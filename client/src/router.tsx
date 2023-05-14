@@ -7,67 +7,96 @@ import EditProfile from './pages/EditProfile'
 import Premium from './pages/Premium'
 import { createBrowserRouter } from 'react-router-dom'
 import { Router as RemixRouter } from '@remix-run/router/dist/router'
+import { SidebarElement } from './types/sidebar'
+import {SidebarLayout, HeaderLayout} from './layout/GeneralLayout'
 
 interface RouterElement {
   id: number
   path: string
   label: string
   element: React.ReactElement
+  isSidebar: boolean
 }
 
 const routerData: RouterElement[] = [
   {
     id: 0,
     path: '/',
-    label: 'Home',
+    label: '홈',
     element: <Home />,
+    isSidebar: false
   },
   {
     id: 1,
     path: '/login',
-    label: 'Login',
+    label: '로그인',
     element: <Login />,
+    isSidebar: false
   },
   {
     id: 2,
     path: '/signup',
-    label: 'Signup',
+    label: '회원가입',
     element: <Signup />,
+    isSidebar: false
   },
   {
     id: 3,
     path: '/categorysetting',
-    label: 'CategorySetting',
+    label: '카테고리 관리',
     element: <CategorySetting />,
+    isSidebar: true
   },
   {
     id: 4,
     path: '/social',
-    label: 'Social',
+    label: '친구 관리',
     element: <Social />,
+    isSidebar: true
   },
   {
     id: 5,
     path: '/editprofile',
-    label: 'EditProfile',
+    label: '프로필 수정',
     element: <EditProfile />,
+    isSidebar: true
   },
   {
     id: 6,
     path: '/premium',
-    label: 'Premium',
+    label: '투두몬 프리미엄',
     element: <Premium />,
+    isSidebar: true
   },
   
   
 ]
 
 export const routers: RemixRouter = createBrowserRouter(
-
   routerData.map((router) => {
-    return {
-      path: router.path,
-      element: router.element
+    if (router.isSidebar) {
+      return {
+        path: router.path,
+        element: <SidebarLayout>{ router.element }</SidebarLayout>
+      }
+    } else {
+      return {
+        path: router.path,
+        element: <HeaderLayout>{ router.element }</HeaderLayout>
+      }
     }
   })
 )
+
+export const SidebarContent: SidebarElement[] = routerData.reduce((prev, router) => {
+  if (!router.isSidebar) return prev
+
+  return [
+    ...prev,
+    {
+      id: router.id,
+      path: router.path,
+      label: router.label,
+    }
+  ]
+}, [] as SidebarElement[])
