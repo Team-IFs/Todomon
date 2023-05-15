@@ -20,7 +20,7 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @ToString
@@ -32,8 +32,8 @@ public class Follow extends Auditable {
 
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @Setter
-  @JoinColumn(name = "followed_member_id")
-  private Member followed;
+  @JoinColumn(name = "follower_member_id")
+  private Member follower;
 
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @Setter

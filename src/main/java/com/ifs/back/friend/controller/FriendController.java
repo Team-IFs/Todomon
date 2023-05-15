@@ -34,13 +34,13 @@ public class FriendController {
   private final FriendService friendService;
   private final MemberService memberService;
 
-  @PostMapping("/request/{friend_id}")
-  public ResponseEntity postFriend(@PathVariable("friend_id") @Positive long friendId) {
+  @PostMapping("/request/{member_id}")
+  public ResponseEntity postFriend(@PathVariable("friend_id") @Positive long memberId) {
     log.info("## 친구 요청");
     //Todo: 토큰 적용 전까진 내 member_id = 1
     Member request = memberService.findMember(
         1);
-    Member received = memberService.findMember(friendId);
+    Member received = memberService.findMember(memberId);
 
     Friend friend = new Friend();
     friend.setRequest(request);
@@ -83,11 +83,11 @@ public class FriendController {
     return ResponseEntity.ok().body(responses);
   }
 
-  @DeleteMapping("/{friend_id}/deny")
+  @DeleteMapping("/{friend_id}")
   public ResponseEntity deleteFriend(@PathVariable("friend_id") @Positive long friendId) {
     // 친구 요청 삭제랑 로직이 같은데 차이점을 만들어야하나 그냥 갈까?
     log.info("## 친구 삭제");
     friendService.denyFriend(friendId);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }
