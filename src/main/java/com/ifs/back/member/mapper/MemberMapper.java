@@ -30,7 +30,7 @@ public interface MemberMapper {
     return builder.build();
   }
 
-  default Page<MemberDto.Response> memberPageToMemberSearchDtoPage(Page<Member> memberPage){
+  default Page<MemberDto.Response> memberPageToMemberResponseDtoPage(Page<Member> memberPage){
     return memberPage.map(member -> {
       return Response.builder().memberId(member.getMemberId()).nickname(member.getNickname())
           .bio(member.getBio()).premium(member.getPremium()).memberStatus(member.getMemberStatus())

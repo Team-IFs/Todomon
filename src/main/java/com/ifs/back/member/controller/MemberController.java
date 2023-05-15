@@ -103,7 +103,7 @@ public class MemberController {
 
     Page<Member> memberPage = memberService
         .searchMembersByEmail(pageable, email);
-    Page<MemberDto.Response> responsePage = mapper.memberPageToMemberSearchDtoPage(memberPage);
+    Page<MemberDto.Response> responsePage = mapper.memberPageToMemberResponseDtoPage(memberPage);
     return ResponseEntity.ok().body(responsePage);
   }
 
