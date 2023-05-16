@@ -5,19 +5,21 @@ interface GeneralLayoutProps {
 }
 
 export const SidebarLayout: React.FC<GeneralLayoutProps> = ({children}) => {
-  return (<div>
-    <Header/>
+  return (<div className='general-layout'>
+    <Header />
+    <div className='sidebar-layout-child'>
     <Sidebar/>
-    <div>
+    <div className='sidebar-layout-content'>
       { children }
+      </div>
     </div>
   </div>)
 }
 
 export const HeaderLayout: React.FC<GeneralLayoutProps> = ({children}) => {
-  return (<div>
+  return (<div className='general-layout'>
     <Header/>
-    <div>
+    <div className='header-layout-content'>
       { children }
     </div>
   </div>)
