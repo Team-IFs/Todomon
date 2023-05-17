@@ -25,7 +25,7 @@ const Sidebar = () => {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 240, bgcolor: 'background.paper' }}>
+    <Box sx={{ width: '100%', maxWidth: 220, bgcolor: 'background.paper' }}>
       <List component="nav" aria-label="sidebar">
         {SidebarContent.map((item, idx) => (
             <ListItemButton

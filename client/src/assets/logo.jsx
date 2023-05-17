@@ -1,7 +1,7 @@
 import React from "react";
 function Logo() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="215" height="75" viewBox='200 -30 200 200'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="215" height="75" viewBox='180 -30 200 200'>
       <g className="layer">
         <path fill="#fff" stroke="#000" d="M15 15H416V136H15z"></path>
         <g
