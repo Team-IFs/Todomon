@@ -1,0 +1,65 @@
+package com.ifs.back.category.entity;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.ifs.back.audit.Auditable;
+import com.ifs.back.member.entity.Member;
+import com.ifs.back.todo.entity.Todo;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.ToString.Exclude;
+
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@ToString
+public class Category extends Auditable {
+  @Id
+  @Setter
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long categoryId;
+  @Column(nullable = false, unique = true)
+  @Setter
+  private String categoryName;
+  @Column(nullable = false, unique = true)
+  @Setter
+  private String categoryColor;
+  @Column(nullable = false)
+  @Setter
+  private int scope;
+  @Setter
+  @Column(nullable = false)
+  private boolean isHide;
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Setter
+  @JoinColumn(name = "member_id")
+  private Member member;
+
+  @OneToMany(mappedBy = "category",fetch = FetchType.EAGER, orphanRemoval = true)
+  @Default
+  @Exclude
+  private List<Todo> todos = new ArrayList<>();
+
+}

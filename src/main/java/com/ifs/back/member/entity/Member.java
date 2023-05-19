@@ -39,7 +39,7 @@ public class Member extends Auditable {
   @Column(nullable = false)
   @Setter
   private String nickname;
-  @Column(nullable = false, updatable = false)
+  @Column(nullable = false, unique = true, updatable = false)
   private String email;
   @Setter
   @JsonProperty(access = Access.WRITE_ONLY)

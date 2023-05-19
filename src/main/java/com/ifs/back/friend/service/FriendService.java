@@ -8,6 +8,7 @@ import com.ifs.back.friend.exception.FriendExceptionCode;
 import com.ifs.back.friend.repository.FriendRepository;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.mapper.MemberMapper;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,6 +57,10 @@ public class FriendService {
   public Page<FriendDto.Response> findRequests (long memberId, Pageable pageable) {
     Page<Friend> friendPage = friendRepository.findAllRequest(memberId, pageable);
     return friendPage.map(friend -> friendToFriendResponse(friend, memberId));
+  }
+
+  public Optional<Friend> findFriendByUsers (long memberId, long targetId){
+    return friendRepository.findByUsers(memberId, targetId);
   }
 
   private FriendDto.Response friendToFriendResponse(Friend friend, long memberId) {
