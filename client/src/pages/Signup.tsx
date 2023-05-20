@@ -1,15 +1,9 @@
-import React from 'react'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Divider } from '@mui/material';
-import { useRouter } from '../hooks/useRouter'
 import cat from '../assets/cat.png'
 
-const ariaLabel = { 'aria-label': 'description' };
-
 const Signup = () => {
-  const { routeTo } = useRouter()
   const SingupPage = styled.div({
     display: 'flex',
     flexDirection: 'row',
