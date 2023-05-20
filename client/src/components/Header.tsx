@@ -37,8 +37,12 @@ const Header = () => {
   const handleLogoClick = (path: string) => {
     routeTo(path)
   };
-  const handleLoginClick = () => {
-    setIsLogin(!isLogin)
+  const handleLoginClick = (path: string) => {
+    routeTo(path)
+  }
+  const handleLogoutClick = (path: string) => {
+    routeTo(path)
+    setIsLogin(false)
   }
   return (
     <div className='header'>
@@ -53,9 +57,9 @@ const Header = () => {
               </SearchIconWrapper>
               <SearchInput placeholder="search" />
             </SearchBar>
-            <Button variant="contained" onClick={() => handleLoginClick()}>Logout</Button>
+            <Button variant="contained" onClick={() => handleLogoutClick('/')}>Logout</Button>
           </div>
-        : <Button variant="contained" onClick={() => handleLoginClick()}>Login</Button>}
+        : <Button variant="contained" onClick={() => handleLoginClick('/login')}>Login</Button>}
       </div>
     
   );
