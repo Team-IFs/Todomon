@@ -32,7 +32,7 @@ const SearchInput = styled.input({
 
 const Header = () => {
   const { routeTo } = useRouter()
-  const [isLogin, setIsLogin] = React.useState(false);
+  const [isLogin, setIsLogin] = React.useState(true);
 
   const handleLogoClick = (path: string) => {
     routeTo(path)

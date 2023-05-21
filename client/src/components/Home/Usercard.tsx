@@ -1,22 +1,18 @@
 import styled from '@emotion/styled';
-import cat from '../../assets/cat.png'
-
-  const Cat = () => {
-    return <img alt="cat" src={cat} width='80px'/>
-  }
+import { ReactComponent as CatCircle } from '../../assets/cat.svg';
 
 const Card = styled.div({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'left',
   alignItems: 'center',
-  backgroundColor: 'white',
   width: '90%',
   margin: '10px',
   borderRadius: '10px',
   padding: '10px'
 })
 const UserCat = styled.div({
+  width: '70px',
   margin: '10px 20px',
 })
 
@@ -31,7 +27,7 @@ const UserCard = () => {
   return (
     <Card>
       <UserCat>
-        <Cat />
+        <CatCircle />
       </UserCat>
       <InfoCard>
         <div className='name'>닉네임</div>

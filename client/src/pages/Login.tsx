@@ -4,7 +4,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Divider } from '@mui/material';
 import { useRouter } from '../hooks/useRouter'
-import cat from '../assets/cat.png'
+import { ReactComponent as CatBasic }  from '../assets/cat-basic.svg';
+
 
 const Login = () => {
   const { routeTo } = useRouter()
@@ -16,9 +17,9 @@ const Login = () => {
     justifyContent: 'center',
   })
 
-  const Cat = () => {
-    return <img alt="cat" src={cat} width='80px'/>
-  }
+  const CatContainer = styled.div({
+    width: '100px',
+  })
 
   const LogoLabel = styled.div({
     font: 'bold 1.2em sans-serif',
@@ -47,7 +48,9 @@ const Login = () => {
     marginTop: '30px'
   })
   return (<LoginPage>
-    <Cat />
+    <CatContainer>
+      <CatBasic/>
+    </CatContainer>
     <LogoLabel>TODOMON</LogoLabel>
     <Form>
       <TextField label="이메일" type="email" variant="standard"/>

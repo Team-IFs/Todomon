@@ -10,6 +10,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import StarsIcon from '@mui/icons-material/Stars';
 import { SidebarContent } from '../router';
 import { useRouter } from '../hooks/useRouter'
+import { Divider } from '@mui/material';
+
 
 const sidebarIcons = [<ListIcon/>, <AccountCircleIcon/>, <PeopleIcon/>, <StarsIcon/>]
 
@@ -25,25 +27,28 @@ const Sidebar = () => {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 220, bgcolor: 'background.paper' }}>
-      <List component="nav" aria-label="sidebar">
-        {SidebarContent.map((item, idx) => (
-            <ListItemButton
-            key={item.id}
-            selected={selectedIndex === idx}
-            onClick={() => handleListItemClick(idx, item.path)}
-            >
-              <ListItemIcon sx={{ color: 'inherit' }}>
-                {sidebarIcons[idx]}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.label}
-                primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
-              />
-            </ListItemButton>
-          ))}
-      </List>
-    </Box>
+    <>
+      <Box sx={{ width: '100%', maxWidth: 210, bgcolor: 'background.paper' }}>
+        <List component="nav" aria-label="sidebar">
+          {SidebarContent.map((item, idx) => (
+              <ListItemButton
+              key={item.id}
+              selected={selectedIndex === idx}
+              onClick={() => handleListItemClick(idx, item.path)}
+              >
+                <ListItemIcon sx={{ color: 'inherit' }}>
+                  {sidebarIcons[idx]}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+                />
+              </ListItemButton>
+            ))}
+        </List>
+      </Box>
+      <Divider orientation="vertical" />
+    </>
   );
 }
 

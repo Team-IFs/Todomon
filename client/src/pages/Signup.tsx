@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import cat from '../assets/cat.png'
+import { ReactComponent as CatBasic }  from '../assets/cat-basic.svg';
+
 
 const Signup = () => {
   const SingupPage = styled.div({
@@ -21,7 +22,7 @@ const Signup = () => {
   })
 
   const Cat = () => {
-    return <img alt="cat" src={cat} width='200px'/>
+    return <CatBasic />
   }
 
   const LogoLabel = styled.div({
