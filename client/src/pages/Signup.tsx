@@ -2,9 +2,30 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { ReactComponent as CatBasic }  from '../assets/cat-basic.svg';
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { SingupFormValue } from '../types/signupform'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
+  const emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
-const Signup = () => {
+  const schema = yup.object().shape({
+    email:
+      yup.string()
+        .required('이메일을 입력해주세요.')
+        .matches(emailRegex, '이메일 형식에 맞지 않습니다.'),
+    nickname:
+      yup.string()
+        .required('닉네임을 입력해주세요.')
+        .max(10, '10자 이하의 닉네임만 가능합니다.'),
+    password:
+      yup.string()
+      .required('비밀번호를 입력해주세요.'),
+    passwordConfirmation:
+      yup.string()
+      .required('비밀번호 확인을 입력해주세요.')
+      .oneOf([yup.ref('password')], '비밀번호가 일치하지 않습니다.')
+  })
   const SingupPage = styled.div({
     display: 'flex',
     flexDirection: 'row',
@@ -44,23 +65,67 @@ const Signup = () => {
     marginTop: '30px'
   })
 
-  
+
+const Signup = () => {
+
+  const formSubmitHandler: SubmitHandler<SingupFormValue> = (data: SingupFormValue) => {
+    alert('회원가입이 완료되었습니다!')
+    console.log(data)
+  }
+    const { register, handleSubmit, control, formState: { errors } } = useForm<SingupFormValue>({
+      mode: 'onChange',
+      resolver: yupResolver(schema)
+  })
+
   return (<SingupPage>
     <LogoContainer>
       <Cat />
       <LogoLabel>TODOMON</LogoLabel>
       <label>Todomon과 함께 할일을 정복해보세요</label>
     </LogoContainer>
-    <Form>
-      <TextField required label="이메일" type="email" variant="standard"/>
-      <TextField required label="닉네임" type="text" variant="standard"/>
-      <TextField required label="비밀번호" type="password" helperText="아래 규칙에 맞는 비밀번호를 사용해주세요" variant="standard" />
-      <TextField required label="비밀번호 확인" type="password" variant="standard"/>
+    <form onSubmit={handleSubmit(formSubmitHandler)} >
+      <Form>
+        <Controller name='email' control={control} defaultValue='' render={({ field }) => (
+          <TextField
+            label='이메일'
+            variant='standard'
+            {...register('email')}
+            error={!!errors.email}
+            autoFocus
+            helperText={errors.email ? errors.email?.message : ''} />
+        )} />
+        <Controller name='nickname' control={control} defaultValue='' render={({ field }) => (
+          <TextField
+            label='닉네임'
+            variant='standard'
+            {...register('nickname')}
+            error={!!errors.nickname}
+            helperText={errors.nickname ? errors.nickname?.message : ''} />
+        )} />
+        <Controller name='password' control={control} defaultValue='' render={({ field }) => (
+          <TextField
+            label='비밀번호'
+            type='password'
+            variant='standard'
+            {...register('password')}
+            error={!!errors.password}
+            helperText={errors.password ? errors.password?.message : ''} />
+        )} />
+        <Controller name='passwordConfirmation' control={control} defaultValue='' render={({ field }) => (
+          <TextField
+            label='비밀번호 확인'
+            type='password'
+            variant='standard'
+            {...register('passwordConfirmation')}
+            error={!!errors.passwordConfirmation}
+            helperText={errors.passwordConfirmation ? errors.passwordConfirmation?.message : ''} />
+        )} />
 
       <ButtonContainer>
-        <Button variant="outlined">회원가입</Button>
-      </ButtonContainer>
-    </Form>
+          <Button type='submit' variant='outlined'>회원가입</Button>
+        </ButtonContainer>
+      </Form>
+    </form>
   </SingupPage>)
 }
 
