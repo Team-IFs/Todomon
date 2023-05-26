@@ -8,6 +8,7 @@ import { SingupFormValue } from '../types/signupform'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { emailRegex, numRegex, letterRegex, specialRegex } from '../utils/validations';
 import * as yup from 'yup'
+import { setDataLocalStorage } from '../utils/localstorage';
 
 const schema = yup.object().shape({
   email:
@@ -75,7 +76,9 @@ const Signup = () => {
 
   const formSubmitHandler: SubmitHandler<SingupFormValue> = (data: SingupFormValue) => {
     alert('회원가입이 완료되었습니다!')
-    routeTo('/login')
+    console.log(data)
+    setDataLocalStorage(`${data.email}`, data);
+    // routeTo('/login')
   }
     const { register, handleSubmit, control, formState: { errors } } = useForm<SingupFormValue>({
       mode: 'onChange',
