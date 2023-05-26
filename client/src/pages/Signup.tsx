@@ -1,26 +1,30 @@
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { ReactComponent as CatBasic }  from '../assets/cat-basic.svg';
+import { ReactComponent as CatBasic } from '../assets/cat-basic.svg';
+import { useRouter } from '../hooks/useRouter'
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { SingupFormValue } from '../types/signupform'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { emailRegex, numRegex, letterRegex, specialRegex } from '../utils/validations';
 import * as yup from 'yup'
 
-  const emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-
-  const schema = yup.object().shape({
-    email:
-      yup.string()
-        .required('이메일을 입력해주세요.')
-        .matches(emailRegex, '이메일 형식에 맞지 않습니다.'),
-    nickname:
-      yup.string()
-        .required('닉네임을 입력해주세요.')
-        .max(10, '10자 이하의 닉네임만 가능합니다.'),
-    password:
-      yup.string()
-      .required('비밀번호를 입력해주세요.'),
+const schema = yup.object().shape({
+  email:
+    yup.string()
+      .required('이메일을 입력해주세요.')
+      .matches(emailRegex, '이메일 형식에 맞지 않습니다.'),
+  nickname:
+    yup.string()
+      .required('닉네임을 입력해주세요.')
+      .max(10, '10자 이하의 닉네임만 가능합니다.'),
+  password:
+    yup.string()
+      .required('비밀번호를 입력해주세요.')
+      .matches(numRegex, '1개 이상의 숫자를 포함해야합니다.')
+      .matches(letterRegex, '1개 이상의 영문을 포함해야합니다.')
+      .matches(specialRegex, '1개 이상의 특수문자를 포함해야합니다.')
+      .min(8, '8자리 이상이어야합니다.'),
     passwordConfirmation:
       yup.string()
       .required('비밀번호 확인을 입력해주세요.')
@@ -67,15 +71,17 @@ import * as yup from 'yup'
 
 
 const Signup = () => {
+  const { routeTo } = useRouter()
 
   const formSubmitHandler: SubmitHandler<SingupFormValue> = (data: SingupFormValue) => {
     alert('회원가입이 완료되었습니다!')
-    console.log(data)
+    routeTo('/login')
   }
     const { register, handleSubmit, control, formState: { errors } } = useForm<SingupFormValue>({
       mode: 'onChange',
+      criteriaMode: 'all',
       resolver: yupResolver(schema)
-  })
+    })
 
   return (<SingupPage>
     <LogoContainer>
@@ -103,14 +109,19 @@ const Signup = () => {
             helperText={errors.nickname ? errors.nickname?.message : ''} />
         )} />
         <Controller name='password' control={control} defaultValue='' render={({ field }) => (
-          <TextField
-            label='비밀번호'
-            type='password'
-            variant='standard'
-            {...register('password')}
-            error={!!errors.password}
-            helperText={errors.password ? errors.password?.message : ''} />
-        )} />
+          
+            <TextField
+              label='비밀번호'
+              type='password'
+              variant='standard'
+              error={!!errors.password}
+              helperText={errors.password ? errors.password?.message : ''}
+            {...register('password')} />
+          
+          
+        )} 
+          
+        />
         <Controller name='passwordConfirmation' control={control} defaultValue='' render={({ field }) => (
           <TextField
             label='비밀번호 확인'
