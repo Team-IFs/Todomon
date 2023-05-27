@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.ifs.back.audit.Auditable;
 import com.ifs.back.todomon.entity.Todomon;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,6 +30,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,24 +42,19 @@ public class Member extends Auditable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long memberId;
   @Column(nullable = false)
-  @Setter
   private String nickname;
   @Column(nullable = false, unique = true, updatable = false)
   private String email;
-  @Setter
   @JsonProperty(access = Access.WRITE_ONLY)
   @Column(nullable = false)
   private String password;
   @Column
   @Lob
-  @Setter
   private String bio;
   @Column
-  @Setter
   @Default
   private Boolean premium = false;
   @Column
-  @Setter
   private String photoUrl;
   @Default
   private Integer theme = 1;
@@ -65,9 +65,12 @@ public class Member extends Auditable {
   private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @Setter
   @JoinColumn(name = "todomonId")
   private Todomon todomon;
+
+  @ElementCollection(fetch = FetchType.EAGER)
+  @Default
+  private List<String> roles = new ArrayList<>();
 
   @RequiredArgsConstructor
   public enum MemberStatus {

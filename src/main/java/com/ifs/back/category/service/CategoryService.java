@@ -28,8 +28,8 @@ public class CategoryService {
   }
 
   @Transactional
-  public Category updateCategory(Category category) {
-    Category findCategory = findVerifiedCategory(category.getCategoryId());
+  public Category updateCategory(Category category, long memberId) {
+    Category findCategory = findVerifiedCategory(category.getCategoryId(), memberId);
     Optional.ofNullable(category.getCategoryName())
         .ifPresent(findCategory::setCategoryName);
     Optional.ofNullable(category.getCategoryColor())
@@ -43,11 +43,17 @@ public class CategoryService {
     return savedCategory;
   }
 
+  private void checkCategoryMember(long memberId, Category category){
+    if(category.getMember().getMemberId() != memberId)
+      throw new BusinessLogicException(CategoryExceptionCode.CATEGORY_NOT_ALLOWED);
+  }
+
   @Transactional
-  public Category findVerifiedCategory(long categoryId) {
+  public Category findVerifiedCategory(long categoryId, long memberId) {
     Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
     Category category = optionalCategory.orElseThrow(
         () -> new BusinessLogicException(CategoryExceptionCode.CATEGORY_NOT_FOUND));
+    checkCategoryMember(memberId, category);
     return category;
   }
 
@@ -57,7 +63,8 @@ public class CategoryService {
   }
 
   @Transactional
-  public void deleteCategory(long categoryId) {
+  public void deleteCategory(long categoryId, long memberId) {
+    Category findCategory = findVerifiedCategory(categoryId, memberId);
     categoryRepository.deleteById(categoryId);
   }
 

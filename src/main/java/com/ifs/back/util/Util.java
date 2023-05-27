@@ -17,22 +17,10 @@ public class Util {
 
   public static String checkPrincipal(Principal principal) {
     if (principal == null) {
-      log.info("## 토큰이 들어오지 않는다..");
+      log.info("## 토큰 들어오지 않음.");
       throw new BusinessLogicException(CommonExceptionCode.TOKEN_NOT_REQUESTED);
     }
     log.info("## 토큰 들어옴: {}", principal.getName());
     return principal.getName();
-  }
-
-  public static <T> Page<T> ListToPage(Collection<T> collection, Pageable pageable,
-      Comparator<T> comparator) {
-    int start = (int) pageable.getOffset();
-    int end = Math.min((start + pageable.getPageSize()), collection.size());
-    List<T> list = new ArrayList<>(collection);
-    if (comparator != null) {
-      list.sort(comparator);
-    }
-    Page<T> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
-    return page;
   }
 }

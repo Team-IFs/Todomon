@@ -70,7 +70,7 @@ public class CategoryTodoService {
     if (targetId == memberId) {
       return 2;
     }
-    if (friendService.findFriendByUsers(memberId, targetId).isEmpty()) {
+    else if (friendService.findFriendByUsers(memberId, targetId).isEmpty()) {
       return 0;
     } else {
       return 1;

@@ -7,7 +7,9 @@ import com.ifs.back.member.service.MemberService;
 import com.ifs.back.todomon.dto.TodomonDto;
 import com.ifs.back.todomon.entity.Todomon;
 import com.ifs.back.util.UriCreator;
+import com.ifs.back.util.Util;
 import java.net.URI;
+import java.security.Principal;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -53,27 +55,31 @@ public class MemberController {
   }
 
   @PatchMapping("/me")
-  public ResponseEntity patchMember(@Valid @RequestBody MemberDto.Patch requestBody) {
+  public ResponseEntity patchMember(@Valid @RequestBody MemberDto.Patch requestBody,
+      Principal principal) {
     Member member = mapper.memberPatchToMember(requestBody);
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    member.setMemberId(currentId);
     log.info("## 사용자 정보 수정: {}", member.toString());
     Member updateMember = memberService.updateMember(member);
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(updateMember));
   }
 
   @PatchMapping("/me/todomon")
-  public ResponseEntity patchTodomon(@Valid @RequestBody TodomonDto.Patch requestBody) {
+  public ResponseEntity patchTodomon(@Valid @RequestBody TodomonDto.Patch requestBody,
+      Principal principal) {
     Todomon todomon = mapper.todomonPatchToTodomon(requestBody);
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     log.info("## 투두몬 정보 수정: {}", todomon.toString());
-    Member updateMember = memberService.updateTodomon(todomon);
+    Member updateMember = memberService.updateTodomon(todomon, currentId);
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(updateMember));
   }
 
   @GetMapping("/me")
-  public ResponseEntity getMemberBySelf() {
+  public ResponseEntity getMemberBySelf(Principal principal) {
     log.info("## 내 정보 조회");
-    //Todo : token구현 전 까지 내 이메일 test123@test.com 으로 고정
-    String myEmail = "test123@test.com";
-    Member findMember = memberService.findMemberByEmail(myEmail);
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    Member findMember = memberService.findMember(currentId);
 
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(findMember));
   }
@@ -89,9 +95,10 @@ public class MemberController {
   }
 
   @DeleteMapping("/me")
-  public ResponseEntity deleteMember() {
+  public ResponseEntity deleteMember(Principal principal) {
     log.info("## 사용자 탈퇴: {}");
-    memberService.deleteMember();
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    memberService.deleteMember(currentId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

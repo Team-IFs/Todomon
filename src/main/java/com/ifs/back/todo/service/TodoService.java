@@ -29,8 +29,9 @@ public class TodoService {
   }
 
   @Transactional
-  public Todo updateTodo(Todo todo){
-    Todo findTodo = findVerifiedTodo(todo.getTodoId());
+  public Todo updateTodo(Todo todo, long memberId){
+    Todo findTodo = findVerifiedTodo(todo.getTodoId(), memberId);
+
     Optional.ofNullable(todo.getTodoName())
         .ifPresent(findTodo::setTodoName);
     Optional.ofNullable(todo.getStartAt())
@@ -45,15 +46,15 @@ public class TodoService {
   }
 
   @Transactional
-  public void updateTodoDone(long todoId){
-    Todo findTodo = findVerifiedTodo(todoId);
+  public void updateTodoDone(long todoId, long memberId){
+    Todo findTodo = findVerifiedTodo(todoId, memberId);
     findTodo.setDone(true);
     todoRepository.save(findTodo);
   }
 
   @Transactional
-  public void updateTodoUndone(long todoId){
-    Todo findTodo = findVerifiedTodo(todoId);
+  public void updateTodoUndone(long todoId, long memberId){
+    Todo findTodo = findVerifiedTodo(todoId, memberId);
     findTodo.setDone(false);
     todoRepository.save(findTodo);
   }
@@ -62,11 +63,16 @@ public class TodoService {
     todoRepository.deleteById(todoId);
   }
 
-  public Todo findVerifiedTodo(long todoId){
+  public Todo findVerifiedTodo(long todoId, long memberId){
     Optional<Todo> optionalTodo = todoRepository.findById(todoId);
     Todo todo = optionalTodo.orElseThrow(() -> new BusinessLogicException(TodoExceptionCode.TODO_NOT_FOUND));
+    checkTodoMember(todo, memberId);
     return todo;
   }
 
+  private void checkTodoMember(Todo todo, long memberId){
+    if(todo.getCategory().getMember().getMemberId() != memberId)
+      throw new BusinessLogicException(TodoExceptionCode.TODO_NOT_ALLOWED);
+  }
 
 }

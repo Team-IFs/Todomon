@@ -4,6 +4,7 @@ import com.ifs.back.exception.BusinessLogicException;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.exception.MemberExceptionCode;
 import com.ifs.back.member.repository.MemberRepository;
+import com.ifs.back.security.utils.AuthorityUtils;
 import com.ifs.back.todomon.entity.Todomon;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,22 +23,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
   private final MemberRepository memberRepository;
-//  private final PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
+  private final AuthorityUtils authorityUtils;
 
   @Transactional
   public Member createMember(Member member) {
     verifyExistsEmail(member.getEmail());
 
-//    String encryptedPassword = passwordEncoder.encode(member.getPassword());
-//    member.setPassword(encryptedPassword);
+    String encryptedPassword = passwordEncoder.encode(member.getPassword());
+    member.setPassword(encryptedPassword);
+
+    List<String> roles = authorityUtils.createRoles(member.getEmail());
+    member.setRoles(roles);
 
     return memberRepository.save(member);
   }
 
   @Transactional
   public Member updateMember(Member member) {
-    // Todo: token 도입 전 까진 내 아이디 1로 통일
-    Member findMember = findVerifiedMember(1);
+    Member findMember = findVerifiedMember(member.getMemberId());
     Optional.ofNullable(member.getNickname())
         .ifPresent(findMember::setNickname);
     Optional.ofNullable(member.getBio())
@@ -50,9 +54,8 @@ public class MemberService {
   }
 
   @Transactional
-  public Member updateTodomon(Todomon todomon) {
-    // Todo: token 도입 전 까진 내 아이디 1로 통일
-    Member findMember = findVerifiedMember(1);
+  public Member updateTodomon(Todomon todomon, long currentId) {
+    Member findMember = findVerifiedMember(currentId);
     Optional.ofNullable(todomon.getFaceColor())
         .ifPresent(findMember.getTodomon()::setFaceColor);
     Optional.ofNullable(todomon.getRightEyeColor())
@@ -70,9 +73,7 @@ public class MemberService {
     return findVerifiedMember(memberId);
   }
 
-  public void deleteMember() {
-    // Todo: token 도입 전 까진 내 아이디 1로 통일
-    long memberId = 1;
+  public void deleteMember(long memberId) {
     memberRepository.deleteById(memberId);
   }
 
@@ -84,12 +85,9 @@ public class MemberService {
     }
   }
 
-  public Member findMemberByEmail(String email) {
-    Optional<Member> optionalMember = memberRepository.findByEmail(email);
-
-    Member findMember = optionalMember.orElseThrow(()
-        -> new BusinessLogicException(MemberExceptionCode.MEMBER_NOT_FOUND));
-    return findMember;
+  public Long findMemberIdByEmail(String email) {
+    return memberRepository.findMemberIdByEmail(email)
+        .orElseThrow(() -> new BusinessLogicException(MemberExceptionCode.MEMBER_NOT_FOUND));
   }
 
   public Page<Member> searchMembersByEmail(Pageable pageable, String email) {
