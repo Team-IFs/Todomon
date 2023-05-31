@@ -37,7 +37,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     String redirectURI = "http://localhost:8080";
     log.info("## 리다이렉트 -> {}", redirectURI);
     log.info("## 토큰: {}", accessToken);
-    getRedirectStrategy().sendRedirect(request, response, createURI(accessToken, refreshToken).toString());
+    getRedirectStrategy().sendRedirect(request, response,
+        createURI(accessToken, refreshToken).toString());
 
   }
 
@@ -48,7 +49,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     return UriComponentsBuilder.newInstance()
         .scheme("http")
-        .host("localhost:8080")
+        .host("localhost")
+        .port(8080)
         .queryParams(queryParams).build().toUri();
   }
 

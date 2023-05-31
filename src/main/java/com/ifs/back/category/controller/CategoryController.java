@@ -7,6 +7,7 @@ import com.ifs.back.category.service.CategoryService;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
+import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import java.security.Principal;
 import javax.validation.Valid;
@@ -35,6 +36,7 @@ public class CategoryController {
   private final CategoryMapper mapper;
   private final MemberService memberService;
 
+  @ApiOperation(value = "카테고리 생성")
   @PostMapping
   public ResponseEntity postCategory(@Valid @RequestBody CategoryDto.Post requestBody,
       Principal principal) {
@@ -47,6 +49,7 @@ public class CategoryController {
     return ResponseEntity.created(uri).build();
   }
 
+  @ApiOperation(value = "카테고리 설정")
   @PatchMapping("/{category_id}")
   public ResponseEntity patchCategory(@PathVariable("category_id") @Positive long categoryId,
       @Valid @RequestBody CategoryDto.Patch requestBody, Principal principal) {
@@ -58,6 +61,7 @@ public class CategoryController {
     return ResponseEntity.ok().body(mapper.categoryToCategoryResponse(updatedCategory));
   }
 
+  @ApiOperation(value = "카테고리 삭제")
   @DeleteMapping("/{category_id}")
   public ResponseEntity deleteCategory(@PathVariable("category_id") @Positive long categoryId,
       Principal principal) {

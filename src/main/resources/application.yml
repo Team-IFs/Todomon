@@ -35,6 +35,9 @@ spring:
             user-name-attribute: id
 ---
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   h2:
     console:
       enabled: true
@@ -51,6 +54,10 @@ spring:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 100
+  redis:
+    host: localhost
+    port: 6379
+
 mail:
   address:
     admin: admin@gmail.com

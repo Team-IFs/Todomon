@@ -9,6 +9,7 @@ import com.ifs.back.friend.entity.Friend;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
+import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class FollowController {
   private final FollowService followService;
   private final MemberService memberService;
 
+  @ApiOperation(value = "구독 신청")
   @PostMapping("/{member_id}")
   public ResponseEntity postFriend(@PathVariable("member_id") @Positive long memberId) {
     log.info("##구독 신청");
@@ -53,6 +55,7 @@ public class FollowController {
     return ResponseEntity.created(uri).build();
   }
 
+  @ApiOperation(value = "내가 구독한 목록 조회")
   @GetMapping("/following")
   public ResponseEntity getFollowing(@PageableDefault Pageable pageable) {
     log.info("## 내가 구독한 목록 조회");
@@ -62,6 +65,7 @@ public class FollowController {
     return ResponseEntity.ok().body(responses);
   }
 
+  @ApiOperation(value = "내가 구독된 목록 조회")
   @GetMapping("/follower")
   public ResponseEntity getFollower(@PageableDefault Pageable pageable) {
     log.info("## 내가 구독된 목록 조회");
@@ -70,7 +74,7 @@ public class FollowController {
     Page<FollowDto.Response> responses = followService.findFollower(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
-
+  @ApiOperation(value = "구독 취소")
   @DeleteMapping("/{follow_id}")
   public ResponseEntity deleteFriend(@PathVariable("follow_id") @Positive long followId) {
     log.info("## 구독 취소");
