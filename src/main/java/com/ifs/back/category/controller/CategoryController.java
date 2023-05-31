@@ -4,6 +4,7 @@ import com.ifs.back.category.dto.CategoryDto;
 import com.ifs.back.category.entity.Category;
 import com.ifs.back.category.mapper.CategoryMapper;
 import com.ifs.back.category.service.CategoryService;
+import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
@@ -14,10 +15,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,13 +74,22 @@ public class CategoryController {
     categoryService.deleteCategory(categoryId, currentId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
-//  @GetMapping
-//  public ResponseEntity getCategories() {
-//    log.info("## 내 정보 조회");
-//    //Todo: 토큰 적용 전까진 내 member_id = 1
-//    String myEmail = "test123@test.com";
-//    Member findMember = memberService.findMemberByEmail(myEmail);
-//
-//    return ResponseEntity.ok().body(mapper.memberToMemberResponse(findMember));
-//  }
+
+  @ApiOperation(value = "특정 카테고리 정보 조회")
+  @GetMapping("/{category_id}")
+  public ResponseEntity getCategory(@PathVariable("category_id") @Positive long categoryId,
+      Principal principal) {
+    log.info("## 특정 카테고리 정보 조회");
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    Category category = categoryService.findVerifiedCategory(categoryId, currentId);
+    return ResponseEntity.ok().body(mapper.categoryToCategoryResponse(category));
+  }
+
+  @ApiOperation(value = "모든 카테고리 정보 조회")
+  @GetMapping()
+  public ResponseEntity getCategories(Principal principal, @PageableDefault Pageable pageable) {
+    log.info("## 모든 카테고리 정보 조회");
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    return ResponseEntity.ok().body(categoryService.findAllCategories(currentId, pageable));
+  }
 }

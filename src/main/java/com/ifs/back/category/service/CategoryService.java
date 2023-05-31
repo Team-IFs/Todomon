@@ -1,10 +1,13 @@
 package com.ifs.back.category.service;
 
+import com.ifs.back.category.dto.CategoryDto;
 import com.ifs.back.category.entity.Category;
 import com.ifs.back.category.exception.CategoryExceptionCode;
+import com.ifs.back.category.mapper.CategoryMapper;
 import com.ifs.back.category.repository.CategoryRepository;
 import com.ifs.back.exception.BusinessLogicException;
 import com.ifs.back.member.entity.Member;
+import com.ifs.back.todo.dto.CategoryTodoDto;
 import com.ifs.back.todo.entity.Todo;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService {
 
   private final CategoryRepository categoryRepository;
+  private final CategoryMapper categoryMapper;
 
   @Transactional
   public Category createCategory(Category category) {
@@ -58,8 +62,16 @@ public class CategoryService {
   }
 
   @Transactional
+  public Page<CategoryDto.Response> findAllCategories(long memberId, Pageable pageable) {
+    Page<Category> categoryPage = categoryRepository.findAllByMemberId(memberId, pageable);
+    Page<CategoryDto.Response> responses = categoryPage.map(
+        category -> categoryMapper.categoryToCategoryResponse(category));
+    return responses;
+  }
+
+  @Transactional
   public Page<Category> findCategoriesByMemberId(long memberId, int scope, Pageable pageable) {
-    return categoryRepository.findAllByMemberId(memberId, scope, pageable);
+    return categoryRepository.findCategoriesByMemberId(memberId, scope, pageable);
   }
 
   @Transactional
@@ -68,8 +80,4 @@ public class CategoryService {
     categoryRepository.deleteById(categoryId);
   }
 
-//
-//  public Category findCategories(long categoryId){
-//
-//  }
 }

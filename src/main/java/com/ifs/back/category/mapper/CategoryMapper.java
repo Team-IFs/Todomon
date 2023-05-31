@@ -2,6 +2,7 @@ package com.ifs.back.category.mapper;
 
 import com.ifs.back.category.dto.CategoryDto;
 import com.ifs.back.category.entity.Category;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
