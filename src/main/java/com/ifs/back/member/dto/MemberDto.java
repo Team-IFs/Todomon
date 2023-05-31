@@ -21,7 +21,9 @@ public class MemberDto {
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W)(?=.*[0-9]).{8,20}$", message = "최소 8자 이상 20자 이하 영문, 숫자, 특수문자혼용")
     private String password;
     @NotNull(message = "공백 불가")
+    @Pattern(regexp = "^(?=.{1,10}$).*", message = "최대 10자")
     private String nickname;
+    @Pattern(regexp = "^(?=.{1,20}$).*", message = "최대 20자")
     private String bio;
     private String profileUrl;
   }
