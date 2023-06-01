@@ -10,6 +10,7 @@ import com.ifs.back.todo.service.TodoService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.net.URI;
 import java.security.Principal;
 import javax.validation.Valid;
@@ -103,6 +104,7 @@ public class TodoController {
   @ApiOperation(value = "특정 날짜 할 일 확인")
   @GetMapping
   public ResponseEntity getTodo(
+      @ApiParam(name = "date", value = "yyyy-mm-dd", required = true)
       @RequestParam(value = "date", required = true) String date,
       @PageableDefault Pageable pageable,
       Principal principal
@@ -116,7 +118,9 @@ public class TodoController {
   @ApiOperation(value = "월간 할 일 확인")
   @GetMapping("/calendar")
   public ResponseEntity getMonthTodo(
+      @ApiParam(name = "year", value = "년도", required = true)
       @RequestParam(value = "year", required = true) Integer year,
+      @ApiParam(name = "month", value = "달", required = true)
       @RequestParam(value = "month", required = true)@Min(1) @Max(12)  Integer month,
       @PageableDefault Pageable pageable,
       Principal principal
