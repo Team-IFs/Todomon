@@ -105,4 +105,14 @@ public class MemberService {
 
     return findMember;
   }
+
+  public Member findMemberByEmail(String email){
+    Optional<Member> optionalMember =
+        memberRepository.findByEmail(email);
+    Member findMember =
+        optionalMember.orElseThrow(() ->
+            new BusinessLogicException(MemberExceptionCode.MEMBER_NOT_FOUND));
+
+    return findMember;
+  }
 }

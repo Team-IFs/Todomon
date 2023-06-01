@@ -9,8 +9,10 @@ import com.ifs.back.friend.entity.Friend;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
+import com.ifs.back.util.Util;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
+import java.security.Principal;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +41,9 @@ public class FollowController {
 
   @ApiOperation(value = "구독 신청")
   @PostMapping("/{member_id}")
-  public ResponseEntity postFriend(@PathVariable("member_id") @Positive long memberId) {
+  public ResponseEntity postFriend(@PathVariable("member_id") @Positive long memberId, Principal principal) {
     log.info("##구독 신청");
-    //Todo: 토큰 적용 전까진 내 member_id = 1
-    Member follower = memberService.findMember(
-        1);
+    Member follower = memberService.findMemberByEmail(Util.checkPrincipal(principal));
     Member following = memberService.findMember(memberId);
 
     Follow follow = new Follow();
@@ -57,29 +57,26 @@ public class FollowController {
 
   @ApiOperation(value = "내가 구독한 목록 조회")
   @GetMapping("/following")
-  public ResponseEntity getFollowing(@PageableDefault Pageable pageable) {
+  public ResponseEntity getFollowing(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 내가 구독한 목록 조회");
-    //Todo: 토큰 적용 전까진 내 member_id = 1
-    long memberId = 1;
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FollowDto.Response> responses = followService.findFollowing(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
 
   @ApiOperation(value = "내가 구독된 목록 조회")
   @GetMapping("/follower")
-  public ResponseEntity getFollower(@PageableDefault Pageable pageable) {
+  public ResponseEntity getFollower(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 내가 구독된 목록 조회");
-    //Todo: 토큰 적용 전까진 내 member_id = 1
-    long memberId = 1;
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FollowDto.Response> responses = followService.findFollower(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
   @ApiOperation(value = "구독 취소")
   @DeleteMapping("/{follow_id}")
-  public ResponseEntity deleteFriend(@PathVariable("follow_id") @Positive long followId) {
+  public ResponseEntity deleteFriend(@PathVariable("follow_id") @Positive long followId, Principal principal) {
     log.info("## 구독 취소");
-    //Todo: 토큰 적용 전까진 내 member_id = 1
-    long memberId = 1;
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     followService.deleteFollow(followId, memberId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

@@ -6,8 +6,10 @@ import com.ifs.back.friend.service.FriendService;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
+import com.ifs.back.util.Util;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
+import java.security.Principal;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,11 +39,10 @@ public class FriendController {
 
   @ApiOperation(value = "친구 요청")
   @PostMapping("/request/{member_id}")
-  public ResponseEntity postFriend(@PathVariable("friend_id") @Positive long memberId) {
+  public ResponseEntity postFriend(@PathVariable("friend_id") @Positive long memberId,
+      Principal principal) {
     log.info("## 친구 요청");
-    //Todo: 토큰 적용 전까진 내 member_id = 1
-    Member request = memberService.findMember(
-        1);
+    Member request = memberService.findMemberByEmail(Util.checkPrincipal(principal));
     Member received = memberService.findMember(memberId);
 
     Friend friend = new Friend();
@@ -71,20 +72,18 @@ public class FriendController {
 
   @ApiOperation(value = "친구 조회")
   @GetMapping
-  public ResponseEntity getFriend(@PageableDefault Pageable pageable) {
+  public ResponseEntity getFriend(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 친구 조회");
-    //Todo: 토큰 적용 전까진 내 member_id = 1
-    long memberId = 1;
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FriendDto.Response> responses = friendService.findFriends(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
 
   @ApiOperation(value = "친구 요청 조회")
   @GetMapping("/request")
-  public ResponseEntity getRequest(@PageableDefault Pageable pageable) {
+  public ResponseEntity getRequest(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 친구 요청 조회");
-    //Todo: 토큰 적용 전까진 내 member_id = 1
-    long memberId = 1;
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FriendDto.Response> responses = friendService.findRequests(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
