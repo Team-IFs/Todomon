@@ -13,7 +13,22 @@ public interface TodoMapper {
 
   Todo todoPatchToTodo(TodoDto.Patch todoPatchDto);
 
-  TodoDto.Response todoToTodoResponse(Todo todo);
+  default TodoDto.Response todoToTodoResponse(Todo todo){
+    if ( todo == null ) {
+      return null;
+    }
+
+    TodoDto.Response.ResponseBuilder response = TodoDto.Response.builder();
+
+    response.todoId( todo.getTodoId() );
+    response.todoName( todo.getTodoName() );
+    response.startAt( todo.getStartAt() );
+    response.endAt( todo.getEndAt() );
+    response.categoryId(todo.getCategory().getCategoryId());
+    response.repeated( todo.getRepeated() );
+
+    return response.build();
+  }
 
   List<Response> todosToTodoResponses(List<Todo> todos);
 }

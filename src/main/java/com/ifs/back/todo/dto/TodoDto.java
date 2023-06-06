@@ -37,6 +37,7 @@ public class TodoDto {
   @Builder
   public static class Response {
     private long todoId;
+    private long categoryId;
     private String todoName;
     private LocalDate startAt;
     private LocalDate endAt;
