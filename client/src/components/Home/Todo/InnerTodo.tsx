@@ -1,8 +1,11 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ReactComponent as CatBasic } from '../../../assets/cat-basic.svg';
+import { CategoryItem, SubItem } from '../../../types/todo'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import styled from '@emotion/styled'
-
+import Input from '@mui/material/Input';
+import { AddNewItem } from './CRUD';
+import { useState } from 'react';
 const CatContainer = styled.div({
   display: 'flex',
   justifyContent: 'center',
@@ -25,31 +28,42 @@ const CatContainer = styled.div({
     color: 'black',
   })
 
-const getListStyle = () => ({
-  display: 'flex',
-  flexDirection: 'column',
-});
 
-const InnerTodo = ({ type, subItems, color, setSubItems, isAddTodoClicked }) => {
-
+const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: string, replaceSubItems: any, isAddTodoClicked: boolean, clickedCategoryId: string }>
+  = ({ categoryId, subItems, color, replaceSubItems, isAddTodoClicked, clickedCategoryId }) => {
   const pendingColor = '#eeeeee';
   
-  const handleCatClick = (id, isDone) => {
-    const newSubItem = subItems.map(todo => todo.id === id
+  const handleCatClick = (id: string, isDone: boolean) => {
+    const newSubItem = subItems.map((todo:SubItem) => todo.id === id
     ? { ...todo, isDone: !isDone }
     : todo
     )
     const categoryId = subItems[0].categoryId;
-    setSubItems(newSubItem, categoryId)
+    console.log(categoryId);
+    replaceSubItems(newSubItem, categoryId)
   }
+    
+    const handleOnChange = (e:any) => {
+      setNewInputValue(e.target.value)
+    }
 
+    const [newInputValue, setNewInputValue] = useState('');
+  
+  const handleOnKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      !!newInputValue.trim() && AddNewItem(newInputValue, categoryId, subItems, replaceSubItems)
+      setNewInputValue('');
+  }
+  };
+  
   return (
-    <Droppable droppableId={type} type={`droppableSubItem`}>
+    <div>
+
+    <Droppable droppableId={categoryId} type={`droppableSubItem`}>
       {(provided) => (
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          style={getListStyle()}
         >
           {subItems && subItems.map((item, index) => (
             <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -71,30 +85,40 @@ const InnerTodo = ({ type, subItems, color, setSubItems, isAddTodoClicked }) => 
                     <MoreHorizIcon color='primary' />
                     
                   </ItemContainer>
-                  {provided.placeholder}
-                  
                 </div>
-                  
-                  
-                  )}
+              )}
+              
             </Draggable>
+            
+            
           ))}
-          {isAddTodoClicked ? <ItemContainer>
+            
+            {provided.placeholder}
+            {/* 새로운 input 추가 */}
+            {subItems.map((item) => {
+              if (`${clickedCategoryId}-0` === `${item.id}` && isAddTodoClicked) {
+                return (
+                  <ItemContainer key={item.id}>
                     <CatandTodoContainer>
                       <CatContainer >
-                <CatBasic fill={pendingColor} />
+                        <CatBasic fill={pendingColor} />
                       </CatContainer>
-                      {`new`}
-                      
-                      </CatandTodoContainer>
+                      <Input value={newInputValue} onChange={handleOnChange} onKeyPress={handleOnKeyPress} />
+                    </CatandTodoContainer>
                     <MoreHorizIcon color='primary' />
-                    
-                  </ItemContainer>: <></>}
-          {provided.placeholder}
+                  </ItemContainer>
+                )
+              }
+              return null;
+            })
+              }
         </div>
         
       )}
-    </Droppable>
+      </Droppable>
+      
+    </div>
+      
   );
 };
 

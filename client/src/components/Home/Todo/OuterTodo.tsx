@@ -5,11 +5,12 @@ import styled from '@emotion/styled';
 import { static_items } from './data';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { setDataLocalStorage, getDataLocalStorage } from '../../../utils/localstorage'
+import { CategoryItem, SubItem } from '../../../types/todo'
+
 // setDataLocalStorage('todos', static_items);
 
-
 /** dnd순서상의 id를 다시 부여하는 함수 */
-const reorder = (list, startIndex, endIndex) => {
+const reorder = (list: any[], startIndex: number, endIndex: number) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -17,7 +18,7 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 /** 카테고리 id를 재부여 하는 함수 */
-const reorderCategoryId = (list, sourceIndex, destIndex) => {
+const reorderCategoryId = (list: any[] , sourceIndex: number, destIndex: number) => {
   list = reorder(list, sourceIndex, destIndex)
   // 내부 todos 들의 categoryId, id 앞자리를 재부여
   list.map((category, index) => {
@@ -30,7 +31,7 @@ const reorderCategoryId = (list, sourceIndex, destIndex) => {
 }
 
 /**  투두 id를 다시 부여하는 함수 */
-const reorderTodoId = (list, newCategoryId) => {
+const reorderTodoId = (list:any[], newCategoryId: number) => {
   list.map((todo, index) => {
     todo.categoryId = newCategoryId;
     todo.id = `${newCategoryId}-${index}`
@@ -40,22 +41,15 @@ const reorderTodoId = (list, newCategoryId) => {
   return list;
 };
 
-
-const getItemStyle = (draggableStyle, categoryColor) => ({
-  userSelect: 'none',
-  fontWeight: 'bold',
-  color: categoryColor,
-  margin: '10px 0',
-  ...draggableStyle
-});
-
-
-const TitleContainer = styled.div({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '5px'
-})
   
+const TitleContainer = styled.div<{ categoryColor: string }>`
+  color: ${(props: any) => (props.categoryColor)};
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
 
 const getListStyle = () => ({
   width: '100%',
@@ -63,21 +57,25 @@ const getListStyle = () => ({
 
 const OuterTodo = () => {
   const [items, setItems] = useState(getDataLocalStorage('todos'));
-
-  const setSubItems = (newnewItems, categoryId) => {
-    setItems(i => {
+  
+  const replaceSubItems = (newnewItems: SubItem[]) => {
+    setItems((i: any) => {
       const tempItems = [...i];
-      tempItems[categoryId].subItems = newnewItems;
+      tempItems[Number(newnewItems[0].categoryId)].subItems = newnewItems;
       return tempItems
     })
     setDataLocalStorage('todos', items);
   }
-
+  
+  const [clickedCategoryId, setClickedCategoryId] = useState('0')
   const [isAddTodoClicked, setIsAddTodoClicked] = useState(false);
-  const handleAddTodoClick = () => {
+
+  const handleAddTodoClick = (item:CategoryItem) => {
     setIsAddTodoClicked(!isAddTodoClicked)
+    setClickedCategoryId(item.id)
   }
-  const onDragEnd = (result) => {
+
+  const onDragEnd = (result:any) => {
     // dropped outside the list
     if (!result.destination) {
       return;
@@ -87,7 +85,7 @@ const OuterTodo = () => {
     if (result.type === 'droppableItem') {
       setItems(reorderCategoryId(items, sourceIndex, destIndex)) // 카테고리 id 재부여
     } else if (result.type === 'droppableSubItem') {
-      const itemSubItemMap = items.reduce((acc, item) => {
+      const itemSubItemMap = items.reduce((acc:any, item:any) => {
         acc[item.id] = item.subItems;
         return acc;
       }, {});
@@ -102,11 +100,12 @@ const OuterTodo = () => {
 
       // 같은 카테고리 내부에서의 정렬
       if (sourceParentId === destParentId) {
-        const reorderedSubItems = reorder(
+        const reorderedSubItems:SubItem[] = reorder(
           sourceSubItems,
           sourceIndex,
           destIndex
         );
+        console.log(reorderedSubItems);
         const newSubItems = reorderedSubItems.map((item, index) => {
           // 앞은 고정, 뒤쪽은 해당 item의 자체적인 index로 변경
           item.id = `${sourceParentId}-${index}`
@@ -150,44 +149,42 @@ const OuterTodo = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId='droppable' type='droppableItem'>
-        {(provided, snapshot) => (
+        {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={getListStyle(snapshot.isDraggingOver)}
+            style={getListStyle()}
           >
-            {items && items.map((item, index) => (
+            {items && items.map((item: CategoryItem, index: number) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided, snapshot) => (
+                {(provided) => (
                   <>
                     <div
                       ref={provided.innerRef}
                       {...provided.dragHandleProps}
                       {...provided.draggableProps}
-                      style={getItemStyle(
-                        provided.draggableProps.style,
-                        item.color
-                      )}
                       >
-                      <TitleContainer>
+                      <TitleContainer categoryColor={item.color}>
                         {item.content} 
                         <AddCircleOutlineIcon style={{ color: item.color }} onClick={()=>handleAddTodoClick(item)} />
                         </TitleContainer>
                       <InnerTodo
+                        // {...Props}
+                        categoryId={item.id}
                         subItems={item.subItems}
-                        type={item.id}
                         color={item.color}
-                        setSubItems={setSubItems}
+                        replaceSubItems={replaceSubItems}
                         isAddTodoClicked={isAddTodoClicked}
+                        clickedCategoryId={clickedCategoryId}
                         />
                     </div>
-                    {provided.placeholder}
-
+                    
                   </>
                 )}
               </Draggable>
             ))}
             {provided.placeholder}
+            
           </div>
         )}
       </Droppable>
