@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import InnerTodo from './InnerTodo';
+import styled from '@emotion/styled';
 import { static_items } from './data';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { setDataLocalStorage, getDataLocalStorage } from '../../../utils/localstorage'
 // setDataLocalStorage('todos', static_items);
 
@@ -47,6 +49,14 @@ const getItemStyle = (draggableStyle, categoryColor) => ({
   ...draggableStyle
 });
 
+
+const TitleContainer = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '5px'
+})
+  
+
 const getListStyle = () => ({
   width: '100%',
 });
@@ -63,6 +73,10 @@ const OuterTodo = () => {
     setDataLocalStorage('todos', items);
   }
 
+  const [isAddTodoClicked, setIsAddTodoClicked] = useState(false);
+  const handleAddTodoClick = () => {
+    setIsAddTodoClicked(!isAddTodoClicked)
+  }
   const onDragEnd = (result) => {
     // dropped outside the list
     if (!result.destination) {
@@ -148,22 +162,27 @@ const OuterTodo = () => {
                   <>
                     <div
                       ref={provided.innerRef}
-                        {...provided.dragHandleProps}
+                      {...provided.dragHandleProps}
                       {...provided.draggableProps}
                       style={getItemStyle(
                         provided.draggableProps.style,
                         item.color
                       )}
-                    >
-                      {item.content} 
+                      >
+                      <TitleContainer>
+                        {item.content} 
+                        <AddCircleOutlineIcon style={{ color: item.color }} onClick={()=>handleAddTodoClick(item)} />
+                        </TitleContainer>
                       <InnerTodo
                         subItems={item.subItems}
                         type={item.id}
                         color={item.color}
                         setSubItems={setSubItems}
-                      />
+                        isAddTodoClicked={isAddTodoClicked}
+                        />
                     </div>
                     {provided.placeholder}
+
                   </>
                 )}
               </Draggable>
