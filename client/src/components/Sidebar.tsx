@@ -12,7 +12,6 @@ import { SidebarContent } from '../router';
 import { useRouter } from '../hooks/useRouter'
 import { Divider } from '@mui/material';
 
-
 const sidebarIcons = [<ListIcon/>, <AccountCircleIcon/>, <PeopleIcon/>, <StarsIcon/>]
 
 const Sidebar = () => {

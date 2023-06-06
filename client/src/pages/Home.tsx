@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import UserCard from '../components/Home/Usercard';
-import Todo from '../components/Home/Todo/Todo';
+import TodoContainer from '../components/Home/Todo/TodoContainer';
 import Calendar from '../components/Home/Calendar/Calendar';
 
 const Home = () => {
@@ -34,7 +34,7 @@ const Home = () => {
     <HomePage>
       <UserTodoContainer>
         <UserCard />
-        <Todo/>
+        <TodoContainer/>
       </UserTodoContainer>
       <CalendarContainer>
         <Calendar/>
