@@ -174,6 +174,7 @@ const OuterTodo = () => {
                         subItems={item.subItems}
                         color={item.color}
                         replaceSubItems={replaceSubItems}
+                        reorderTodoId={reorderTodoId}
                         isAddTodoClicked={isAddTodoClicked}
                         clickedCategoryId={clickedCategoryId}
                         />

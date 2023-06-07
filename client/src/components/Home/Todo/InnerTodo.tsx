@@ -5,7 +5,17 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import styled from '@emotion/styled'
 import Input from '@mui/material/Input';
 import { AddNewItem } from './CRUD';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+// import Modal from '../../Common/Modal'
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
 const CatContainer = styled.div({
   display: 'flex',
   justifyContent: 'center',
@@ -29,8 +39,54 @@ const CatContainer = styled.div({
   })
 
 
-const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: string, replaceSubItems: any, isAddTodoClicked: boolean, clickedCategoryId: string }>
-  = ({ categoryId, subItems, color, replaceSubItems, isAddTodoClicked, clickedCategoryId }) => {
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: '10px',
+  },
+  '& .MuiDialogActions-root': {
+    padding: '5px',
+  },
+}));
+
+export interface DialogTitleProps {
+  id: string;
+  children?: React.ReactNode;
+  onClose: () => void;
+}
+
+function BootstrapDialogTitle(props: DialogTitleProps) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+const DetailConatiner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+`
+
+const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: string, replaceSubItems: any, reorderTodoId: any, isAddTodoClicked: boolean, clickedCategoryId: string }>
+  = ({ categoryId, subItems, color, replaceSubItems, reorderTodoId, isAddTodoClicked, clickedCategoryId }) => {
   const pendingColor = '#eeeeee';
   
   const handleCatClick = (id: string, isDone: boolean) => {
@@ -49,14 +105,49 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
 
     const [newInputValue, setNewInputValue] = useState('');
   
-  const handleOnKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      !!newInputValue.trim() && AddNewItem(newInputValue, categoryId, subItems, replaceSubItems)
-      setNewInputValue('');
-  }
-  };
+    const handleOnKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        !!newInputValue.trim() && AddNewItem(newInputValue, categoryId, subItems, replaceSubItems)
+        setNewInputValue('');
+    }
+    };
   
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleMoreClick = (item:SubItem) => {
+      console.log('handleMoreClick')
+      setIsModalOpen(true);
+    }
+
+    const [open, setOpen] = React.useState(false);
+    const [clickedId, setClickedId] = useState('');
+    const [clickedContent, setClickedContent] = useState('');
+    const [clickedItem, setClickedItem] = useState(subItems[0]);
+
+    const handleClickOpen = (item: SubItem) => {
+      setClickedId(item.id)
+      setClickedContent(item.content)
+      setClickedItem(item);
+      console.log(item.id, item.content)
+      setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+    
+    const handleDeleteTodo = (clickedItem: SubItem) => {
+      console.log(clickedItem.id)
+      subItems.splice(Number(clickedItem.id.split('-')[1]), 1)
+      replaceSubItems(subItems)
+      //삭제하고나면 reorder되야되는데 지금 안되고있음
+      reorderTodoId(subItems, clickedItem.categoryId)
+      setOpen(false);
+      console.log(subItems)
+    }
+
+
   return (
+    
     <div>
 
     <Droppable droppableId={categoryId} type={`droppableSubItem`}>
@@ -82,7 +173,34 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
                       {`${item.content}`}
                       
                       </CatandTodoContainer>
-                    <MoreHorizIcon color='primary' />
+                    <MoreHorizIcon color='primary' onClick={()=>handleClickOpen(item)} />
+                    {open && (
+                      <BootstrapDialog
+                        onClose={handleClose}
+                        aria-labelledby="customized-dialog-title"
+                        open={open}
+                      >
+                        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+                          세부사항
+                        </BootstrapDialogTitle>
+                        <DialogContent dividers>
+                          <DetailConatiner>
+                            <div>할일</div>
+                            <div>{clickedItem.content}</div>
+            
+                        </DetailConatiner>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleClose}>
+                          변경
+                        </Button>
+                        <Button onClick={()=>handleDeleteTodo(clickedItem)} color='warning'>
+                          삭제
+                        </Button>
+                      </DialogActions>
+                    </BootstrapDialog>
+                      
+                    )}
                     
                   </ItemContainer>
                 </div>
@@ -105,7 +223,7 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
                       </CatContainer>
                       <Input value={newInputValue} onChange={handleOnChange} onKeyPress={handleOnKeyPress} />
                     </CatandTodoContainer>
-                    <MoreHorizIcon color='primary' />
+                      <MoreHorizIcon color='primary'/>
                   </ItemContainer>
                 )
               }
