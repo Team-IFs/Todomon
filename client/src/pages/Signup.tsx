@@ -78,7 +78,7 @@ const Signup = () => {
     alert('회원가입이 완료되었습니다!')
     console.log(data)
     setDataLocalStorage(`${data.email}`, data);
-    // routeTo('/login')
+    routeTo('/login')
   }
     const { register, handleSubmit, control, formState: { errors } } = useForm<SingupFormValue>({
       mode: 'onChange',
