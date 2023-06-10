@@ -58,6 +58,10 @@ const getListStyle = () => ({
 const OuterTodo = () => {
   const [items, setItems] = useState(getDataLocalStorage('todos'));
 
+  /**
+   * 전체 item list에서 특정 카테고리의 subItem을 수정함
+   * @param newnewItems SubItem 배열
+   */
   const replaceSubItems = (newnewItems: SubItem[]) => {
     setItems((i: any) => {
       const tempItems = [...i];

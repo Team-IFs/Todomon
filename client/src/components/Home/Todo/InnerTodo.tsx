@@ -130,8 +130,8 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
     };
 
     const [open, setOpen] = useState(false);
-    const [clickedId, setClickedId] = useState('');
-    const [clickedContent, setClickedContent] = useState('');
+    const [, setClickedId] = useState('');
+    const [, setClickedContent] = useState('');
     const [clickedItem, setClickedItem] = useState(subItems[0]);
 
     const handleClickOpen = (item: SubItem) => {
@@ -140,11 +140,24 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
       setClickedItem(item);
       setOpen(true);
     };
+    
     const handleClose = () => {
       setOpen(false);
     };
 
+    const [todoChange, setTodoChange] = useState('');
+    const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setTodoChange(e.target.value)
+    }
 
+    const handleSaveBtn = (item: SubItem) => {
+      const newSubItem = subItems.map((todo: SubItem) => todo.id === item.id
+        ? { ...todo, content: todoChange }
+        : todo
+      )
+      replaceSubItems(newSubItem)
+      handleClose();
+    }
     const handleDeleteTodo = (clickedItem: SubItem) => {
       subItems.splice(Number(clickedItem.id.split('-')[1]), 1)
       replaceSubItems(subItems)
@@ -153,10 +166,7 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
     }
 
 
-    const [todoChange, setTodoChange] = useState('');
-    const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTodoChange(e.target.value)
-    }
+
 
     return (
 
@@ -214,7 +224,7 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
                               </DetailConatiner>
                             </DialogContent>
                             <DialogActions>
-                              <Button onClick={handleClose}>
+                              <Button onClick={()=>handleSaveBtn(clickedItem)}>
                                 변경
                               </Button>
                               <Button onClick={() => handleDeleteTodo(clickedItem)} color='warning'>
