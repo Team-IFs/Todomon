@@ -5,7 +5,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import styled from '@emotion/styled'
 import Input from '@mui/material/Input';
 import { AddNewItem } from './CRUD';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 // import Modal from '../../Common/Modal'
 import * as React from 'react';
 import Button from '@mui/material/Button';
@@ -112,13 +112,7 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
     }
     };
   
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const handleMoreClick = (item:SubItem) => {
-      console.log('handleMoreClick')
-      setIsModalOpen(true);
-    }
-
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const [clickedId, setClickedId] = useState('');
     const [clickedContent, setClickedContent] = useState('');
     const [clickedItem, setClickedItem] = useState(subItems[0]);
@@ -127,7 +121,6 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
       setClickedId(item.id)
       setClickedContent(item.content)
       setClickedItem(item);
-      console.log(item.id, item.content)
       setOpen(true);
   };
   const handleClose = () => {
@@ -136,13 +129,10 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
 
     
     const handleDeleteTodo = (clickedItem: SubItem) => {
-      console.log(clickedItem.id)
       subItems.splice(Number(clickedItem.id.split('-')[1]), 1)
       replaceSubItems(subItems)
-      //삭제하고나면 reorder되야되는데 지금 안되고있음
       reorderTodoId(subItems, clickedItem.categoryId)
       setOpen(false);
-      console.log(subItems)
     }
 
 

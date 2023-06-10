@@ -120,6 +120,8 @@ const OuterTodo = () => {
           return item;
         });
         setItems(newItems);
+        setDataLocalStorage('todos', items);
+
 
       }
       // 다른 카테고리로 넘어갈경우
