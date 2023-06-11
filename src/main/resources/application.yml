@@ -4,19 +4,19 @@ spring:  # 환경변수
       client:
         registration:
           google:
-            client-id: ${google.clientId}
-            client-secret: ${google.clientSecret}
+            client-id: ${google_clientId}
+            client-secret: ${google_clientSecret}
             scope: profile,email
           naver:
-            client-id: ${naver.clientId}
-            client-secret: ${naver.clientSecret}
+            client-id: ${naver_clientId}
+            client-secret: ${naver_clientSecret}
             scope: nickname,email,profile_image
             client-name: Naver
             authorization-grant-type: authorization_code
             redirect-uri: https://ec2-54-158-162-51.compute-1.amazonaws.com//login/oauth2/code/naver
           kakao:
-            client-id: ${kakao.clientId}
-            client-secret: ${kakao.clientSecret}
+            client-id: ${kakao_clientId}
+            client-secret: ${kakao_clientSecret}
             scope: profile_nickname, account_email, profile_image
             client-name: Kakao
             authorization-grant-type: authorization_code
@@ -39,9 +39,9 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    url: ${datasource.url}
-    password: ${datasource.password}
-    username: ${datasource.username}
+    url: jdbc:mysql://${datasource_url}/todomon?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    password: ${datasource_password}
+    username: ${datasource_username}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -59,9 +59,9 @@ spring:
 
 mail:
   address:
-    admin: ${admin.address}
+    admin: ${admin_address}
 jwt:
   key:
-    secret: ${jwt.key}        # 민감한 정보는 시스템 환경 변수에서 로드한다.
+    secret: ${jwt_key}        # 민감한 정보는 시스템 환경 변수에서 로드한다.
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 420
