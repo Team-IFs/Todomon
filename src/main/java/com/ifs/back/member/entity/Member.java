@@ -54,8 +54,6 @@ public class Member extends Auditable {
   @Column
   @Default
   private Boolean premium = false;
-  @Column
-  private String photoUrl;
   @Default
   private Integer theme = 1;
 

@@ -14,10 +14,6 @@ public class GoogleOAuth2UserInfo implements OAuth2UserInfo{
     return (String) attributes.get("name");
   }
 
-  public String getImageUrl() {
-    return (String) attributes.get("picture");
-  }
-
   public String getEmail() {
     return (String) attributes.get("email");
   }

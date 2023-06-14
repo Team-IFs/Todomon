@@ -17,10 +17,6 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
     return (String) attributesProfile.get("nickname");
   }
 
-  public String getImageUrl() {
-    return (String) attributesProfile.get("profile_image_url");
-  }
-
   public String getEmail() {
     return (String) attributesAccount.get("email");
   }

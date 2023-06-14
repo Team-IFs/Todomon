@@ -46,8 +46,6 @@ public class MemberService {
         .ifPresent(findMember::setNickname);
     Optional.ofNullable(member.getBio())
         .ifPresent(findMember::setBio);
-    Optional.ofNullable(member.getPhotoUrl())
-        .ifPresent(findMember::setPhotoUrl);
     Member savedMember = memberRepository.save(findMember);
     log.info("## updated member: {}", savedMember);
     return savedMember;

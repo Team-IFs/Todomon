@@ -25,7 +25,6 @@ public class MemberDto {
     private String nickname;
     @Pattern(regexp = "^(?=.{1,20}$).*", message = "최대 20자")
     private String bio;
-    private String profileUrl;
   }
 
   @Getter
@@ -35,7 +34,6 @@ public class MemberDto {
   public static class Patch {
     private String nickname;
     private String bio;
-    private String profileUrl;
   }
 
   @Getter
@@ -45,7 +43,6 @@ public class MemberDto {
     private long memberId;
     private String nickname;
     private String bio;
-    private String photoUrl;
     private Member.MemberStatus memberStatus;
     private boolean premium;
     private TodomonDto.Response todomon;

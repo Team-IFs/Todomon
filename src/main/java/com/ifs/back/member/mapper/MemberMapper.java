@@ -24,7 +24,6 @@ public interface MemberMapper {
         .memberStatus(member.getMemberStatus())
         .nickname(member.getNickname())
         .bio(member.getBio())
-        .photoUrl(member.getPhotoUrl())
         .premium(member.getPremium())
         .todomon(todomonToTodomonResponse(member.getTodomon()));
     return builder.build();
@@ -34,7 +33,7 @@ public interface MemberMapper {
     return memberPage.map(member -> {
       return Response.builder().memberId(member.getMemberId()).nickname(member.getNickname())
           .bio(member.getBio()).premium(member.getPremium()).memberStatus(member.getMemberStatus())
-          .photoUrl(member.getPhotoUrl()).todomon(todomonToTodomonResponse(member.getTodomon())).build();
+          .todomon(todomonToTodomonResponse(member.getTodomon())).build();
     });
   }
 

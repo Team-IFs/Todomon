@@ -72,7 +72,6 @@ public class OAuthAttributes {
     return Member.builder()
         .email(oauth2UserInfo.getEmail())
         .nickname(oauth2UserInfo.getName())
-        .photoUrl(oauth2UserInfo.getImageUrl())
         .password(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString().substring(0, 6)))
         .roles(List.of("USER"))
         .todomon(new Todomon())
