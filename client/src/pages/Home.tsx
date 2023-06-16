@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import UserCard from '../components/Home/Usercard';
+import UserCard from '../components/Home/User/Usercard';
 import TodoContainer from '../components/Home/Todo/TodoContainer';
 import Calendar from '../components/Home/Calendar/Calendar';
 

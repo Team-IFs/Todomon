@@ -4,11 +4,11 @@ import Button from '@mui/material/Button';
 import { ReactComponent as CatBasic } from '../assets/cat-basic.svg';
 import { useRouter } from '../hooks/useRouter'
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { SingupFormValue } from '../types/signupform'
+import { SingupForm, SignupRequestForm } from '../types/signupform'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { emailRegex, numRegex, letterRegex, specialRegex } from '../utils/validations';
 import * as yup from 'yup'
-import { setDataLocalStorage } from '../utils/localstorage';
+import { POST } from '../utils/axios/axios';
 
 const schema = yup.object().shape({
   email:
@@ -71,20 +71,34 @@ const schema = yup.object().shape({
   })
 
 
+
 const Signup = () => {
   const { routeTo } = useRouter()
 
-  const formSubmitHandler: SubmitHandler<SingupFormValue> = (data: SingupFormValue) => {
-    alert('회원가입이 완료되었습니다!')
-    console.log(data)
-    setDataLocalStorage(`${data.email}`, data);
-    routeTo('/login')
+  const formSubmitHandler: SubmitHandler<SingupForm> = async(data: SingupForm) => {
+    try {
+      const newUserData:SignupRequestForm = {
+        email: data.email,
+        password: data.password,
+        nickname: data.nickname,
+        bio: null
+      }
+      const res = POST('/users', newUserData)
+      alert('회원가입이 완료되었습니다!')
+      routeTo('/login')
+    }
+    catch (error) {
+      console.log(error)
+      alert('다시 시도해주세요')
+
+    }
+    
   }
-    const { register, handleSubmit, control, formState: { errors } } = useForm<SingupFormValue>({
-      mode: 'onChange',
-      criteriaMode: 'all',
-      resolver: yupResolver(schema)
-    })
+  const { register, handleSubmit, control, formState: { errors } } = useForm<SingupForm>({
+    mode: 'onChange',
+    criteriaMode: 'all',
+    resolver: yupResolver(schema)
+  })
 
   return (<SingupPage>
     <LogoContainer>
