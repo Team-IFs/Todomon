@@ -34,7 +34,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     String accessToken = delegateAccessToken(oAuth2User);
     String refreshToken = delegateRefreshToken(oAuth2User);
 
-    String redirectURI = "http://localhost:3000";
+    String redirectURI = "http://localhost:3000/login";
     log.info("## 리다이렉트 -> {}", redirectURI);
     log.info("## 토큰: {}", accessToken);
     getRedirectStrategy().sendRedirect(request, response,
@@ -51,6 +51,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         .scheme("http")
         .host("localhost")
         .port(3000)
+        .path("/login")
         .queryParams(queryParams).build().toUri();
   }
 
