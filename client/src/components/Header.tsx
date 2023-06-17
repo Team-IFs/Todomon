@@ -48,6 +48,7 @@ const Header = () => {
       routeTo(path)
     }
     removeCookie('accessJwtToken')
+    removeCookie('refreshJwtToken')
     setIsLogin(false)
     alert('로그아웃되었습니다!')
   }
