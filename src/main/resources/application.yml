@@ -13,14 +13,14 @@ spring:  # 환경변수
             scope: nickname,email,profile_image
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: https://ec2-54-158-162-51.compute-1.amazonaws.com//login/oauth2/code/naver
+            redirect-uri: https://ec2-13-209-194-201.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/naver
           kakao:
             client-id: ${kakao_clientId}
             client-secret: ${kakao_clientSecret}
             scope: profile_nickname, account_email, profile_image
             client-name: Kakao
             authorization-grant-type: authorization_code
-            redirect-uri: https://ec2-54-158-162-51.compute-1.amazonaws.com//login/oauth2/code/kakao
+            redirect-uri: https://ec2-13-209-194-201.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/kakao
             client-authentication-method: POST
         provider:
           naver:
