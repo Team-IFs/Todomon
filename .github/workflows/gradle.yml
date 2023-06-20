@@ -10,15 +10,22 @@ name: Java CI with Gradle
 on:
   push:
     branches:
-      - dev-be
+      - dev-be2
       - main
   pull_request:
     branches: 
-      - dev-be
+      - dev-be2
       - main
 
 permissions:
   contents: read
+
+env:
+  S3_BUCKET_NAME: todomon-s3-bucket
+  
+defaults:
+  run:
+    working-directory: server
 
 jobs:
   build:
@@ -32,9 +39,34 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        settings-path: /home/runner/work/Todomon/Todomon
+        settings-path: /home/runner/work/Todomon/Todomon/server
+        
+    # Access Key와 Secret Access Key를 통해 권한을 확인합니다.
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+        aws-region: ap-northeast-2
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         gradle-version: 7.6.1
         arguments: build
+        build-root-directory: /home/runner/work/Todomon/Todomon/server
+  
+    - name: Make zip file
+      run: zip -r ./server.zip .
+      shell: bash
+    # 압축한 프로젝트를 S3로 전송합니다.
+    - name: Upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./server.zip s3://$S3_BUCKET_NAME/server-archive/server.zip
+
+    # CodeDeploy에게 배포 명령을 내립니다.
+    - name: Code Deploy
+      run: >
+        aws deploy create-deployment --application-name todomon
+        --deployment-config-name CodeDeployDefault.AllAtOnce
+        --deployment-group-name todomon-deploy-group
+        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=server-archive/server.zip
+  
