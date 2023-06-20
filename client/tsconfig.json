@@ -23,5 +23,8 @@
   "include": [
     "src"
   ],
-  "typeRoots": ["./src/types"]
+  "typeRoots": ["./src/types"],
+  "env": {
+    "GOOGLE_URL": "process.env.REACT_APP_GOOGLE_LOGIN_URL",
+  },
 }

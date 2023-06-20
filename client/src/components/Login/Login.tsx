@@ -8,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
 import { POST, GET } from '../../utils/axios/axios';
 import { setCookie, getCookie } from '../../utils/cookies/cookies';
+import { useEffect } from 'react';
 
 const Form = styled.div({
   display: 'flex',
@@ -40,36 +41,7 @@ interface UserData {
 const Login = () => {
   const { routeTo } = useRouter();
   const [, setIsLogin] = useRecoilState(IsLogin);
-  const [, setUserInfo] = useRecoilState(UserInfo);
-
-  async function loginRequest(userData: UserData) {
-    try {
-      const response = await POST('/login', userData);
-      setCookie('accessJwtToken', response.headers.authorization);
-      alert('로그인 성공!');
-      setIsLogin(true);
-      return 'SUCCESS';
-    } catch (error) {
-      console.log(error);
-      setIsLogin(false);
-      return 'FAIL';
-    }
-  }
-
-  async function getUserData() {
-    const requestHeader = {
-      headers: {
-        Authorization: `Bearer ${getCookie('accessJwtToken')}`,
-      },
-    }
-    try {
-      const response = await GET('/users/me', requestHeader);
-      setUserInfo(response.data)
-    } catch (error) {
-      console.log(error);
-      setIsLogin(false);
-    }
-  }
+  const [userInfo, setUserInfo] = useRecoilState(UserInfo);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -93,6 +65,64 @@ const Login = () => {
     }
   }
 
+  async function loginRequest(userData: UserData) {
+    try {
+      const response = await POST('/login', userData);
+      setCookie('accessJwtToken', response.headers.authorization);
+      setCookie('refreshJwtToken', response.headers.refresh);
+      alert('로그인 성공!');
+      setIsLogin(true);
+      return 'SUCCESS';
+    } catch (error) {
+      console.log(error);
+      setIsLogin(false);
+      return 'FAIL';
+    }
+  }
+
+  const googleLoginClick = () => {
+    window.location.href = `${process.env.REACT_APP_GOOGLE_LOGIN_URL}`;
+  }
+  const kakaoLoginClick = () => {
+    window.location.href = `${process.env.REACT_APP_KAKAO_LOGIN_URL}`;
+  }
+  const naverLoginClick = () => {
+    window.location.href = `${process.env.REACT_APP_NAVER_LOGIN_URL}`;
+
+  }
+
+  useEffect(() => {
+    if (window.location.search) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get('access_token');
+      if (accessToken) {
+        const refreshToken = urlParams.get('refresh_token');
+        setCookie('accessJwtToken', 'Bearer ' + accessToken);
+        setCookie('refreshJwtToken', 'Bearer ' + refreshToken);
+        getUserData();
+        setIsLogin(true);
+        routeTo('/')
+      }
+    }
+  });
+
+  async function getUserData() {
+    const requestHeader = {
+      headers: {
+        Authorization: `Bearer ${getCookie('accessJwtToken')}`,
+      },
+    }
+    try {
+      const response = await GET('/users/me', requestHeader);
+      setUserInfo(response.data)
+    } catch (error) {
+      console.log(error);
+      setIsLogin(false);
+    }
+  }
+
+
+
 
   return (
     <>
@@ -109,9 +139,9 @@ const Login = () => {
           </BottomLogin>
           <Divider>간편 로그인</Divider>
           <ButtonContainer>
-            <Button variant='outlined'>소셜1 로그인</Button>
-            <Button variant='outlined'>소셜2 로그인</Button>
-            <Button variant='outlined'>소셜3 로그인</Button>
+            <Button variant='outlined' onClick={googleLoginClick}>구글 로그인</Button>
+            <Button variant='outlined' onClick={kakaoLoginClick}>카카오 로그인</Button>
+            <Button variant='outlined' onClick={naverLoginClick}>네이버 로그인</Button>
           </ButtonContainer>
         </Form>
       </form>

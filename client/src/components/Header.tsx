@@ -51,6 +51,7 @@ const Header = () => {
     removeCookie('refreshJwtToken')
     setIsLogin(false)
     alert('로그아웃되었습니다!')
+    routeTo('/')
   }
   return (
     <div className='header'>

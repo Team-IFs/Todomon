@@ -33,6 +33,7 @@ const InfoCard = styled.div({
 const UserCard = () => {
   const [isLogin] = useRecoilState(IsLogin);
   const [userInfo] = useRecoilState(UserInfo);
+
   return (
     <Card>
       <UserCat>

@@ -28,7 +28,6 @@ export const UserInfo = atom({
             faceColor: '',
             leftEyeColor: '',
             rightEyeColor: '',
-
         },
 
     },
