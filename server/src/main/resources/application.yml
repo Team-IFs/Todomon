@@ -45,7 +45,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    url: jdbc:mysql://${datasource_url}/todomon?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: ${datasource.url}
     password: ${datasource_password}
     username: ${datasource_username}
     driver-class-name: com.mysql.cj.jdbc.Driver
