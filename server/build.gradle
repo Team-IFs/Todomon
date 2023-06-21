@@ -45,6 +45,7 @@ dependencies {
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.22'
 
 	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws-parameter-store-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 dependencyManagement {
