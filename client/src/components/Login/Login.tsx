@@ -9,6 +9,8 @@ import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
 import { POST, GET } from '../../utils/axios/axios';
 import { setCookie, getCookie } from '../../utils/cookies/cookies';
 import { useEffect } from 'react';
+import { loginRequest } from '../../utils/login';
+import { getCurrentUserInfo } from '../../utils/userInfo';
 
 const Form = styled.div({
   display: 'flex',
@@ -33,11 +35,6 @@ const ButtonContainer = styled.div({
   marginTop: '30px'
 })
 
-interface UserData {
-  username: string
-  password: string
-};
-
 const Login = () => {
   const { routeTo } = useRouter();
   const [, setIsLogin] = useRecoilState(IsLogin);
@@ -60,25 +57,17 @@ const Login = () => {
     const res = await loginRequest(userData)
     // login success
     if (res === 'SUCCESS') {
-      getUserData();
-      routeTo('/');
-    }
-  }
-
-  async function loginRequest(userData: UserData) {
-    try {
-      const response = await POST('/login', userData);
-      setCookie('accessJwtToken', response.headers.authorization);
-      setCookie('refreshJwtToken', response.headers.refresh);
-      alert('로그인 성공!');
+      getCurrentUserInfo().then(userInfo => {
+          if(userInfo) setUserInfo(userInfo);
+        });
       setIsLogin(true);
-      return 'SUCCESS';
-    } catch (error) {
-      console.log(error);
+      alert('로그인 성공!');
+      routeTo('/');
+    } else {
       setIsLogin(false);
-      return 'FAIL';
     }
   }
+  
 
   const googleLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_GOOGLE_LOGIN_URL}`;
@@ -99,28 +88,14 @@ const Login = () => {
         const refreshToken = urlParams.get('refresh_token');
         setCookie('accessJwtToken', 'Bearer ' + accessToken);
         setCookie('refreshJwtToken', 'Bearer ' + refreshToken);
-        getUserData();
+        getCurrentUserInfo().then(userInfo => {
+          if(userInfo) setUserInfo(userInfo);
+        });
         setIsLogin(true);
         routeTo('/')
       }
     }
   });
-
-  async function getUserData() {
-    const requestHeader = {
-      headers: {
-        Authorization: `Bearer ${getCookie('accessJwtToken')}`,
-      },
-    }
-    try {
-      const response = await GET('/users/me', requestHeader);
-      setUserInfo(response.data)
-    } catch (error) {
-      console.log(error);
-      setIsLogin(false);
-    }
-  }
-
 
 
 

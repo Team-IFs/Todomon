@@ -1,6 +1,7 @@
 import { atom } from 'recoil'
 import { static_items as defaultTodoList } from '../../components/Home/Todo/data'
 import { recoilPersist } from 'recoil-persist'
+import { User } from '../../types/user'
 
 const { persistAtom } = recoilPersist()
 
@@ -15,14 +16,14 @@ export const IsLogin = atom({
     effects_UNSTABLE: [persistAtom],
 })
 
-export const UserInfo = atom({
+export const UserInfo = atom<User>({
     key: 'UserInfo',
     default: {
         bio: '',
-        memberId: '',
+        memberId: -1,
         memberStatus: '',
         nickname: '',
-        premium: '',
+        premium: false,
         todomon: {
             backgroundColor: '',
             faceColor: '',
