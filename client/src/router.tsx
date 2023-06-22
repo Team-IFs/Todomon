@@ -5,6 +5,7 @@ import CategorySetting from './pages/CategorySetting'
 import Social from './pages/Social'
 import EditProfile from './pages/EditProfile'
 import Premium from './pages/Premium'
+import Landing from './pages/Landing'
 import { createBrowserRouter } from 'react-router-dom'
 import { Router as RemixRouter } from '@remix-run/router/dist/router'
 import { SidebarElement } from './types/sidebar'
@@ -67,6 +68,13 @@ const routerData: RouterElement[] = [
     label: '투두몬 프리미엄',
     element: <Premium />,
     isSidebar: true
+  },
+  {
+    id: 7,
+    path: '/landing',
+    label: '랜딩',
+    element: <Landing />,
+    isSidebar: false
   },
   
   

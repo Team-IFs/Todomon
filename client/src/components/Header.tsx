@@ -1,12 +1,12 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from '../hooks/useRouter'
 import styled from '@emotion/styled'
 import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
 import Logo from '../assets/logo';
 import { useRecoilState } from 'recoil';
-import { IsLogin } from '../recoil/atoms/atoms';
-import { removeCookie } from '../utils/cookies/cookies';
+import { IsLogin, UserInfo } from '../recoil/atoms/atoms';
+import { getCookie, removeCookie } from '../utils/cookies/cookies';
 
 
 const SearchBar = styled.div({
@@ -37,6 +37,7 @@ const Header = () => {
   const { routeTo } = useRouter()
   const [isLogin, setIsLogin] = useRecoilState(IsLogin);
 
+
   const handleLogoClick = (path: string) => {
     routeTo(path)
   };
@@ -44,15 +45,14 @@ const Header = () => {
     routeTo(path)
   }
   const handleLogoutClick = (path: string) => {
-    if (window.location.pathname !== '/') {
-      routeTo(path)
-    }
     removeCookie('accessJwtToken')
     removeCookie('refreshJwtToken')
     setIsLogin(false)
     alert('로그아웃되었습니다!')
-    routeTo('/')
+    routeTo(path)
   }
+
+
   return (
     <div className='header'>
       <div className='logo' onClick={() => handleLogoClick('/')} >
@@ -66,7 +66,7 @@ const Header = () => {
               </SearchIconWrapper>
               <SearchInput placeholder='search' />
             </SearchBar>
-            <Button variant='contained' onClick={() => handleLogoutClick('/')}>Logout</Button>
+            <Button variant='contained' onClick={() => handleLogoutClick('/landing')}>Logout</Button>
           </div>
         : <Button variant='contained' onClick={() => handleLoginClick('/login')}>Login</Button>}
       </div>
