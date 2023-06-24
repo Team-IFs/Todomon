@@ -80,3 +80,14 @@ aws:
     enabled: true
     profile-separator:
     prefix: /config
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    tagsSorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+  show-login-endpoint: true
+  version: 'v1'

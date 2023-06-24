@@ -9,10 +9,11 @@ import com.ifs.back.todo.service.CategoryTodoService;
 import com.ifs.back.todo.service.TodoService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.net.URI;
 import java.security.Principal;
+import java.time.LocalDate;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -48,20 +49,23 @@ public class TodoController {
   private final TodoService todoService;
   private final TodoMapper mapper;
 
-  @ApiOperation(value = "할 일 생성")
+  @Operation(summary = "할 일 생성")
   @PostMapping("/{category_id}")
   public ResponseEntity postTodo(@PathVariable("category_id") @Positive long categoryId,
+      @PathVariable("date") LocalDate date,
       @Valid @RequestBody TodoDto.Post requestBody, Principal principal) {
     log.info("## 할 일 생성");
     Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Todo todo = mapper.todoPostToTodo(requestBody);
     todo.setCategory(categoryService.findVerifiedCategory(categoryId, currentId));
+    todo.setStartAt(date);
+    todo.setEndAt(date);
     Todo createdTodo = todoService.createTodo(todo);
     URI uri = UriCreator.createUri("/users/me/todos", createdTodo.getTodoId());
     return ResponseEntity.created(uri).build();
   }
 
-  @ApiOperation(value = "할 일 세부사항 설정")
+  @Operation(summary = "할 일 세부사항 설정")
   @PatchMapping("/{todo_id}")
   public ResponseEntity patchTodo(@PathVariable("todo_id") @Positive long todoId,
       @Valid @RequestBody TodoDto.Patch requestBody, Principal principal) {
@@ -73,7 +77,7 @@ public class TodoController {
     return ResponseEntity.ok().body(mapper.todoToTodoResponse(updatedTodo));
   }
 
-  @ApiOperation(value = "할 일 완료")
+  @Operation(summary = "할 일 완료")
   @PatchMapping("/{todo_id}/done")
   public ResponseEntity patchTodoDone (@PathVariable("todo_id") @Positive long todoId,
       Principal principal) {
@@ -83,7 +87,7 @@ public class TodoController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @ApiOperation(value = "할 일 미완료")
+  @Operation(summary = "할 일 미완료")
   @PatchMapping("/{todo_id}/undone")
   public ResponseEntity patchTodoUndone (@PathVariable("todo_id") @Positive long todoId,
       Principal principal) {
@@ -93,7 +97,7 @@ public class TodoController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @ApiOperation(value = "할 일 삭제")
+  @Operation(summary = "할 일 삭제")
   @DeleteMapping("/{todo_id}")
   public ResponseEntity deleteTodo(@PathVariable("todo_id") @Positive long todoId) {
     log.info("## 할 일 삭제");
@@ -101,10 +105,10 @@ public class TodoController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  @ApiOperation(value = "특정 날짜 할 일 확인")
+  @Operation(summary = "특정 날짜 별 할 일 확인")
   @GetMapping
   public ResponseEntity getTodo(
-      @ApiParam(name = "date", value = "yyyy-mm-dd", required = true)
+      @Parameter(name = "date", description = "yyyy-mm-dd", required = true)
       @RequestParam(value = "date", required = true) String date,
       @PageableDefault Pageable pageable,
       Principal principal
@@ -115,12 +119,12 @@ public class TodoController {
         categoryTodoService.findCategoryTodo(currentId, currentId, date, pageable));
   }
 
-  @ApiOperation(value = "월간 할 일 확인")
+  @Operation(summary = "월 별 할 일 확인")
   @GetMapping("/calendar")
   public ResponseEntity getMonthTodo(
-      @ApiParam(name = "year", value = "년도", required = true)
+      @Parameter(name = "year", description = "연도", required = true)
       @RequestParam(value = "year", required = true) Integer year,
-      @ApiParam(name = "month", value = "달", required = true)
+      @Parameter(name = "month", description = "달", required = true)
       @RequestParam(value = "month", required = true)@Min(1) @Max(12)  Integer month,
       @PageableDefault Pageable pageable,
       Principal principal

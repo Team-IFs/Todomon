@@ -3,14 +3,11 @@ package com.ifs.back.follow.controller;
 import com.ifs.back.follow.dto.FollowDto;
 import com.ifs.back.follow.entity.Follow;
 import com.ifs.back.follow.service.FollowService;
-import com.ifs.back.friend.dto.FriendDto;
-import com.ifs.back.friend.dto.FriendDto.Response;
-import com.ifs.back.friend.entity.Friend;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import java.security.Principal;
 import javax.validation.constraints.Positive;
@@ -39,7 +36,7 @@ public class FollowController {
   private final FollowService followService;
   private final MemberService memberService;
 
-  @ApiOperation(value = "구독 신청")
+  @Operation(summary = "구독 신청")
   @PostMapping("/{member_id}")
   public ResponseEntity postFriend(@PathVariable("member_id") @Positive long memberId, Principal principal) {
     log.info("##구독 신청");
@@ -55,7 +52,7 @@ public class FollowController {
     return ResponseEntity.created(uri).build();
   }
 
-  @ApiOperation(value = "내가 구독한 목록 조회")
+  @Operation(summary = "내가 구독한 목록 조회")
   @GetMapping("/following")
   public ResponseEntity getFollowing(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 내가 구독한 목록 조회");
@@ -64,7 +61,7 @@ public class FollowController {
     return ResponseEntity.ok().body(responses);
   }
 
-  @ApiOperation(value = "내가 구독된 목록 조회")
+  @Operation(summary = "내가 구독된 목록 조회")
   @GetMapping("/follower")
   public ResponseEntity getFollower(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 내가 구독된 목록 조회");
@@ -72,7 +69,7 @@ public class FollowController {
     Page<FollowDto.Response> responses = followService.findFollower(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
-  @ApiOperation(value = "구독 취소")
+  @Operation(summary = "구독 취소")
   @DeleteMapping("/{follow_id}")
   public ResponseEntity deleteFriend(@PathVariable("follow_id") @Positive long followId, Principal principal) {
     log.info("## 구독 취소");

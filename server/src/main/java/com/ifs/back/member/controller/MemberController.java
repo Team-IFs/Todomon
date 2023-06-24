@@ -8,7 +8,7 @@ import com.ifs.back.todomon.dto.TodomonDto;
 import com.ifs.back.todomon.entity.Todomon;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import java.security.Principal;
 import javax.validation.Valid;
@@ -42,7 +42,7 @@ public class MemberController {
   private final MemberService memberService;
   private final MemberMapper mapper;
 
-  @ApiOperation(value = "회원 가입")
+  @Operation(summary = "회원 가입")
   @PostMapping
   public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
     log.info("## 회원 가입");
@@ -56,7 +56,7 @@ public class MemberController {
     return ResponseEntity.created(location).build();
   }
 
-  @ApiOperation(value = "사용자 정보 수정")
+  @Operation(summary = "사용자 정보 수정")
   @PatchMapping("/me")
   public ResponseEntity patchMember(@Valid @RequestBody MemberDto.Patch requestBody,
       Principal principal) {
@@ -68,7 +68,7 @@ public class MemberController {
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(updateMember));
   }
 
-  @ApiOperation(value = "내 투두몬 정보 수정")
+  @Operation(summary = "투두몬 정보 수정")
   @PatchMapping("/me/todomon")
   public ResponseEntity patchTodomon(@Valid @RequestBody TodomonDto.Patch requestBody,
       Principal principal) {
@@ -79,7 +79,7 @@ public class MemberController {
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(updateMember));
   }
 
-  @ApiOperation(value = "내 정보 조회")
+  @Operation(summary = "내 정보 조회")
   @GetMapping("/me")
   public ResponseEntity getMemberBySelf(Principal principal) {
     log.info("## 내 정보 조회");
@@ -89,7 +89,7 @@ public class MemberController {
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(findMember));
   }
 
-  @ApiOperation(value = "다른 유저 정보 조회")
+  @Operation(summary = "다른 유저 정보 조회")
   @GetMapping("/{member-id}")
   public ResponseEntity getMember(
       @PathVariable("member-id") @Positive long memberId) {
@@ -100,7 +100,7 @@ public class MemberController {
         HttpStatus.OK);
   }
 
-  @ApiOperation(value = "사용자 탈퇴")
+  @Operation(summary = "사용자 탈퇴")
   @DeleteMapping("/me")
   public ResponseEntity deleteMember(Principal principal) {
     log.info("## 사용자 탈퇴: {}");
@@ -109,7 +109,7 @@ public class MemberController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @ApiOperation(value = "이메일 검색")
+  @Operation(summary = "이메일 검색")
   @GetMapping("/search")
   public ResponseEntity searchMembers(
       @RequestParam(value = "email", required = false, defaultValue = "") String email,

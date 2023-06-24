@@ -7,7 +7,7 @@ import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import java.security.Principal;
 import javax.validation.constraints.Positive;
@@ -37,7 +37,7 @@ public class FriendController {
   private final FriendService friendService;
   private final MemberService memberService;
 
-  @ApiOperation(value = "친구 요청")
+  @Operation(summary = "친구 요청")
   @PostMapping("/request/{member_id}")
   public ResponseEntity postFriend(@PathVariable("friend_id") @Positive long memberId,
       Principal principal) {
@@ -54,7 +54,7 @@ public class FriendController {
     return ResponseEntity.created(uri).build();
   }
 
-  @ApiOperation(value = "친구 요청 수락")
+  @Operation(summary = "친구 요청 수락")
   @PatchMapping("/{friend_id}/accept")
   public ResponseEntity acceptFriend(@PathVariable("friend_id") @Positive long friendId) {
     log.info("## 친구 요청 수락");
@@ -62,7 +62,7 @@ public class FriendController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @ApiOperation(value = "친구 요청 거절")
+  @Operation(summary = "친구 요청 거절")
   @DeleteMapping("/{friend_id}/deny")
   public ResponseEntity denyFriend(@PathVariable("friend_id") @Positive long friendId) {
     log.info("## 친구 요청 거절");
@@ -70,7 +70,7 @@ public class FriendController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @ApiOperation(value = "친구 조회")
+  @Operation(summary = "친구 조회")
   @GetMapping
   public ResponseEntity getFriend(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 친구 조회");
@@ -79,7 +79,7 @@ public class FriendController {
     return ResponseEntity.ok().body(responses);
   }
 
-  @ApiOperation(value = "친구 요청 조회")
+  @Operation(summary = "친구 요청")
   @GetMapping("/request")
   public ResponseEntity getRequest(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 친구 요청 조회");
@@ -88,7 +88,7 @@ public class FriendController {
     return ResponseEntity.ok().body(responses);
   }
 
-  @ApiOperation(value = "친구 삭제")
+  @Operation(summary = "친구 요청")
   @DeleteMapping("/{friend_id}")
   public ResponseEntity deleteFriend(@PathVariable("friend_id") @Positive long friendId) {
     // 친구 요청 삭제랑 로직이 같은데 차이점을 만들어야하나 그냥 갈까?

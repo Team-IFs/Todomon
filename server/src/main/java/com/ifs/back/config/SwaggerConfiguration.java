@@ -1,124 +1,46 @@
 package com.ifs.back.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.http.HttpHeaders;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfiguration {
-
   @Bean
-  public Docket apiV1() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .securityContexts(List.of(this.securityContext())) // SecurityContext 설정
-        .securitySchemes(List.of(this.apiKey())) // ApiKey 설정
-        .groupName("Member")
-        .select()
-        .apis(RequestHandlerSelectors.
-            basePackage("com.ifs.back.member"))
-        .paths(PathSelectors.ant("/users/**"))
-        .build()
-        .apiInfo(apiInfo());
-  }
+  public OpenAPI openAPI(
+      @Value("${springdoc.version}") String version
+  ) {
 
-  @Bean
-  public Docket apiV2() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .useDefaultResponseMessages(false)
-        .securityContexts(List.of(this.securityContext()))
-        .securitySchemes(List.of(this.apiKey()))
-        .groupName("Todo")
-        .select()
-        .apis(RequestHandlerSelectors.
-            basePackage("com.ifs.back.todo"))
-        .paths(PathSelectors.ant("/users/me/todos/**"))
-        .build()
-        .apiInfo(apiInfo());
-  }
+    Info info = new Info()
+        .title("Todomon API 문서") // 타이틀
+        .version(version) // 문서 버전
+        .description("잘못된 부분이나 오류 발생 시 바로 말씀해주세요.") // 문서 설명
+        .contact(new Contact() // 연락처
+            .email("aas9919@gmail.com"));
 
-  @Bean
-  public Docket apiV3() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .useDefaultResponseMessages(false)
-        .securityContexts(List.of(this.securityContext()))
-        .securitySchemes(List.of(this.apiKey()))
-        .groupName("Category")
-        .select()
-        .apis(RequestHandlerSelectors.
-            basePackage("com.ifs.back.category"))
-        .paths(PathSelectors.ant("/users/me/categories/**"))
-        .build()
-        .apiInfo(apiInfo());
-  }
+    SecurityScheme bearerAuth = new SecurityScheme()
+        .type(SecurityScheme.Type.HTTP)
+        .scheme("bearer")
+        .bearerFormat("Authorization")
+        .in(SecurityScheme.In.HEADER)
+        .name(HttpHeaders.AUTHORIZATION);
 
-  @Bean
-  public Docket apiV4() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .useDefaultResponseMessages(false)
-        .securityContexts(List.of(this.securityContext()))
-        .securitySchemes(List.of(this.apiKey()))
-        .groupName("Friend")
-        .select()
-        .apis(RequestHandlerSelectors.
-            basePackage("com.ifs.back.friend"))
-        .paths(PathSelectors.ant("/users/me/friends/**"))
-        .build()
-        .apiInfo(apiInfo());
-  }
+// Security 요청 설정
+    SecurityRequirement addSecurityItem = new SecurityRequirement();
+    addSecurityItem.addList("Authorization");
 
-  @Bean
-  public Docket apiV5() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .useDefaultResponseMessages(false)
-        .securityContexts(List.of(this.securityContext()))
-        .securitySchemes(List.of(this.apiKey()))
-        .groupName("Follow")
-        .select()
-        .apis(RequestHandlerSelectors.
-            basePackage("com.ifs.back.follow"))
-        .paths(PathSelectors.ant("/users/me/follows/**"))
-        .build()
-        .apiInfo(apiInfo());
-  }
-
-  private ApiInfo apiInfo() {
-    return new ApiInfo(
-        "Title",
-        "Description",
-        "version 1.0",
-        "https://naver.com",
-        new Contact("Contact Me", "https://daum.net", "colt@colt.com"),
-        "Edit Licenses",
-        "https://naver.com",
-        new ArrayList<>()
-    );
-  }
-
-  // JWT SecurityContext 구성
-  private SecurityContext securityContext() {
-    return SecurityContext.builder()
-        .securityReferences(defaultAuth())
-        .build();
-  }
-
-  private List<SecurityReference> defaultAuth() {
-    AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-    authorizationScopes[0] = authorizationScope;
-    return List.of(new SecurityReference("Authorization", authorizationScopes));
-  }
-
-  // ApiKey 정의
-  private ApiKey apiKey() {
-    return new ApiKey("Authorization", "Authorization", "header");
+    return new OpenAPI()
+        // Security 인증 컴포넌트 설정
+        .components(new Components().addSecuritySchemes("Authorization", bearerAuth))
+        // API 마다 Security 인증 컴포넌트 설정
+        .addSecurityItem(addSecurityItem)
+        .info(info);
   }
 }
