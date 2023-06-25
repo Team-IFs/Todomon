@@ -5,14 +5,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListIcon from '@mui/icons-material/List';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PeopleIcon from '@mui/icons-material/People';
 import StarsIcon from '@mui/icons-material/Stars';
+import Settings from '@mui/icons-material/Settings';
 import { SidebarContent } from '../router';
 import { useRouter } from '../hooks/useRouter'
 import { Divider } from '@mui/material';
 
-const sidebarIcons = [<ListIcon/>, <AccountCircleIcon/>, <PeopleIcon/>, <StarsIcon/>]
+const sidebarIcons = [<Settings/>, <ListIcon/>,<PeopleIcon/>, <StarsIcon/>]
 
 const Sidebar = () => {
   const { routeTo } = useRouter()
@@ -42,7 +42,8 @@ const Sidebar = () => {
                   primary={item.label}
                   primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
                 />
-              </ListItemButton>
+            </ListItemButton>
+            
             ))}
         </List>
       </Box>

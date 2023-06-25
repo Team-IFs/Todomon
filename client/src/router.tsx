@@ -3,7 +3,7 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import CategorySetting from './pages/CategorySetting'
 import Social from './pages/Social'
-import EditProfile from './pages/EditProfile'
+import Settings from './pages/Settings'
 import Premium from './pages/Premium'
 import Landing from './pages/Landing'
 import { createBrowserRouter } from 'react-router-dom'
@@ -43,23 +43,23 @@ const routerData: RouterElement[] = [
   },
   {
     id: 3,
+    path: '/settings',
+    label: '설정',
+    element: <Settings />,
+    isSidebar: true
+  },
+  {
+    id: 4,
     path: '/categorysetting',
     label: '카테고리 관리',
     element: <CategorySetting />,
     isSidebar: true
   },
   {
-    id: 4,
+    id: 5,
     path: '/social',
     label: '친구 관리',
     element: <Social />,
-    isSidebar: true
-  },
-  {
-    id: 5,
-    path: '/editprofile',
-    label: '프로필 수정',
-    element: <EditProfile />,
     isSidebar: true
   },
   {

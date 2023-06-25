@@ -38,6 +38,9 @@ export default function AccountMenu() {
     alert('로그아웃되었습니다!')
     routeTo('/')
   }
+  const handleSettingClick = () => {
+    routeTo('/settings')
+  }
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -92,7 +95,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleSettingClick}>
           <ListItemIcon>
             <Settings fontSize='small' />
           </ListItemIcon>
