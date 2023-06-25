@@ -62,7 +62,7 @@ const Login = () => {
         });
       setIsLogin(true);
       alert('로그인 성공!');
-      routeTo('/');
+      routeTo('/home');
     } else {
       setIsLogin(false);
     }
@@ -92,7 +92,7 @@ const Login = () => {
           if(userInfo) setUserInfo(userInfo);
         });
         setIsLogin(true);
-        routeTo('/')
+        routeTo('/home')
       }
     }
   });

@@ -22,7 +22,7 @@ interface RouterElement {
 const routerData: RouterElement[] = [
   {
     id: 0,
-    path: '/',
+    path: '/home',
     label: '홈',
     element: <Home />,
     isSidebar: false
@@ -71,7 +71,7 @@ const routerData: RouterElement[] = [
   },
   {
     id: 7,
-    path: '/landing',
+    path: '/',
     label: '랜딩',
     element: <Landing />,
     isSidebar: false

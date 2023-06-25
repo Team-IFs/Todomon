@@ -66,7 +66,7 @@ const Header = () => {
               </SearchIconWrapper>
               <SearchInput placeholder='search' />
             </SearchBar>
-            <Button variant='contained' onClick={() => handleLogoutClick('/landing')}>Logout</Button>
+            <Button variant='contained' onClick={() => handleLogoutClick('/')}>Logout</Button>
           </div>
         : <Button variant='contained' onClick={() => handleLoginClick('/login')}>Login</Button>}
       </div>
