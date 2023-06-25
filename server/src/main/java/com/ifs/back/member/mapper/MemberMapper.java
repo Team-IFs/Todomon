@@ -1,7 +1,7 @@
 package com.ifs.back.member.mapper;
 
 import com.ifs.back.member.dto.MemberDto;
-import com.ifs.back.member.dto.MemberDto.Response;
+import com.ifs.back.member.dto.MemberDto.MemberResponse;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.todomon.dto.TodomonDto;
 import com.ifs.back.todomon.entity.Todomon;
@@ -12,14 +12,14 @@ import org.springframework.data.domain.Page;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MemberMapper {
 
-  Member memberPostToMember(MemberDto.Post memberPostDto);
+  Member memberPostToMember(MemberDto.MemberPost memberPostDto);
 
-  Member memberPatchToMember(MemberDto.Patch memberPatchDto);
+  Member memberPatchToMember(MemberDto.MemberPatch memberPatchDto);
 
-  Todomon todomonPatchToTodomon(TodomonDto.Patch todomonPatchDto);
+  Todomon todomonPatchToTodomon(TodomonDto.TodomonPatch todomonPatchDto);
 
-  default MemberDto.Response memberToMemberResponse(Member member) {
-    MemberDto.Response.ResponseBuilder builder = MemberDto.Response.builder()
+  default MemberDto.MemberResponse memberToMemberResponse(Member member) {
+    MemberDto.MemberResponse.MemberResponseBuilder builder = MemberDto.MemberResponse.builder()
         .memberId(member.getMemberId())
         .memberStatus(member.getMemberStatus())
         .nickname(member.getNickname())
@@ -29,16 +29,16 @@ public interface MemberMapper {
     return builder.build();
   }
 
-  default Page<MemberDto.Response> memberPageToMemberResponseDtoPage(Page<Member> memberPage){
+  default Page<MemberDto.MemberResponse> memberPageToMemberResponseDtoPage(Page<Member> memberPage){
     return memberPage.map(member -> {
-      return Response.builder().memberId(member.getMemberId()).nickname(member.getNickname())
+      return MemberResponse.builder().memberId(member.getMemberId()).nickname(member.getNickname())
           .bio(member.getBio()).premium(member.getPremium()).memberStatus(member.getMemberStatus())
           .todomon(todomonToTodomonResponse(member.getTodomon())).build();
     });
   }
 
-  default TodomonDto.Response todomonToTodomonResponse(Todomon todomon){
-    TodomonDto.Response.ResponseBuilder builder = TodomonDto.Response.builder()
+  default TodomonDto.TodomonResponse todomonToTodomonResponse(Todomon todomon){
+    TodomonDto.TodomonResponse.TodomonResponseBuilder builder = TodomonDto.TodomonResponse.builder()
         .faceColor(todomon.getFaceColor())
         .leftEyeColor(todomon.getLeftEyeColor())
         .rightEyeColor(todomon.getRightEyeColor())

@@ -1,7 +1,7 @@
 package com.ifs.back.todo.mapper;
 
 import com.ifs.back.todo.dto.TodoDto;
-import com.ifs.back.todo.dto.TodoDto.Response;
+import com.ifs.back.todo.dto.TodoDto.TodoResponse;
 import com.ifs.back.todo.entity.Todo;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -9,16 +9,28 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TodoMapper {
-  Todo todoPostToTodo(TodoDto.Post todoPostDto);
+  default Todo todoPostToTodo(TodoDto.TodoPost todoPostDto){
+    if ( todoPostDto == null ) {
+      return null;
+    }
 
-  Todo todoPatchToTodo(TodoDto.Patch todoPatchDto);
+    Todo.TodoBuilder todo = Todo.builder();
 
-  default TodoDto.Response todoToTodoResponse(Todo todo){
+    todo.todoName( todoPostDto.getTodoName() );
+    todo.startAt( todoPostDto.getDate() );
+    todo.endAt( todoPostDto.getDate() );
+
+    return todo.build();
+  }
+
+  Todo todoPatchToTodo(TodoDto.TodoPatch todoPatchDto);
+
+  default TodoDto.TodoResponse todoToTodoResponse(Todo todo){
     if ( todo == null ) {
       return null;
     }
 
-    TodoDto.Response.ResponseBuilder response = TodoDto.Response.builder();
+    TodoDto.TodoResponse.TodoResponseBuilder response = TodoDto.TodoResponse.builder();
 
     response.todoId( todo.getTodoId() );
     response.todoName( todo.getTodoName() );
@@ -30,5 +42,5 @@ public interface TodoMapper {
     return response.build();
   }
 
-  List<Response> todosToTodoResponses(List<Todo> todos);
+  List<TodoResponse> todosToTodoResponses(List<Todo> todos);
 }

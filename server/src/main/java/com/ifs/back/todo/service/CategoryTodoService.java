@@ -6,8 +6,8 @@ import com.ifs.back.category.entity.Category;
 import com.ifs.back.category.service.CategoryService;
 import com.ifs.back.friend.service.FriendService;
 import com.ifs.back.todo.dto.TodoDto;
-import com.ifs.back.todo.dto.TodoDto.Response;
 import com.ifs.back.todo.dto.MonthTodoDto;
+import com.ifs.back.todo.dto.TodoDto.TodoResponse;
 import com.ifs.back.todo.exception.TodoExceptionCode;
 import com.ifs.back.todo.mapper.TodoMapper;
 import java.time.LocalDate;
@@ -89,7 +89,7 @@ public class CategoryTodoService {
     page.map(categoryTodoDto -> {
       Iterator it = categoryTodoDto.getTodos().iterator();
       while (it.hasNext()) {
-        TodoDto.Response response = (Response) it.next();
+        TodoDto.TodoResponse response = (TodoResponse) it.next();
         if (date.isAfter(response.getEndAt()) || date.isBefore(response.getStartAt())) {
           it.remove();
         } else if(response.getRepeated() != null) {

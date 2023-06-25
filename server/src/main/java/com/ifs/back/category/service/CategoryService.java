@@ -62,9 +62,9 @@ public class CategoryService {
   }
 
   @Transactional
-  public Page<CategoryDto.Response> findAllCategories(long memberId, Pageable pageable) {
+  public Page<CategoryDto.CategoryResponse> findAllCategories(long memberId, Pageable pageable) {
     Page<Category> categoryPage = categoryRepository.findAllByMemberId(memberId, pageable);
-    Page<CategoryDto.Response> responses = categoryPage.map(
+    Page<CategoryDto.CategoryResponse> responses = categoryPage.map(
         category -> categoryMapper.categoryToCategoryResponse(category));
     return responses;
   }

@@ -16,16 +16,17 @@ public class TodoDto {
   @AllArgsConstructor
   @NoArgsConstructor
   @Builder
-  public static class Post {
+  public static class TodoPost {
     @NotNull(message = "이름을 비울 수 없습니다.")
     private String todoName;
+    private LocalDate date;
   }
 
   @Getter
   @AllArgsConstructor
   @NoArgsConstructor
   @Builder
-  public static class Patch {
+  public static class TodoPatch {
     private String todoName;
     private LocalDate startAt;
     private LocalDate endAt;
@@ -35,7 +36,7 @@ public class TodoDto {
   @Getter
   @AllArgsConstructor
   @Builder
-  public static class Response {
+  public static class TodoResponse {
     private long todoId;
     private long categoryId;
     private String todoName;

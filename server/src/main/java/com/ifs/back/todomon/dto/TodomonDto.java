@@ -9,7 +9,7 @@ public class TodomonDto {
   @Getter
   @AllArgsConstructor
   @Builder
-  public static class Patch {
+  public static class TodomonPatch {
 
     private String faceColor;
     private String rightEyeColor;
@@ -20,7 +20,7 @@ public class TodomonDto {
   @Getter
   @AllArgsConstructor
   @Builder
-  public static class Response {
+  public static class TodomonResponse {
 
     private String faceColor;
     private String rightEyeColor;

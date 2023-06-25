@@ -7,7 +7,6 @@ import com.ifs.back.follow.exception.FollowExceptionCode;
 import com.ifs.back.follow.mapper.FollowMapper;
 import com.ifs.back.follow.repository.FollowRepository;
 import com.ifs.back.friend.dto.FriendDto;
-import com.ifs.back.friend.dto.FriendDto.Response;
 import com.ifs.back.friend.entity.Friend;
 import com.ifs.back.friend.exception.FriendExceptionCode;
 import com.ifs.back.friend.repository.FriendRepository;
@@ -36,12 +35,12 @@ public class FollowService {
     return followRepository.save(follow);
   }
 
-  public Page<FollowDto.Response> findFollowing(long memberId, Pageable pageable) {
+  public Page<FollowDto.FollowResponse> findFollowing(long memberId, Pageable pageable) {
     Page<Follow> followPage = followRepository.findAllFollowingsByMemberId(memberId, pageable);
     return followPage.map(follow -> followToFollowResponse(follow, memberId));
   }
 
-  public Page<FollowDto.Response> findFollower(long memberId, Pageable pageable) {
+  public Page<FollowDto.FollowResponse> findFollower(long memberId, Pageable pageable) {
     Page<Follow> followPage = followRepository.findAllFollowersByMemberId(memberId, pageable);
     return followPage.map(follow -> followToFollowResponse(follow, memberId));
   }
@@ -52,8 +51,8 @@ public class FollowService {
     followRepository.deleteById(followId);
   }
 
-  private FollowDto.Response followToFollowResponse(Follow follow, long memberId) {
-    FollowDto.Response response = FollowDto.Response
+  private FollowDto.FollowResponse followToFollowResponse(Follow follow, long memberId) {
+    FollowDto.FollowResponse response = FollowDto.FollowResponse
         .builder()
         .followId(follow.getFollowId())
         .follow(

@@ -1,6 +1,8 @@
 package com.ifs.back.friend.controller;
 
+import com.ifs.back.follow.dto.FollowDto;
 import com.ifs.back.friend.dto.FriendDto;
+import com.ifs.back.friend.dto.FriendDto.FriendResponse;
 import com.ifs.back.friend.entity.Friend;
 import com.ifs.back.friend.service.FriendService;
 import com.ifs.back.member.entity.Member;
@@ -8,6 +10,10 @@ import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.security.Principal;
 import javax.validation.constraints.Positive;
@@ -27,6 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Friend", description = "친구 API")
 @RestController
 @RequestMapping("/users/me/friends")
 @RequiredArgsConstructor
@@ -70,21 +77,23 @@ public class FriendController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @Operation(summary = "친구 조회")
+  @Operation(summary = "친구 조회", responses = {
+      @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping
   public ResponseEntity getFriend(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 친구 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
-    Page<FriendDto.Response> responses = friendService.findFriends(memberId, pageable);
+    Page<FriendDto.FriendResponse> responses = friendService.findFriends(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
 
-  @Operation(summary = "친구 요청")
+  @Operation(summary = "친구 요청", responses = {
+      @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping("/request")
   public ResponseEntity getRequest(@PageableDefault Pageable pageable, Principal principal) {
     log.info("## 친구 요청 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
-    Page<FriendDto.Response> responses = friendService.findRequests(memberId, pageable);
+    Page<FriendDto.FriendResponse> responses = friendService.findRequests(memberId, pageable);
     return ResponseEntity.ok().body(responses);
   }
 

@@ -2,7 +2,6 @@ package com.ifs.back.friend.service;
 
 import com.ifs.back.exception.BusinessLogicException;
 import com.ifs.back.friend.dto.FriendDto;
-import com.ifs.back.friend.dto.FriendDto.Response;
 import com.ifs.back.friend.entity.Friend;
 import com.ifs.back.friend.exception.FriendExceptionCode;
 import com.ifs.back.friend.repository.FriendRepository;
@@ -49,12 +48,12 @@ public class FriendService {
     friendRepository.deleteById(friendId);
   }
 
-  public Page<FriendDto.Response> findFriends(long memberId, Pageable pageable) {
+  public Page<FriendDto.FriendResponse> findFriends(long memberId, Pageable pageable) {
     Page<Friend> friendPage = friendRepository.findAllFriend(memberId, pageable);
     return friendPage.map(friend -> friendToFriendResponse(friend, memberId));
   }
 
-  public Page<FriendDto.Response> findRequests (long memberId, Pageable pageable) {
+  public Page<FriendDto.FriendResponse> findRequests (long memberId, Pageable pageable) {
     Page<Friend> friendPage = friendRepository.findAllRequest(memberId, pageable);
     return friendPage.map(friend -> friendToFriendResponse(friend, memberId));
   }
@@ -63,8 +62,8 @@ public class FriendService {
     return friendRepository.findByUsers(memberId, targetId);
   }
 
-  private FriendDto.Response friendToFriendResponse(Friend friend, long memberId) {
-    FriendDto.Response response = FriendDto.Response
+  private FriendDto.FriendResponse friendToFriendResponse(Friend friend, long memberId) {
+    FriendDto.FriendResponse response = FriendDto.FriendResponse
         .builder()
         .friendId(friend.getFriendId())
         .friend(
