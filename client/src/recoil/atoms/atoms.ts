@@ -15,7 +15,11 @@ export const IsLogin = atom({
     default: false,
     effects_UNSTABLE: [persistAtom],
 })
-
+export const DarkMode = atom({
+    key: 'DarkMode',
+    default: false,
+    effects_UNSTABLE: [persistAtom],
+})
 export const UserInfo = atom<User>({
     key: 'UserInfo',
     default: {
