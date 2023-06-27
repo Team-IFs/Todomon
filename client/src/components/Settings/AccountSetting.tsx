@@ -4,10 +4,10 @@ import Input from '@mui/material/Input';
 import { useRecoilState } from 'recoil';
 import { UserInfo } from '../../recoil/atoms/atoms';
 
-  const TitleContainer = styled.div({
+  const Container = styled.div({
     display: 'flex',
     flexDirection: 'column',
-    margin: '20px'
+    margin: '10px 0px 40px 20px',
   })
   const ContentContainer = styled.div({
     display: 'flex',
@@ -35,7 +35,7 @@ const AccountSetting = () => {
   const [userInfo, setUserInfo] = useRecoilState(UserInfo);
 
   return (
-    <TitleContainer>
+    <Container>
       <h2>개인정보관리</h2>
       <ContentContainer>
         <InputContainer>
@@ -63,7 +63,7 @@ const AccountSetting = () => {
           </ButtonContainer>
         </InputContainer>
       </ContentContainer>
-    </TitleContainer>
+    </Container>
   )
 };
 export default AccountSetting;

@@ -3,10 +3,10 @@ import { useRecoilState } from 'recoil';
 import { UserInfo, DarkMode } from '../../recoil/atoms/atoms';
 import MaterialUISwitch from './MaterialUISwitch';
 
-  const TitleContainer = styled.div({
+  const Container = styled.div({
     display: 'flex',
     flexDirection: 'column',
-    margin: '20px'
+    margin: '10px 0px 40px 20px',
   })
   const ContentContainer = styled.div({
     display: 'flex',
@@ -25,14 +25,14 @@ const ThemeSetting = () => {
   const [isDarkMode, setDarkMode] = useRecoilState(DarkMode);
 
   return (
-    <TitleContainer>
+    <Container>
       <h2>테마</h2>
       <ContentContainer>
         <label>밝게</label>
         <MaterialUISwitch />
         <label>어둡게</label>
       </ContentContainer>
-    </TitleContainer>
+    </Container>
   )
 };
 export default ThemeSetting;

@@ -4,15 +4,14 @@ import { useRecoilState } from 'recoil';
 import { IsLogin } from '../recoil/atoms/atoms';
 import AccountSetting from '../components/Settings/AccountSetting';
 import ThemeSetting from '../components/Settings/ThemeSetting';
-import TodomonSetting from '../components/Settings/TodomonSetting';
+import TodomonSetting from '../components/Settings/Todomon/TodomonSetting';
 import styled from '@emotion/styled';
+import { Divider } from '@mui/material';
 
   const SettingContainer = styled.div({
     display: 'flex',
     flexDirection: 'column',
     width: 'calc(100vw - 210px)',
-    height: 'calc(100vh - 80px)',
-    backgroundColor: 'beige'
   })
 
 const Settings = () => {
@@ -34,9 +33,13 @@ const Settings = () => {
       | 설정
     </h1>
     <SettingContainer>
-    <AccountSetting />
-    <ThemeSetting />
-    <TodomonSetting/>
+      <Divider />
+      <AccountSetting />
+      <Divider />
+      <ThemeSetting />
+      <Divider />
+      <TodomonSetting/>
+      <Divider />
     </SettingContainer>
       </div>)
 }
