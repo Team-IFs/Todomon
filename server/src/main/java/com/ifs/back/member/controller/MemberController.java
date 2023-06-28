@@ -73,7 +73,7 @@ public class MemberController {
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(updateMember));
   }
 
-  @Operation(summary = "투두몬 정보 수정")
+  @Operation(summary = "투두몬 정보 수정", description = "변경하길 원하는 필드의 정보만 전송")
   @PatchMapping("/me/todomon")
   public ResponseEntity patchTodomon(@Valid @RequestBody TodomonDto.TodomonPatch requestBody,
       Principal principal) {
@@ -95,7 +95,7 @@ public class MemberController {
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(findMember));
   }
 
-  @Operation(summary = "다른 유저 정보 조회", responses = {
+  @Operation(summary = "다른 유저 정보 조회", description = "{member_id}의 정보 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MemberDto.MemberResponse.class)))})
   @GetMapping("/{member-id}")
   public ResponseEntity getMember(

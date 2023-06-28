@@ -79,7 +79,7 @@ public class TodoController {
     return ResponseEntity.ok().body(mapper.todoToTodoResponse(updatedTodo));
   }
 
-  @Operation(summary = "할 일 완료")
+  @Operation(summary = "할 일 완료", description = "{todo_id}를 할 일 완료상태로 변경")
   @PatchMapping("/{todo_id}/done")
   public ResponseEntity patchTodoDone(@PathVariable("todo_id") @Positive long todoId,
       Principal principal) {
@@ -89,7 +89,7 @@ public class TodoController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @Operation(summary = "할 일 미완료")
+  @Operation(summary = "할 일 미완료", description = "{todo_id}를 할 일 미완료상태로 변경")
   @PatchMapping("/{todo_id}/undone")
   public ResponseEntity patchTodoUndone(@PathVariable("todo_id") @Positive long todoId,
       Principal principal) {
@@ -107,7 +107,7 @@ public class TodoController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  @Operation(summary = "특정 날짜 별 할 일 확인", responses = {
+  @Operation(summary = "특정 날짜 별 할 일 확인", description = "해당 date의 category와 todo를 조회",responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CategoryTodoDto.CategoryTodoPage.class)))})
   @GetMapping
   public ResponseEntity getTodo(
@@ -122,7 +122,7 @@ public class TodoController {
         categoryTodoService.findCategoryTodo(currentId, currentId, date, pageable));
   }
 
-  @Operation(summary = "월 별 할 일 확인", responses = {
+  @Operation(summary = "월 별 할 일 확인", description = "해당 year&month의 category와 todo를 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MonthTodoDto.MonthTodoPage.class)))})
   @GetMapping("/calendar")
   public ResponseEntity getMonthTodo(

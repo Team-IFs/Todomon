@@ -81,7 +81,7 @@ public class CategoryController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  @Operation(summary = "특정 카테고리 정보 조회", responses = {
+  @Operation(summary = "특정 카테고리 정보 조회", description = "내가 가진 특정 카테고리 조회",responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CategoryDto.CategoryResponse.class)))})
   @GetMapping("/{category_id}")
   public ResponseEntity getCategory(@PathVariable("category_id") @Positive long categoryId,
@@ -92,7 +92,7 @@ public class CategoryController {
     return ResponseEntity.ok().body(mapper.categoryToCategoryResponse(category));
   }
 
-  @Operation(summary = "모든 카테고리 정보 조회", responses = {
+  @Operation(summary = "모든 카테고리 정보 조회", description = "내가 가진 모든 카테고리 조회",responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CategoryDto.CategoryPage.class)))})
   @GetMapping()
   public ResponseEntity getCategories(Principal principal, @PageableDefault Pageable pageable) {

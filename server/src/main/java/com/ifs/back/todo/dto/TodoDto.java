@@ -1,6 +1,7 @@
 package com.ifs.back.todo.dto;
 
 import com.ifs.back.category.entity.Category;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +31,7 @@ public class TodoDto {
     private String todoName;
     private LocalDate startAt;
     private LocalDate endAt;
+    @Schema(defaultValue = "W/1,2")
     private String repeated;
   }
 
