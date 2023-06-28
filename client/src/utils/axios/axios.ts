@@ -21,3 +21,18 @@ export const POST = (
   return instance.post(url, formmated, options);
 };
 
+export const PATCH = (
+  url: string,
+  data: any,
+  options: AxiosRequestConfig<any> = defaultOptions
+) => {
+  const formmated = JSON.stringify(data);
+  return instance.patch(url, formmated, options);
+};
+
+export const DELETE = (
+  url: string,
+  options: AxiosRequestConfig<any> = defaultOptions
+) => {
+  return instance.delete(url, options);
+};

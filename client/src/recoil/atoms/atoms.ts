@@ -34,6 +34,9 @@ export const UserInfo = atom<User>({
             leftEyeColor: '',
             rightEyeColor: '',
         },
-
     },
 });
+export const CurrentClickedPart = atom({
+    key: 'currentClickedPart',
+    default: 'backgroundColor',
+})
