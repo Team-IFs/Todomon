@@ -16,11 +16,13 @@ import org.springframework.data.domain.Pageable;
 
 
 public class MemberDto {
+
   @Getter
   @AllArgsConstructor
   @NoArgsConstructor
   @Builder
   public static class MemberPost {
+
     @Email
     @NotNull(message = "공백 불가")
     private String email;
@@ -33,18 +35,36 @@ public class MemberDto {
     @Pattern(regexp = "^(?=.{1,20}$).*", message = "최대 20자")
     private String bio;
   }
+
   @Getter
   @AllArgsConstructor
   @NoArgsConstructor
   @Builder
   public static class MemberPatch {
+
     private String nickname;
     private String bio;
   }
+
+  @Getter
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @Builder
+  public static class MemberPassword {
+
+    @NotNull
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W)(?=.*[0-9]).{8,20}$", message = "최소 8자 이상 20자 이하 영문, 숫자, 특수문자혼용")
+    private String currentPassword;
+    @NotNull
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W)(?=.*[0-9]).{8,20}$", message = "최소 8자 이상 20자 이하 영문, 숫자, 특수문자혼용")
+    private String newPassword;
+  }
+
   @Getter
   @AllArgsConstructor
   @Builder
   public static class MemberResponse {
+
     private long memberId;
     private String nickname;
     private String bio;
@@ -55,6 +75,7 @@ public class MemberDto {
   }
 
   public static class MemberPage extends PageImpl<MemberResponse> {
+
     public MemberPage(List<MemberResponse> content, Pageable pageable, long total) {
       super(content, pageable, total);
     }

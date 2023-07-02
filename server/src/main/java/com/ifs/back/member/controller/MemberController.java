@@ -73,6 +73,16 @@ public class MemberController {
     return ResponseEntity.ok().body(mapper.memberToMemberResponse(updateMember));
   }
 
+  @Operation(summary = "비밀번호 변경", description = "현재의 비밀번호와 일치해야 변경 가능")
+  @PatchMapping("/me/password")
+  public ResponseEntity patchPassword(@Valid @RequestBody MemberDto.MemberPassword requestBody,
+      Principal principal) {
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    log.info("## 비밀번호 변경: {}");
+    Member updateMember = memberService.updatePassword(currentId, requestBody);
+    return ResponseEntity.ok().body(mapper.memberToMemberResponse(updateMember));
+  }
+
   @Operation(summary = "투두몬 정보 수정", description = "변경하길 원하는 필드의 정보만 전송")
   @PatchMapping("/me/todomon")
   public ResponseEntity patchTodomon(@Valid @RequestBody TodomonDto.TodomonPatch requestBody,

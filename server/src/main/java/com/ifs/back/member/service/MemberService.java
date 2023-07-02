@@ -1,6 +1,7 @@
 package com.ifs.back.member.service;
 
 import com.ifs.back.exception.BusinessLogicException;
+import com.ifs.back.member.dto.MemberDto;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.exception.MemberExceptionCode;
 import com.ifs.back.member.repository.MemberRepository;
@@ -67,6 +68,18 @@ public class MemberService {
     return savedMember;
   }
 
+  @Transactional
+  public Member updatePassword(long currentId, MemberDto.MemberPassword requestBody) {
+    Member findMember = findVerifiedMember(currentId);
+    if(passwordEncoder.matches(requestBody.getCurrentPassword(), findMember.getPassword()))
+      findMember.setPassword(requestBody.getNewPassword());
+    else
+      throw new BusinessLogicException(MemberExceptionCode.PASSWORD_NOT_MATCH);
+    Member savedMember = memberRepository.save(findMember);
+    log.info("## updated password: {}", savedMember);
+    return savedMember;
+  }
+
   public Member findMember(long memberId) {
     return findVerifiedMember(memberId);
   }
@@ -104,7 +117,7 @@ public class MemberService {
     return findMember;
   }
 
-  public Member findMemberByEmail(String email){
+  public Member findMemberByEmail(String email) {
     Optional<Member> optionalMember =
         memberRepository.findByEmail(email);
     Member findMember =
