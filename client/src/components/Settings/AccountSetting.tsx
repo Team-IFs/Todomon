@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import { useRecoilState } from 'recoil';
 import { UserInfo } from '../../recoil/atoms/atoms';
+import { useState } from 'react';
 
   const Container = styled.div({
     display: 'flex',
@@ -31,8 +32,20 @@ import { UserInfo } from '../../recoil/atoms/atoms';
     width: '200px',
   })
 
-const AccountSetting = () => {
-  const [userInfo, setUserInfo] = useRecoilState(UserInfo);
+const AccountSetting: React.FC<{ changeNewUsername: any, changeNewBio: any }>
+  = ({ changeNewUsername, changeNewBio }) => {
+  const [userInfo] = useRecoilState(UserInfo);
+  const [newUsername, setNewUsername] = useState(userInfo.nickname);
+  const [newBio, setNewBio] = useState(userInfo.bio);
+
+  const handleUsernameChange = (e: any) => {
+    setNewUsername(e.target.value)
+    changeNewUsername(newUsername)
+  }
+  const handleBioChange = (e: any) => {
+    setNewBio(e.target.value);
+    changeNewBio(newBio)
+  }
 
   return (
     <Container>
@@ -41,13 +54,13 @@ const AccountSetting = () => {
         <InputContainer>
           <label>닉네임</label>
           <ButtonContainer>
-            <Input type='text' fullWidth={true} defaultValue={userInfo.nickname} />
+            <Input type='text' fullWidth={true} defaultValue={userInfo.nickname} value={newUsername} onBlur={handleUsernameChange} onChange={handleUsernameChange}/>
           </ButtonContainer>
         </InputContainer>
         <InputContainer>
           <label>자기소개</label>
           <ButtonContainer>
-            <Input type='text' fullWidth={true} defaultValue={userInfo.bio} />
+            <Input type='text' fullWidth={true} defaultValue={userInfo.bio} value={newBio} onBlur={handleBioChange} onChange={handleBioChange}/>
           </ButtonContainer>
         </InputContainer>
         <InputContainer>
@@ -59,7 +72,7 @@ const AccountSetting = () => {
         <InputContainer>
           <label>계정삭제</label>
           <ButtonContainer>
-            <Button type='submit' variant='outlined' fullWidth={true}>회원가입</Button>
+            <Button type='submit' variant='outlined' fullWidth={true}>계정 삭제</Button>
           </ButtonContainer>
         </InputContainer>
       </ContentContainer>
