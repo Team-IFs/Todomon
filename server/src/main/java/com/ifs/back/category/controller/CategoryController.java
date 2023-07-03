@@ -46,7 +46,10 @@ public class CategoryController {
   private final CategoryMapper mapper;
   private final MemberService memberService;
 
-  @Operation(summary = "카테고리 생성")
+  @Operation(summary = "카테고리 생성", description = "scope\n"
+      + "0 = 전체 공개\n"
+      + "1 = 친구 공개\n"
+      + "2 = 비공개")
   @PostMapping
   public ResponseEntity postCategory(@Valid @RequestBody CategoryDto.CategoryPost requestBody,
       Principal principal) {

@@ -28,8 +28,7 @@ public class CategoryDto {
     private String categoryColor;
     @Schema(description = "공개범위")
     @NotNull(message = "공개범위를 비울 수 없습니다.")
-    @Min(0)
-    @Max(2)
+    @Pattern(regexp = "^(?=.*[0-2]).{1}$", message = "0 = 전체 공개 / 1 = 친구 공개 / 2 = 비공개")
     private int scope;
     @Schema(description = "숨기기 여부")
     @NotNull(message = "숨기기 여부를 비울 수 없습니다.")
