@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum TodoExceptionCode implements ExceptionCode {
-  TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "할 일을 찾을 수 없습니다."),
-  TODO_NOT_ALLOWED(HttpStatus.FORBIDDEN, "유효하지 않은 할 일 입니다.")
+  TODO_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "할 일을 찾을 수 없습니다."),
+  TODO_NOT_ALLOWED(HttpStatus.FORBIDDEN.value(), "유효하지 않은 할 일 입니다.")
   ;
 
-  private final HttpStatus status;
+  private final int status;
   private final String message;
 
 }

@@ -13,12 +13,12 @@ import org.springframework.validation.BindingResult;
 @Getter
 public class ErrorResponse {
 
-  private HttpStatus status;
+  private int status;
   private String message;
   private List<FieldError> fieldErrors;
   private List<ConstraintViolationError> violationErrors;
 
-  private ErrorResponse(HttpStatus status, String message) {
+  private ErrorResponse(int status, String message) {
     this.status = status;
     this.message = message;
   }
@@ -42,11 +42,11 @@ public class ErrorResponse {
   }
 
   public static ErrorResponse of(HttpStatus httpStatus) {
-    return new ErrorResponse(httpStatus, httpStatus.getReasonPhrase());
+    return new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase());
   }
 
   public static ErrorResponse of(HttpStatus httpStatus, String message) {
-    return new ErrorResponse(httpStatus, message);
+    return new ErrorResponse(httpStatus.value(), message);
   }
 
   @Getter
