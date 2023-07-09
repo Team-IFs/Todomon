@@ -1,13 +1,20 @@
+/** 응답으로 받아서 필요한 타입으로 변경한 카테고리 아이템 interface */
 export interface CategoryItem {
-  id: string,
-  content: string,
-  color: string,
-  subItems: SubItem[]
+  categoryColor: string,
+  categoryId: number,
+  categoryName: string,
+  hide: boolean,
+  scope: number,
+  todos: SubItem[]
 }
 
+/** 응답으로 받아서 필요한 타입으로 변경한 카테고리 내부 할일 아이템 interface */
 export interface SubItem {
-  categoryId: string,
-  id: string,
-  content: string,
-  isDone: boolean
+  categoryId: number,
+  done: boolean,
+  endAt: string,
+  repeated: string | null,
+  startAt: string,
+  todoId: number,
+  todoName: string
 }

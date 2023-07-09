@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { UserInfo } from '../../../recoil/atoms/atoms';
 import { getCookie } from '../../../utils/cookies/cookies';
-import { getCurrentUserInfo } from '../../../utils/userInfo';
+import { getCurrentUserInfo } from '../../../utils/axios/userInfo';
 import Cat from '../../../assets/Cat';
 
 const Card = styled.div({

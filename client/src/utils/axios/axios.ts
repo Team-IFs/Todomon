@@ -30,6 +30,13 @@ export const PATCH = (
   return instance.patch(url, formmated, options);
 };
 
+export const PATCH_NODATA = (
+  url: string,
+  options: AxiosRequestConfig<any> = defaultOptions
+) => {
+  return instance.patch(url, options);
+};
+
 export const DELETE = (
   url: string,
   options: AxiosRequestConfig<any> = defaultOptions

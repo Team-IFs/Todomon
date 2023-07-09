@@ -1,6 +1,6 @@
-import { User } from '../types/user';
-import { GET } from './axios/axios';
-import { getCookie } from './cookies/cookies';
+import { User } from '../../types/user';
+import { GET } from './axios';
+import { getCookie } from '../cookies/cookies';
 
 export const getCurrentUserInfo = async (): Promise<User | null> => {
   const requestHeader = {

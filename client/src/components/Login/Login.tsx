@@ -6,11 +6,10 @@ import Button from '@mui/material/Button';
 import { Divider } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
-import { POST, GET } from '../../utils/axios/axios';
 import { setCookie, getCookie } from '../../utils/cookies/cookies';
 import { useEffect } from 'react';
-import { loginRequest } from '../../utils/login';
-import { getCurrentUserInfo } from '../../utils/userInfo';
+import { loginRequest } from '../../utils/axios/account';
+import { getCurrentUserInfo } from '../../utils/axios/userInfo';
 
 const Form = styled.div({
   display: 'flex',

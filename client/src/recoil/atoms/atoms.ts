@@ -10,6 +10,11 @@ export const DefaultTodoList = atom({
     default: defaultTodoList
 })
 
+export const TodoList = atom({
+    key: 'TodoList',
+    default: []
+})
+
 export const IsLogin = atom({
     key: 'IsLogin',
     default: false,

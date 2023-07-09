@@ -14,6 +14,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ReactComponent as CatBasic } from '../../../assets/cat-basic.svg';
 import { CategoryItem, SubItem } from '../../../types/todo'
 import { AddNewItem } from './CRUD';
+import { setTodoDoneState } from '../../../utils/axios/todo';
 
 const CatContainer = styled.div({
   display: 'flex',
@@ -102,18 +103,27 @@ const Label = styled.div`
   font-weight: bold;
 `
 
-const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: string, replaceSubItems: any, reorderTodoId: any, isAddTodoClicked: boolean, clickedCategoryId: string }>
-  = ({ categoryId, subItems, color, replaceSubItems, reorderTodoId, isAddTodoClicked, clickedCategoryId }) => {
+const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: SubItem[], color: string, replaceSubItems: any, reorderTodoId: any, isAddTodoClicked: boolean, clickedCategoryId: string }>
+  = ({ todoIndex, categoryId, subItems, color, replaceSubItems, reorderTodoId, isAddTodoClicked, clickedCategoryId }) => {
     const pendingColor = '#eeeeee';
 
-    const handleCatClick = (id: string, isDone: boolean) => {
-      const newSubItem = subItems.map((todo: SubItem) => todo.id === id
-        ? { ...todo, isDone: !isDone }
+
+    const updateTodoDone = async (todoId:number, isDone:boolean) => {
+      const res = await setTodoDoneState(todoId, isDone);
+      // delete success
+    }
+
+    const handleCatClick = (categoryId: number, id: number, isDone: boolean, index: number) => {
+      
+      updateTodoDone(id, !isDone);
+
+      
+      const newSubItem = subItems.map((todo: SubItem) => todo.todoId === id
+        ? { ...todo, done: !isDone }
         : todo
       )
-      const categoryId = subItems[0].categoryId;
-      console.log(categoryId);
-      replaceSubItems(newSubItem, categoryId)
+      console.log(newSubItem);
+      replaceSubItems(newSubItem, todoIndex); // 현재 클릭한 item의 카테고리 id로 수정 -> 집가서 replace 부분 다시 뜯어보기
     }
 
     const handleOnChange = (e: any) => {
@@ -135,8 +145,8 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
     const [clickedItem, setClickedItem] = useState(subItems[0]);
 
     const handleClickOpen = (item: SubItem) => {
-      setClickedId(item.id)
-      setClickedContent(item.content)
+      setClickedId(item.todoId.toString());
+      setClickedContent(item.todoName);
       setClickedItem(item);
       setOpen(true);
     };
@@ -151,15 +161,15 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
     }
 
     const handleSaveBtn = (item: SubItem) => {
-      const newSubItem = subItems.map((todo: SubItem) => todo.id === item.id
+      const newSubItem = subItems.map((todo: SubItem) => todo.todoId === item.todoId
         ? { ...todo, content: todoChange }
         : todo
       )
-      replaceSubItems(newSubItem)
+      replaceSubItems(newSubItem, item.categoryId)
       handleClose();
     }
     const handleDeleteTodo = (clickedItem: SubItem) => {
-      subItems.splice(Number(clickedItem.id.split('-')[1]), 1)
+      subItems.splice(Number(clickedItem.todoId), 1)
       replaceSubItems(subItems)
       reorderTodoId(subItems, clickedItem.categoryId)
       setOpen(false);
@@ -172,14 +182,14 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
 
       <div>
 
-        <Droppable droppableId={categoryId} type={`droppableSubItem`}>
+        <Droppable droppableId={categoryId.toString()} type={`droppableSubItem`}>
           {(provided) => (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
               {subItems && subItems.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
+                <Draggable key={item.todoId} draggableId={item.todoId.toString()} index={index}>
                   {(provided) => (
 
                     <div
@@ -189,10 +199,10 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
                     >
                       <ItemContainer>
                         <CatandTodoContainer>
-                          <CatContainer onClick={() => handleCatClick(item.id, item.isDone)}>
-                            <CatBasic fill={item.isDone ? color : pendingColor} />
+                          <CatContainer onClick={() => handleCatClick(item.categoryId, item.todoId, item.done, index)}>
+                            <CatBasic fill={item.done ? color : pendingColor} />
                           </CatContainer>
-                          {`${item.content}`}
+                          {`${item.todoName} todoId:${item.todoId} index:${index} isDone:${item.done}`}
 
                         </CatandTodoContainer>
                         <MoreHorizIcon color='primary' onClick={() => handleClickOpen(item)} />
@@ -209,7 +219,7 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
                               <DetailConatiner>
                                 <RowContainer>
                                   <Label>할일</Label>
-                                  <Input className='input' defaultValue={clickedItem.content} onChange={handleTodoChange} />
+                                  <Input className='input' defaultValue={clickedItem.todoName} onChange={handleTodoChange} />
                                 </RowContainer>
                                 <RowContainer>
                                   <Label>날짜</Label>
@@ -247,9 +257,9 @@ const InnerTodo: React.FC<{ categoryId: string, subItems: SubItem[], color: stri
               {provided.placeholder}
               {/* 새로운 input 추가 */}
               {subItems.map((item) => {
-                if (`${clickedCategoryId}-0` === `${item.id}` && isAddTodoClicked) {
+                if (`${clickedCategoryId}-0` === `${item.todoId}` && isAddTodoClicked) {
                   return (
-                    <ItemContainer key={item.id}>
+                    <ItemContainer key={item.todoId}>
                       <CatandTodoContainer>
                         <CatContainer >
                           <CatBasic fill={pendingColor} />
