@@ -2,8 +2,10 @@ import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import { useRecoilState } from 'recoil';
-import { UserInfo } from '../../recoil/atoms/atoms';
+import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
 import { useState } from 'react';
+import { accountDeleteRequest } from '../../utils/login';
+import { useRouter } from '../../hooks/useRouter';
 
   const Container = styled.div({
     display: 'flex',
@@ -37,6 +39,8 @@ const AccountSetting: React.FC<{ changeNewUsername: any, changeNewBio: any }>
   const [userInfo] = useRecoilState(UserInfo);
   const [newUsername, setNewUsername] = useState(userInfo.nickname);
   const [newBio, setNewBio] = useState(userInfo.bio);
+  const [, setIsLogin] = useRecoilState(IsLogin);
+  const { routeTo } = useRouter()
 
   const handleUsernameChange = (e: any) => {
     setNewUsername(e.target.value)
@@ -46,7 +50,17 @@ const AccountSetting: React.FC<{ changeNewUsername: any, changeNewBio: any }>
     setNewBio(e.target.value);
     changeNewBio(newBio)
   }
-
+  const handleAccountDelete = async () => {
+    const res = await accountDeleteRequest()
+    // delete success
+    if (res === 'SUCCESS') {
+      setIsLogin(false);
+      alert('계정을 성공적으로 삭제했습니다.');
+      routeTo('/home');
+    } else {
+      setIsLogin(true);
+    }
+  }
   return (
     <Container>
       <h2>개인정보관리</h2>
@@ -72,7 +86,7 @@ const AccountSetting: React.FC<{ changeNewUsername: any, changeNewBio: any }>
         <InputContainer>
           <label>계정삭제</label>
           <ButtonContainer>
-            <Button type='submit' variant='outlined' fullWidth={true}>계정 삭제</Button>
+            <Button type='submit' variant='outlined' fullWidth={true} onClick={handleAccountDelete}>계정 삭제</Button>
           </ButtonContainer>
         </InputContainer>
       </ContentContainer>
