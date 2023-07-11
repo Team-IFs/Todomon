@@ -3,6 +3,7 @@ package com.ifs.back.member.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.ifs.back.audit.Auditable;
+import com.ifs.back.category.entity.Category;
 import com.ifs.back.todomon.entity.Todomon;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -62,13 +64,16 @@ public class Member extends Auditable {
   @Default
   private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "todomonId")
   private Todomon todomon;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @Default
   private List<String> roles = new ArrayList<>();
+
+  @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Category> categories;
 
   @RequiredArgsConstructor
   public enum MemberStatus {
