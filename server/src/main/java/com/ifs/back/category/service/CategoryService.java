@@ -47,9 +47,10 @@ public class CategoryService {
     return savedCategory;
   }
 
-  private void checkCategoryMember(long memberId, Category category){
-    if(category.getMember().getMemberId() != memberId)
+  private void checkCategoryMember(long memberId, Category category) {
+    if (category.getMember().getMemberId() != memberId) {
       throw new BusinessLogicException(CategoryExceptionCode.CATEGORY_NOT_ALLOWED);
+    }
   }
 
   @Transactional
@@ -78,6 +79,14 @@ public class CategoryService {
   public void deleteCategory(long categoryId, long memberId) {
     Category findCategory = findVerifiedCategory(categoryId, memberId);
     categoryRepository.deleteById(categoryId);
+  }
+
+  @Transactional
+  public void createBasicCategory(Member member) {
+    Category basicCategory = Category.builder().member(member)
+        .categoryColor("#000000").categoryName("기본").isHide(false).scope(0).build();
+
+    createCategory(basicCategory);
   }
 
 }

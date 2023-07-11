@@ -58,6 +58,7 @@ public class SecurityConfiguration {
         .and()
         .authorizeHttpRequests(authorize -> authorize
             .antMatchers("/users").permitAll()
+            .antMatchers("/users/search/password").permitAll()
             .antMatchers("/users/*").hasAnyRole("USER","ADMIN")
         )
         .oauth2Login()

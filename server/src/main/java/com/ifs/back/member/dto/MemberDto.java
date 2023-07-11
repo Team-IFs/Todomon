@@ -50,6 +50,15 @@ public class MemberDto {
   @AllArgsConstructor
   @NoArgsConstructor
   @Builder
+  public static class MemberSearch {
+
+    private String email;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @Builder
   public static class MemberPassword {
 
     @NotNull

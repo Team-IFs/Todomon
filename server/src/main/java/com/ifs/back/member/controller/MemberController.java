@@ -1,5 +1,6 @@
 package com.ifs.back.member.controller;
 
+import com.ifs.back.category.service.CategoryService;
 import com.ifs.back.member.dto.MemberDto;
 import com.ifs.back.member.entity.Member;
 import com.ifs.back.member.mapper.MemberMapper;
@@ -47,6 +48,7 @@ public class MemberController {
   private final static String MEMBER_DEFAULT_URL = "/users";
   private final MemberService memberService;
   private final MemberMapper mapper;
+  private final CategoryService categoryService;
 
   @Operation(summary = "회원 가입")
   @PostMapping
@@ -55,6 +57,8 @@ public class MemberController {
     Member member = mapper.memberPostToMember(requestBody);
     member.setTodomon(new Todomon());
     Member createdMember = memberService.createMember(member);
+
+    categoryService.createBasicCategory(createdMember);
 
     URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, createdMember.getMemberId());
 
@@ -139,6 +143,15 @@ public class MemberController {
     Page<MemberDto.MemberResponse> responsePage = mapper.memberPageToMemberResponseDtoPage(
         memberPage);
     return ResponseEntity.ok().body(responsePage);
+  }
+
+  @Operation(summary = "비밀번호 찾기", description = "소셜 로그인 회원은 사용 불가")
+  @PostMapping("/search/password")
+  public ResponseEntity searchPassword(
+      @Valid @RequestBody MemberDto.MemberSearch requestBody) {
+    log.info("## 비밀번호 찾기");
+    memberService.searchPassword(requestBody);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
 }
