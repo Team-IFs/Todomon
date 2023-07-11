@@ -12,7 +12,7 @@ spring:  # 환경변수
           google:
             client-id: ${google_clientId}
             client-secret: ${google_clientSecret}
-            scope: email
+            scope: email, profile
           naver:
             client-id: ${naver_clientId}
             client-secret: ${naver_clientSecret}
@@ -43,6 +43,14 @@ spring:  # 환경변수
 spring:
   config:
     import: 'aws-parameterstore:'
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail_username}
+    password: ${mail_password}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
