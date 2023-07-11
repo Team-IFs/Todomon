@@ -50,7 +50,7 @@ public class MemberController {
   private final MemberMapper mapper;
   private final CategoryService categoryService;
 
-  @Operation(summary = "회원 가입")
+  @Operation(summary = "회원 가입", description = "회원가입할 때 기본 카테고리 생성")
   @PostMapping
   public ResponseEntity postMember(@Valid @RequestBody MemberDto.MemberPost requestBody) {
     log.info("## 회원 가입");
