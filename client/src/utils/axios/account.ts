@@ -6,6 +6,10 @@ export interface UserData {
   password: string
 };
 
+export interface UserEmail {
+  email: string
+}
+
 type Result = 'SUCCESS' | 'FAIL';
 
 
@@ -18,6 +22,15 @@ export const loginRequest = async (userData: UserData): Promise<Result> => {
     return 'SUCCESS';
   } catch (error) {
     console.log(error);
+    return 'FAIL';
+  }
+}
+
+export const newPasswordRequest = async (userEmail: UserEmail): Promise<Result> => {
+  try {
+    await POST('/users/search/password', userEmail);
+    return 'SUCCESS'
+  } catch (error) {
     return 'FAIL';
   }
 }

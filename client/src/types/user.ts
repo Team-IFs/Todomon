@@ -11,3 +11,14 @@ export interface User {
     rightEyeColor: string,
   },
 };
+
+export interface PasswordForm {
+  currentPassword: string;
+  newPassword: string
+  newPasswordConfirmation: string
+}
+
+export interface PasswordRequestForm {
+  currentPassword: string,
+  newPassword: string
+}

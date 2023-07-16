@@ -108,7 +108,7 @@ const Login = () => {
             <Button variant='outlined' type='submit'>로그인</Button>
           </ButtonContainer>
           <BottomLogin>
-            <Button variant='text'>비밀번호 찾기</Button>
+            <Button variant='text' onClick={() => routeTo('/findpassword')}>비밀번호 찾기</Button>
             <Button variant='text' onClick={() => routeTo('/signup')}>회원가입</Button>
           </BottomLogin>
           <Divider>간편 로그인</Divider>
