@@ -56,13 +56,15 @@ public class CategoryController {
     log.info("## 카테고리 생성");
     Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Category category = mapper.categoryPostToCategory(requestBody);
-    category.setMember(memberService.findMember(currentId));
+    Member member = memberService.findMember(currentId);
+    category.setMember(member);
+    category.setIdx(member.getCategories().size());
     Category createdCategory = categoryService.createCategory(category);
     URI uri = UriCreator.createUri("/users/me/categories", createdCategory.getCategoryId());
     return ResponseEntity.created(uri).build();
   }
 
-  @Operation(summary = "카테고리 설정")
+  @Operation(summary = "카테고리 설정", description = "카테고리 이름 / 색상 중복 불가")
   @PatchMapping("/{category_id}")
   public ResponseEntity patchCategory(@PathVariable("category_id") @Positive long categoryId,
       @Valid @RequestBody CategoryDto.CategoryPatch requestBody, Principal principal) {

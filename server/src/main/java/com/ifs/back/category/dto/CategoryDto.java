@@ -44,6 +44,7 @@ public class CategoryDto {
     @Max(2)
     @Min(0)
     private int scope;
+    private long idx;
   }
   @Getter
   @AllArgsConstructor
@@ -54,6 +55,7 @@ public class CategoryDto {
     private String categoryColor;
     private boolean isHide;
     private int scope;
+    private long idx;
   }
 
   public static class CategoryPage extends PageImpl<CategoryResponse> {

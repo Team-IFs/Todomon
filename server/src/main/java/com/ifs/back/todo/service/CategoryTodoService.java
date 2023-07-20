@@ -82,6 +82,7 @@ public class CategoryTodoService {
         .categoryId(category.getCategoryId())
         .categoryName(category.getCategoryName()).isHide(category.isHide())
         .scope(category.getScope())
+        .idx(category.getIdx())
         .todos(todoMapper.todosToTodoResponses(category.getTodos())).build();
   }
 

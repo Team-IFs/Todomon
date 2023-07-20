@@ -16,6 +16,7 @@ public class CategoryTodoDto {
   private String categoryColor;
   private boolean isHide;
   private int scope;
+  private long idx;
   private List<TodoDto.TodoResponse> todos;
 
   public static class CategoryTodoPage extends PageImpl<CategoryTodoDto> {

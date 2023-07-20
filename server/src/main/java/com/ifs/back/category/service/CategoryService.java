@@ -7,6 +7,7 @@ import com.ifs.back.category.mapper.CategoryMapper;
 import com.ifs.back.category.repository.CategoryRepository;
 import com.ifs.back.exception.BusinessLogicException;
 import com.ifs.back.member.entity.Member;
+import com.ifs.back.member.exception.MemberExceptionCode;
 import com.ifs.back.todo.dto.CategoryTodoDto;
 import com.ifs.back.todo.entity.Todo;
 import java.util.Optional;
@@ -42,6 +43,16 @@ public class CategoryService {
         .ifPresent(findCategory::setScope);
     Optional.ofNullable(category.isHide())
         .ifPresent(findCategory::setHide);
+    Optional.ofNullable(category.getIdx())
+        .ifPresent(newIdx -> {
+          long currentIdx = findCategory.getIdx();
+          if (currentIdx < newIdx) {
+            categoryRepository.updateIndexDown(currentIdx, newIdx);
+          } else if (currentIdx > newIdx) {
+            categoryRepository.updateIndexUp(currentIdx, newIdx);
+          }
+          findCategory.setIdx(newIdx);
+        });
     Category savedCategory = categoryRepository.save(findCategory);
     log.info("## updated category: {}", savedCategory);
     return savedCategory;
