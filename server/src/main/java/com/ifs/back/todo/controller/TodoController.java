@@ -1,5 +1,6 @@
 package com.ifs.back.todo.controller;
 
+import com.ifs.back.category.entity.Category;
 import com.ifs.back.category.service.CategoryService;
 import com.ifs.back.member.service.MemberService;
 import com.ifs.back.todo.dto.CategoryTodoDto;
@@ -61,7 +62,9 @@ public class TodoController {
     log.info("## 할 일 생성");
     Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Todo todo = mapper.todoPostToTodo(requestBody);
-    todo.setCategory(categoryService.findVerifiedCategory(categoryId, currentId));
+    Category category = categoryService.findVerifiedCategory(categoryId, currentId);
+    todo.setCategory(category);
+    todo.setIdx(category.getTodos().size());
     Todo createdTodo = todoService.createTodo(todo);
     URI uri = UriCreator.createUri("/users/me/todos", createdTodo.getTodoId());
     return ResponseEntity.created(uri).build();

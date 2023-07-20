@@ -20,6 +20,7 @@ public class TodoDto {
   public static class TodoPost {
     @NotNull(message = "이름을 비울 수 없습니다.")
     private String todoName;
+    @NotNull
     private LocalDate date;
   }
 
@@ -33,6 +34,7 @@ public class TodoDto {
     private LocalDate endAt;
     @Schema(defaultValue = "W/1,2")
     private String repeated;
+    private long idx;
   }
 
   @Getter
@@ -46,6 +48,7 @@ public class TodoDto {
     private LocalDate endAt;
     private boolean isDone;
     private String repeated;
+    private long idx;
   }
 
 }

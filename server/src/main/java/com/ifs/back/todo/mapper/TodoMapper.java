@@ -38,6 +38,8 @@ public interface TodoMapper {
     response.endAt( todo.getEndAt() );
     response.categoryId(todo.getCategory().getCategoryId());
     response.repeated( todo.getRepeated() );
+    response.idx( todo.getIdx() );
+    response.isDone( todo.isDone() );
 
     return response.build();
   }

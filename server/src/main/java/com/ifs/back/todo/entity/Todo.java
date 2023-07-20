@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +30,11 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @ToString
+@Table(
+    uniqueConstraints={
+        @UniqueConstraint(name = "UniqueTodoNameAndCategory", columnNames = {"todoName", "category_id"})
+    }
+)
 public class Todo extends Auditable {
   @Id
   @Setter
@@ -47,8 +54,11 @@ public class Todo extends Auditable {
   @Column
   @Setter
   private String repeated;
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @Setter
   @JoinColumn(name = "category_id")
   private Category category;
+  @Column(nullable = false)
+  @Setter
+  private long idx;
 }
