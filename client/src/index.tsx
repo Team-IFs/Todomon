@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { theme } from '../src/styles/theme';
 import { ThemeProvider } from '@emotion/react';
 import { RecoilRoot } from 'recoil';
+import { darkModeTheme } from '../src/theme/theme'
+import { CssBaseline } from '@mui/material';
 
 
 const root = ReactDOM.createRoot(
@@ -12,7 +13,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <RecoilRoot>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkModeTheme}>
+      <CssBaseline/>
       <App />
     </ThemeProvider>
   </RecoilRoot>

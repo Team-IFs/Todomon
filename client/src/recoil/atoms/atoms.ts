@@ -20,8 +20,8 @@ export const IsLogin = atom({
     default: false,
     effects_UNSTABLE: [persistAtom],
 })
-export const DarkMode = atom({
-    key: 'DarkMode',
+export const TempDarkMode = atom({
+    key: 'TempDarkMode',
     default: false,
     effects_UNSTABLE: [persistAtom],
 })

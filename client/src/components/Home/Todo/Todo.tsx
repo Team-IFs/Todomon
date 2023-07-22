@@ -8,7 +8,6 @@ const Card = styled.div({
   alignItems: 'center',
   width: '90%',
   height: '100%',
-  backgroundColor: 'white',
   margin: '10px',
   borderRadius: '10px',
   padding: '20px'
