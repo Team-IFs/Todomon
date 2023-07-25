@@ -1,9 +1,19 @@
-import React from "react";
+import { useTheme } from '@mui/material/styles';
+import { DARK } from '../theme/theme';
+import { grey } from '@mui/material/colors';
+
 function Logo() {
+  const theme = useTheme();
+  const darkTheme = theme.palette.mode === DARK ? true : false;
+  
+  const bgColor = darkTheme ? '#000': '#fff';
+  const strokeColor = darkTheme ? '#fff': '#000';
+  const fontColor = grey[600];
+
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="215" height="60" viewBox='260 -30 200 200'>
       <g className="layer">
-        <path fill="#fff" stroke="#000" d="M15 15H416V136H15z"></path>
+        <path fill={bgColor} stroke={strokeColor} d="M15 15H416V136H15z"></path>
         <g
           fill="none"
           fillRule="nonzero"
@@ -18,11 +28,11 @@ function Logo() {
         >
           <path
             fill="none"
-            stroke="#757575"
+            stroke={fontColor}
             strokeWidth="3.5"
             d="M15 136.48V15h400v121.48H15z"
           ></path>
-          <g fill="#757575" data-paper-data='{"elementType":"logo"}'>
+          <g fill={fontColor} data-paper-data='{"elementType":"logo"}'>
             <g data-paper-data='{"elementType":"text"}'>
               <g data-paper-data='{"baseline":67.2,"elementType":"row"}'>
                 <g data-paper-data='{"baselineProportion":0.9882352941176471,"fontSize":100,"baseline":67.2,"elementType":"word"}'>

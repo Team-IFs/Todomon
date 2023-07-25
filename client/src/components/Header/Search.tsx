@@ -9,9 +9,6 @@ const SearchBar = styled.div({
   borderRadius: '5px',
   justifyContent: 'center',
   padding: '5px',
-  '&:hover': {
-    backgroundColor: '#eeeeee',
-  },
 })
 
 const SearchIconWrapper = styled.div({
@@ -28,11 +25,11 @@ const SearchInput = styled.input({
 const Search = () => {
   return (
     <SearchBar>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <SearchInput placeholder='search' />
-            </SearchBar>
+      <SearchIconWrapper>
+        <SearchIcon />
+      </SearchIconWrapper>
+      <SearchInput placeholder='search' />
+    </SearchBar>
   )
 }
 export default Search
