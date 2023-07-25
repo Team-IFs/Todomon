@@ -14,7 +14,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ReactComponent as CatBasic } from '../../../assets/cat-basic.svg';
 import { SubItem } from '../../../types/todo'
 import { AddNewItem } from './CRUD';
-import { setTodoDoneState } from '../../../utils/axios/todo';
+import { getTodaysTodo, setTodo, setTodoDoneState } from '../../../utils/axios/todo';
 
 const CatContainer = styled.div({
   display: 'flex',
@@ -101,8 +101,8 @@ const Label = styled.div`
   font-weight: bold;
 `
 
-const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: SubItem[], color: string, replaceSubItems: any, reorderTodoId: any, isAddTodoClicked: boolean, clickedCategoryId: number }>
-  = ({ todoIndex, categoryId, subItems, color, replaceSubItems, reorderTodoId, isAddTodoClicked, clickedCategoryId }) => {
+const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: SubItem[], color: string, replaceSubItems: any, reorderTodoId: any, isAddTodoClicked: boolean, clickedCategoryId: number, readTodo: any }>
+  = ({ todoIndex, categoryId, subItems, color, replaceSubItems, reorderTodoId, isAddTodoClicked, clickedCategoryId, readTodo }) => {
     const pendingColor = '#eeeeee';
 
 
@@ -128,8 +128,10 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
 
     const handleOnKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        !!newInputValue.trim() && AddNewItem(newInputValue, categoryId, subItems, replaceSubItems)
-        setNewInputValue('');
+        !!newInputValue.trim() && setTodo(clickedCategoryId, newInputValue, '2023-07-25').then(() => {
+          readTodo();
+          setNewInputValue('');
+        })
       }
     };
 
@@ -251,7 +253,7 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
                         <CatContainer >
                           <CatBasic fill={pendingColor} />
                         </CatContainer>
-                        <Input value={newInputValue} onChange={handleOnChange} onKeyPress={handleOnKeyPress} />
+                        <Input value={newInputValue} onChange={handleOnChange} onKeyPress={handleOnKeyPress} autoFocus/>
                       </CatandTodoContainer>
                       <MoreHorizIcon color='primary' />
                 </ItemContainer>

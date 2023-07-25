@@ -54,14 +54,17 @@ const getListStyle = () => ({
 const OuterTodo = () => {
   let [items, setItems] = useState<CategoryItem[]>([]);
 
+  const readTodo = () => {
+    const todaysTodo = getTodaysTodo();
+      todaysTodo.then((res) => {
+        if (res) {
+          setItems(res.content);
+        }
+      });
+  }
   // api 요청해서 todolist 불러오기
   useEffect(() => {
-    const todaysTodo = getTodaysTodo();
-    todaysTodo.then((res) => {
-      if (res) {
-        setItems(res.content);
-      }
-    });
+    readTodo()
   }, []);
 
   /**
@@ -196,6 +199,7 @@ const OuterTodo = () => {
                         reorderTodoId={reorderTodoId}
                         isAddTodoClicked={isAddTodoClicked}
                         clickedCategoryId={clickedCategoryId}
+                        readTodo={readTodo}
                       />
                     </div>
 
