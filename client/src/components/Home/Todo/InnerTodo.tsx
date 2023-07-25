@@ -12,7 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Date from './Date'
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ReactComponent as CatBasic } from '../../../assets/cat-basic.svg';
-import { CategoryItem, SubItem } from '../../../types/todo'
+import { SubItem } from '../../../types/todo'
 import { AddNewItem } from './CRUD';
 import { setTodoDoneState } from '../../../utils/axios/todo';
 
@@ -29,13 +29,11 @@ const ItemContainer = styled.div({
   justifyContent: 'space-between',
   margin: '5px 0',
   fontWeight: 'normal',
-  color: 'black',
 })
 
 const CatandTodoContainer = styled.div({
   display: 'flex',
   fontWeight: 'normal',
-  color: 'black',
 })
 
 
@@ -103,27 +101,23 @@ const Label = styled.div`
   font-weight: bold;
 `
 
-const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: SubItem[], color: string, replaceSubItems: any, reorderTodoId: any, isAddTodoClicked: boolean, clickedCategoryId: string }>
+const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: SubItem[], color: string, replaceSubItems: any, reorderTodoId: any, isAddTodoClicked: boolean, clickedCategoryId: number }>
   = ({ todoIndex, categoryId, subItems, color, replaceSubItems, reorderTodoId, isAddTodoClicked, clickedCategoryId }) => {
     const pendingColor = '#eeeeee';
 
 
     const updateTodoDone = async (todoId:number, isDone:boolean) => {
       const res = await setTodoDoneState(todoId, isDone);
-      // delete success
     }
 
     const handleCatClick = (categoryId: number, id: number, isDone: boolean, index: number) => {
-      
       updateTodoDone(id, !isDone);
-
-      
       const newSubItem = subItems.map((todo: SubItem) => todo.todoId === id
         ? { ...todo, done: !isDone }
         : todo
       )
       console.log(newSubItem);
-      replaceSubItems(newSubItem, todoIndex); // 현재 클릭한 item의 카테고리 id로 수정 -> 집가서 replace 부분 다시 뜯어보기
+      replaceSubItems(newSubItem, todoIndex);
     }
 
     const handleOnChange = (e: any) => {
@@ -202,7 +196,7 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
                           <CatContainer onClick={() => handleCatClick(item.categoryId, item.todoId, item.done, index)}>
                             <CatBasic fill={item.done ? color : pendingColor} />
                           </CatContainer>
-                          {`${item.todoName} todoId:${item.todoId} index:${index} isDone:${item.done}`}
+                          {`${item.todoName} todoId:${item.todoId} item.idx:${item.idx} index:${index} isDone:${item.done}`}
 
                         </CatandTodoContainer>
                         <MoreHorizIcon color='primary' onClick={() => handleClickOpen(item)} />
@@ -242,24 +236,17 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
                               </Button>
                             </DialogActions>
                           </BootstrapDialog>
-
                         )}
-
                       </ItemContainer>
                     </div>
                   )}
-
                 </Draggable>
-
-
               ))}
 
               {provided.placeholder}
               {/* 새로운 input 추가 */}
-              {subItems.map((item) => {
-                if (`${clickedCategoryId}-0` === `${item.todoId}` && isAddTodoClicked) {
-                  return (
-                    <ItemContainer key={item.todoId}>
+              {clickedCategoryId === categoryId && isAddTodoClicked
+                ? <ItemContainer>
                       <CatandTodoContainer>
                         <CatContainer >
                           <CatBasic fill={pendingColor} />
@@ -267,12 +254,8 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
                         <Input value={newInputValue} onChange={handleOnChange} onKeyPress={handleOnKeyPress} />
                       </CatandTodoContainer>
                       <MoreHorizIcon color='primary' />
-                    </ItemContainer>
-                  )
-                }
-                return null;
-              })
-              }
+                </ItemContainer>
+                : null }
             </div>
 
           )}

@@ -1,5 +1,5 @@
 import { EventInput } from '@fullcalendar/core'
-import { static_items } from './../Todo/data'
+import { static_items, AtomItems } from './../Todo/data'
 
 let eventGuid = 0
 let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today

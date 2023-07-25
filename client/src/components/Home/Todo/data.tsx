@@ -1,3 +1,7 @@
+import { useRecoilState } from 'recoil';
+import { TodoList } from '../../../recoil/atoms/atoms';
+import { CategoryItem } from '../../../types/todo';
+
 export const static_items = [
   {
     id: "0",
@@ -63,3 +67,9 @@ export const static_items = [
     ]
   }
 ];
+
+
+export const AtomItems = ():CategoryItem[] => {
+  const [todolist] = useRecoilState(TodoList); // 저장된 TodoList를 가져오기
+  return todolist;
+}

@@ -5,6 +5,7 @@ export interface CategoryItem {
   categoryName: string,
   hide: boolean,
   scope: number,
+  idx: number,
   todos: SubItem[]
 }
 
@@ -13,6 +14,7 @@ export interface SubItem {
   categoryId: number,
   done: boolean,
   endAt: string,
+  idx: number,
   repeated: string | null,
   startAt: string,
   todoId: number,

@@ -4,10 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import InnerTodo from './InnerTodo';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { CategoryItem, SubItem } from '../../../types/todo'
-import { getTodaysTodo } from '../../../utils/axios/todo';
-import { ReadItem } from './CRUD';
-import { useRecoilState } from 'recoil';
-import { TodoList } from '../../../recoil/atoms/atoms';
+import { getTodaysTodo, setCategoryIndex, setTodoIndex } from '../../../utils/axios/todo';
 
 
 /** dnd순서상의 id를 다시 부여하는 함수 */
@@ -24,11 +21,9 @@ const reorderCategoryId = (list: any[], sourceIndex: number, destIndex: number) 
   // 내부 todos 들의 categoryId, id 앞자리를 재부여
   list.map((category, index) => {
     category.id = index + '';
-    // category.subItems = reorderTodoId(category.subItems, index);
-    category.subItems = reorderTodoId(category.subItems, index);
+    category.subItems = reorderTodoId(category.todos, index);
     return category;
   })
-  // setDataLocalStorage('todos', list);
   return list;
 }
 
@@ -36,11 +31,9 @@ const reorderCategoryId = (list: any[], sourceIndex: number, destIndex: number) 
 const reorderTodoId = (list: any[], newCategoryId: number) => {
   list.map((todo, index) => {
     todo.categoryId = newCategoryId;
-    // todo.id = `${newCategoryId}-${index}`
-    todo.id = index; // 그냥 index로 바꾸기.
+    todo.id = index;
     return todo;
   })
-
   return list;
 };
 
@@ -59,7 +52,6 @@ const getListStyle = () => ({
 });
 
 const OuterTodo = () => {
-  const [todolist, setTodolist] = useRecoilState(TodoList); // 저장된 TodoList를 가져오기
   let [items, setItems] = useState<CategoryItem[]>([]);
 
   // api 요청해서 todolist 불러오기
@@ -67,7 +59,6 @@ const OuterTodo = () => {
     const todaysTodo = getTodaysTodo();
     todaysTodo.then((res) => {
       if (res) {
-        setTodolist(res.content)
         setItems(res.content);
       }
     });
@@ -87,50 +78,48 @@ const OuterTodo = () => {
     })
   }
 
-  const [clickedCategoryId, setClickedCategoryId] = useState('0') // 클릭한 카테고리의 아이디 저장(새 투두 만들때 사용할듯)
-  const [isAddTodoClicked, setIsAddTodoClicked] = useState(false); // add todo가 클릭되었는지 여부를 저장(새 투두 만들때 사용할듯)
+  const [clickedCategoryId, setClickedCategoryId] = useState(0);
+  const [isAddTodoClicked, setIsAddTodoClicked] = useState(false);
 
   const handleAddTodoClick = (item: CategoryItem) => {
     setIsAddTodoClicked(!isAddTodoClicked) // 카테고리가 클릭됐다 여부를 누를때마다 토글
-    console.log(item.categoryId)
-    console.log(item.categoryId.toString())
-    setClickedCategoryId(item.categoryId.toString()) // 외부 카테고리의 id(문자, "0", "1")를 저장
+    setClickedCategoryId(item.categoryId)
   }
 
   const onDragEnd = (result: any) => {
-    // dropped outside the list
+    // list 바깥에 drop됐을 때
     if (!result.destination) {
       return;
     }
     const sourceIndex = result.source.index;
     const destIndex = result.destination.index;
+
+    /* 카테고리를 드래그하는 경우 */
     if (result.type === 'droppableItem') {
-      setItems(reorderCategoryId(items, sourceIndex, destIndex)) // 카테고리 id 재부여
-    } else if (result.type === 'droppableSubItem') {
-      const itemSubItemMap = items.reduce((acc: any, item: any) => {
-        acc[item.id] = item.subItems;
-        return acc;
-      }, {});
-
-      const sourceParentId = result.source.droppableId;
-      const destParentId = result.destination.droppableId;
-
-      const sourceSubItems = itemSubItemMap[sourceParentId];
-      const destSubItems = itemSubItemMap[destParentId];
+      setItems(reorderCategoryId(items, sourceIndex, destIndex))
+      setCategoryIndex(Number(result.draggableId), destIndex);
+    }
+    /* 할 일을 드래그 하는 경우 */
+    else if (result.type === 'droppableSubItem') {
+      // 끌어온 item이 속한 카테고리의 실제 id
+      const sourceParentId = Number(result.source.droppableId);
+      const destParentId = Number(result.destination.droppableId);
+      // 끌린 item 각각의 카테고리 내부에서의 화면상의 index(0,1,2)
+      const sourceIndex = result.source.index;
+      const destIndex = result.destination.index;
 
       let newItems = [...items];
 
       // 같은 카테고리 내부에서의 정렬
       if (sourceParentId === destParentId) {
+        const unorderedSubItem = items.filter(category => category.categoryId === sourceParentId)[0].todos; 
         const reorderedSubItems: SubItem[] = reorder(
-          sourceSubItems,
+          unorderedSubItem,
           sourceIndex,
           destIndex
         );
-        console.log(reorderedSubItems);
+        console.log('** reorderedSubItems:', reorderedSubItems);
         const newSubItems = reorderedSubItems.map((item, index) => {
-          // 해당 item의 자체적인 index로 변경
-          item.todoId = index;
           return item;
         })
 
@@ -142,12 +131,17 @@ const OuterTodo = () => {
           return item;
         });
         setItems(newItems);
-        // setDataLocalStorage('todos', items);
+
+        // 서버에 전달
+        setTodoIndex(Number(result.draggableId),destIndex);
 
 
       }
       // 다른 카테고리로 넘어갈경우
       else {
+        const sourceSubItems = items.filter(category => category.categoryId === sourceParentId)[0].todos; 
+        const destSubItems = items.filter(category => category.categoryId === destParentId)[0].todos;
+
         let newSourceSubItems = [...sourceSubItems];
         const [draggedItem] = newSourceSubItems.splice(sourceIndex, 1);
         let newDestSubItems = [...destSubItems];
@@ -165,7 +159,8 @@ const OuterTodo = () => {
           return item;
         });
         setItems(newItems);
-        // setDataLocalStorage('todos', newItems);
+        //TODO: 카테고리를 넘어서 할 일 드래그 하는건 성공, 서버에 저장하는 방법?
+        // setCategoryIndex(categoryIndex, newIdx);
 
       }
     }
@@ -180,7 +175,7 @@ const OuterTodo = () => {
             style={getListStyle()}
           >
             {items && items.map((item: CategoryItem, index: number) => (
-              <Draggable key={item.categoryId} draggableId={item.categoryId.toString()} index={index}>
+              <Draggable key={item.idx} draggableId={item.categoryId.toString()} index={index}>
                 {(provided) => (
                   <>
                     <div
@@ -189,11 +184,11 @@ const OuterTodo = () => {
                       {...provided.draggableProps}
                     >
                       <TitleContainer categoryColor={item.categoryColor}>
-                        {`${item.categoryName} categoryId:${item.categoryId} index:${index}`}
+                        {`${item.categoryName} categoryId:${item.categoryId} idx:${item.idx} index:${index}`}
                         <AddCircleOutlineIcon style={{ color: item.categoryColor }} onClick={() => handleAddTodoClick(item)} />
                       </TitleContainer>
                       <InnerTodo
-                        todoIndex={index}
+                        todoIndex={item.idx}
                         categoryId={item.categoryId}
                         subItems={item.todos}
                         color={item.categoryColor}

@@ -29,7 +29,7 @@ instance.interceptors.response.use(
   (error) => {
     return new Promise((resolve, reject) => {
       if (error.response.status === 401 && error.config) {
-        alert('401에러입니다')
+        alert('로그인 실패')
         if (window.location.pathname !== '/login') {
           removeCookie('accessJwtToken');
           window.location.replace('/');
