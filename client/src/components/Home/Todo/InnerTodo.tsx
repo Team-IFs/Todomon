@@ -14,7 +14,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ReactComponent as CatBasic } from '../../../assets/cat-basic.svg';
 import { SubItem } from '../../../types/todo'
 import { AddNewItem } from './CRUD';
-import { getTodaysTodo, setTodo, setTodoDoneState } from '../../../utils/axios/todo';
+import { deleteTodo, getTodaysTodo, setTodo, setTodoDetail, setTodoDoneState } from '../../../utils/axios/todo';
 
 const CatContainer = styled.div({
   display: 'flex',
@@ -128,6 +128,7 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
 
     const handleOnKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
+        //DB에 새 할 일 추가
         !!newInputValue.trim() && setTodo(clickedCategoryId, newInputValue, '2023-07-25').then(() => {
           readTodo();
           setNewInputValue('');
@@ -152,22 +153,26 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
     };
 
     const [todoChange, setTodoChange] = useState('');
-    const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleTodoChange = (e: any) => {
       setTodoChange(e.target.value)
     }
 
     const handleSaveBtn = (item: SubItem) => {
-      const newSubItem = subItems.map((todo: SubItem) => todo.todoId === item.todoId
-        ? { ...todo, content: todoChange }
-        : todo
-      )
-      replaceSubItems(newSubItem, item.categoryId)
-      handleClose();
+      if (confirm('변경사항을 저장할까요?')) {
+        item.todoName = todoChange;
+        console.log(item);
+        setTodoDetail(item.todoId, item).then(() => {
+          handleClose();
+          readTodo();
+        });
+      }
     }
     const handleDeleteTodo = (clickedItem: SubItem) => {
       subItems.splice(Number(clickedItem.todoId), 1)
       replaceSubItems(subItems)
       reorderTodoId(subItems, clickedItem.categoryId)
+      //DB에서 삭제
+      deleteTodo(clickedItem.todoId).then(() => readTodo());
       setOpen(false);
     }
 
@@ -215,7 +220,7 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
                               <DetailConatiner>
                                 <RowContainer>
                                   <Label>할일</Label>
-                                  <Input className='input' defaultValue={clickedItem.todoName} onChange={handleTodoChange} />
+                                  <Input className='input' defaultValue={clickedItem.todoName} onChange={handleTodoChange} onBlur={handleTodoChange}/>
                                 </RowContainer>
                                 <RowContainer>
                                   <Label>날짜</Label>

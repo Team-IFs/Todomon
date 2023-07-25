@@ -1,6 +1,7 @@
-import { GET, PATCH, PATCH_NODATA, POST } from './axios';
+import { DELETE, GET, PATCH, PATCH_NODATA, POST } from './axios';
 import { getCookie } from '../cookies/cookies';
 import { today } from '../today';
+import { SubItem } from '../../types/todo';
 
 type Result = 'SUCCESS' | 'FAIL';
 
@@ -65,6 +66,29 @@ export const setTodoDoneState = async (todoId: number, isDone: boolean) => {
 }
 
 /**
+ * 특정 할 일의 세부정보를 업데이트 하는 함수
+ * @param todoId
+ * @param newTodo
+ */
+export const setTodoDetail = async (todoId: number, newTodo: SubItem) => {
+  const requestHeader = {
+    params: {
+      todoName: newTodo.todoName,
+      startAt: newTodo.startAt,
+      endAt: newTodo.endAt,
+      repeated: newTodo.repeated
+    }
+  }
+  try {
+    const response = await PATCH(`/users/me/todos/${todoId}`, requestHeader);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
  * 특정 할 일의 index를 업데이트 하는 함수
  * @param todoId
  * @param newIdx
@@ -98,6 +122,19 @@ export const setCategoryIndex = async (CategoryId: number, newIdx: number) => {
   try {
     const response = await PATCH(`/users/me/categories/${CategoryId}`, requestHeader);
     return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
+ * 특정 할 일을 삭제하는 함수
+ * @param todoId
+ */
+export const deleteTodo = async (todoId: number) => {
+  try {
+    await DELETE(`/users/me/todos/${todoId}`);
   } catch (error) {
     console.error(error);
     return null;
