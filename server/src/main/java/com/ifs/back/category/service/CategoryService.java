@@ -87,9 +87,13 @@ public class CategoryService {
   }
 
   @Transactional
-  public void deleteCategory(long categoryId, long memberId) {
-    Category findCategory = findVerifiedCategory(categoryId, memberId);
-    categoryRepository.deleteById(categoryId);
+  public void deleteCategory(long categoryId, Member member) {
+    if(member.getCategories().size() > 1) {
+      Category findCategory = findVerifiedCategory(categoryId, member.getMemberId());
+      categoryRepository.deleteById(categoryId);
+    }
+    else
+      throw new BusinessLogicException(CategoryExceptionCode.AT_LEAST_ONE_CATEGORY);
   }
 
   @Transactional

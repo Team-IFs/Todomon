@@ -81,8 +81,8 @@ public class CategoryController {
   public ResponseEntity deleteCategory(@PathVariable("category_id") @Positive long categoryId,
       Principal principal) {
     log.info("## 카테고리 삭제");
-    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
-    categoryService.deleteCategory(categoryId, currentId);
+    Member currentMember = memberService.findMemberByEmail(Util.checkPrincipal(principal));
+    categoryService.deleteCategory(categoryId, currentMember);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
