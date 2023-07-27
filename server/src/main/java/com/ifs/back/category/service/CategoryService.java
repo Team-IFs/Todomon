@@ -90,7 +90,8 @@ public class CategoryService {
   public void deleteCategory(long categoryId, Member member) {
     if(member.getCategories().size() > 1) {
       Category findCategory = findVerifiedCategory(categoryId, member.getMemberId());
-      categoryRepository.deleteById(categoryId);
+      categoryRepository.updateAfterDeleteCategory(findCategory.getIdx());
+      categoryRepository.deleteById(findCategory.getCategoryId());
     }
     else
       throw new BusinessLogicException(CategoryExceptionCode.AT_LEAST_ONE_CATEGORY);

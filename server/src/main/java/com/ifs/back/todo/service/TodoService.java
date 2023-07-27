@@ -45,6 +45,8 @@ public class TodoService {
           }
           findTodo.setIdx(newIdx);
         });
+    Optional.ofNullable(todo.getCategory())
+        .ifPresent(findTodo::setCategory);
     Todo savedTodo = todoRepository.save(findTodo);
     log.info("## updated todo: {}", savedTodo);
     return savedTodo;
@@ -65,7 +67,9 @@ public class TodoService {
   }
 
   @Transactional
-  public void deleteTodo(long todoId) {
+  public void deleteTodo(long todoId, long memberId) {
+    Todo findTodo = findVerifiedTodo(todoId, memberId);
+    todoRepository.updateAfterDeleteTodo(findTodo.getIdx());
     todoRepository.deleteById(todoId);
   }
 

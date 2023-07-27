@@ -27,5 +27,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   @Query(value = "update category c set c.idx = c.idx-1 where c.idx > :currentIdx and c.idx <= :newIdx ", nativeQuery = true)
   void updateIndexDown (@Param("currentIdx") long currentIdx, @Param("newIdx") long newIdx);
 
+  @Modifying(clearAutomatically = true)
+  @Query(value = "update category c set c.idx = c.idx-1 where c.idx > :deletedIdx", nativeQuery = true)
+  void updateAfterDeleteCategory (@Param("deletedIdx") long deletedIdx);
+
 
 }

@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.security.Principal;
+import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -78,6 +79,12 @@ public class TodoController {
     Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Todo todo = mapper.todoPatchToTodo(requestBody);
     todo.setTodoId(todoId);
+
+    if(requestBody.getCategoryId() > 0){
+      Category newCategory = categoryService.findVerifiedCategory(requestBody.getCategoryId(), currentId);
+      todo.setCategory(newCategory);
+    }
+
     Todo updatedTodo = todoService.updateTodo(todo, currentId);
     return ResponseEntity.ok().body(mapper.todoToTodoResponse(updatedTodo));
   }
@@ -104,9 +111,11 @@ public class TodoController {
 
   @Operation(summary = "할 일 삭제")
   @DeleteMapping("/{todo_id}")
-  public ResponseEntity deleteTodo(@PathVariable("todo_id") @Positive long todoId) {
+  public ResponseEntity deleteTodo(@PathVariable("todo_id") @Positive long todoId,
+      Principal principal) {
     log.info("## 할 일 삭제");
-    todoService.deleteTodo(todoId);
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    todoService.deleteTodo(todoId, currentId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

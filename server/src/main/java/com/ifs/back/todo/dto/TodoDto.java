@@ -35,6 +35,7 @@ public class TodoDto {
     @Schema(defaultValue = "W/1,2")
     private String repeated;
     private long idx;
+    private long categoryId;
   }
 
   @Getter
