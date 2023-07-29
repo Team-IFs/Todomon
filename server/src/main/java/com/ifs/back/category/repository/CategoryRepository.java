@@ -20,16 +20,16 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   Page<Category> findAllByMemberId (@Param("memberId") long memberId, Pageable pageable);
 
   @Modifying(clearAutomatically = true)
-  @Query(value = "update category c set c.idx = c.idx+1 where c.idx >= :newIdx and c.idx < :currentIdx ", nativeQuery = true)
-  void updateIndexUp (@Param("currentIdx") long currentIdx, @Param("newIdx") long newIdx);
+  @Query(value = "update category c set c.idx = c.idx+1 where c.idx >= :newIdx and c.idx < :currentIdx and c.member_id = :memberId", nativeQuery = true)
+  void updateIndexUp (@Param("currentIdx") long currentIdx, @Param("newIdx") long newIdx, @Param("memberId") long memberId);
 
   @Modifying(clearAutomatically = true)
-  @Query(value = "update category c set c.idx = c.idx-1 where c.idx > :currentIdx and c.idx <= :newIdx ", nativeQuery = true)
-  void updateIndexDown (@Param("currentIdx") long currentIdx, @Param("newIdx") long newIdx);
+  @Query(value = "update category c set c.idx = c.idx-1 where c.idx > :currentIdx and c.idx <= :newIdx and c.member_id = :memberId", nativeQuery = true)
+  void updateIndexDown (@Param("currentIdx") long currentIdx, @Param("newIdx") long newIdx, @Param("memberId") long memberId);
 
   @Modifying(clearAutomatically = true)
-  @Query(value = "update category c set c.idx = c.idx-1 where c.idx > :deletedIdx", nativeQuery = true)
-  void updateAfterDeleteCategory (@Param("deletedIdx") long deletedIdx);
+  @Query(value = "update category c set c.idx = c.idx-1 where c.idx > :deletedIdx and c.member_id = :memberId", nativeQuery = true)
+  void updateAfterDeleteCategory (@Param("deletedIdx") long deletedIdx, @Param("memberId") long memberId);
 
 
 }

@@ -69,10 +69,10 @@ public class CategoryController {
   public ResponseEntity patchCategory(@PathVariable("category_id") @Positive long categoryId,
       @Valid @RequestBody CategoryDto.CategoryPatch requestBody, Principal principal) {
     log.info("## 카테고리 설정");
-    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    Member currentMember = memberService.findMemberByEmail(Util.checkPrincipal(principal));
     Category category = mapper.categoryPatchToCategory(requestBody);
     category.setCategoryId(categoryId);
-    Category updatedCategory = categoryService.updateCategory(category, currentId);
+    Category updatedCategory = categoryService.updateCategory(category, currentMember);
     return ResponseEntity.ok().body(mapper.categoryToCategoryResponse(updatedCategory));
   }
 

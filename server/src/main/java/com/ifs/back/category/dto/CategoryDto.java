@@ -44,6 +44,7 @@ public class CategoryDto {
     @Max(2)
     @Min(0)
     private int scope;
+    @Min(0)
     private long idx;
   }
   @Getter

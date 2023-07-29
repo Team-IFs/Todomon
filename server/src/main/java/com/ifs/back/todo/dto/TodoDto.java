@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +35,9 @@ public class TodoDto {
     private LocalDate endAt;
     @Schema(defaultValue = "W/1,2")
     private String repeated;
+    @Min(0)
     private long idx;
+    @Min(1)
     private long categoryId;
   }
 

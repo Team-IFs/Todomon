@@ -33,7 +33,8 @@ public class CategoryService {
   }
 
   @Transactional
-  public Category updateCategory(Category category, long memberId) {
+  public Category updateCategory(Category category, Member member) {
+    long memberId = member.getMemberId();
     Category findCategory = findVerifiedCategory(category.getCategoryId(), memberId);
     Optional.ofNullable(category.getCategoryName())
         .ifPresent(findCategory::setCategoryName);
@@ -45,11 +46,15 @@ public class CategoryService {
         .ifPresent(findCategory::setHide);
     Optional.ofNullable(category.getIdx())
         .ifPresent(newIdx -> {
+          if(member.getCategories().size() < newIdx){
+            throw new BusinessLogicException(CategoryExceptionCode.CATEGORY_INDEX_ERROR);
+          }
+
           long currentIdx = findCategory.getIdx();
           if (currentIdx < newIdx) {
-            categoryRepository.updateIndexDown(currentIdx, newIdx);
+            categoryRepository.updateIndexDown(currentIdx, newIdx, memberId);
           } else if (currentIdx > newIdx) {
-            categoryRepository.updateIndexUp(currentIdx, newIdx);
+            categoryRepository.updateIndexUp(currentIdx, newIdx, memberId);
           }
           findCategory.setIdx(newIdx);
         });
@@ -90,7 +95,7 @@ public class CategoryService {
   public void deleteCategory(long categoryId, Member member) {
     if(member.getCategories().size() > 1) {
       Category findCategory = findVerifiedCategory(categoryId, member.getMemberId());
-      categoryRepository.updateAfterDeleteCategory(findCategory.getIdx());
+      categoryRepository.updateAfterDeleteCategory(findCategory.getIdx(), member.getMemberId());
       categoryRepository.deleteById(findCategory.getCategoryId());
     }
     else

@@ -5,6 +5,8 @@ import com.ifs.back.todo.entity.Todo;
 import com.ifs.back.todo.exception.TodoExceptionCode;
 import com.ifs.back.todo.repository.TodoRepository;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class TodoService {
   @Transactional
   public Todo updateTodo(Todo todo, long memberId) {
     Todo findTodo = findVerifiedTodo(todo.getTodoId(), memberId);
+    long currentCategoryId = findTodo.getCategory().getCategoryId();
 
     Optional.ofNullable(todo.getTodoName())
         .ifPresent(findTodo::setTodoName);
@@ -35,18 +38,25 @@ public class TodoService {
         .ifPresent(findTodo::setEndAt);
     Optional.ofNullable(todo.getRepeated())
         .ifPresent(findTodo::setRepeated);
-    Optional.ofNullable(todo.getIdx())
+    Optional.ofNullable(todo.getCategory())
+        .ifPresent(findTodo::setCategory);
+    OptionalLong.of(todo.getIdx())
         .ifPresent(newIdx -> {
+          if(newIdx > findTodo.getCategory().getTodos().size()){
+            throw new BusinessLogicException(TodoExceptionCode.TODO_INDEX_ERROR);
+          }
+
           long currentIdx = findTodo.getIdx();
-          if (currentIdx < newIdx) {
-            todoRepository.updateIndexDown(currentIdx, newIdx);
+          if(currentCategoryId != findTodo.getCategory().getCategoryId()){
+            todoRepository.updateAfterCategoryChange(newIdx, findTodo.getCategory().getCategoryId());
+          }
+          else if (currentIdx < newIdx) {
+            todoRepository.updateIndexDown(currentIdx, newIdx, findTodo.getCategory().getCategoryId());
           } else if (currentIdx > newIdx) {
-            todoRepository.updateIndexUp(currentIdx, newIdx);
+            todoRepository.updateIndexUp(currentIdx, newIdx, findTodo.getCategory().getCategoryId());
           }
           findTodo.setIdx(newIdx);
         });
-    Optional.ofNullable(todo.getCategory())
-        .ifPresent(findTodo::setCategory);
     Todo savedTodo = todoRepository.save(findTodo);
     log.info("## updated todo: {}", savedTodo);
     return savedTodo;
@@ -69,7 +79,7 @@ public class TodoService {
   @Transactional
   public void deleteTodo(long todoId, long memberId) {
     Todo findTodo = findVerifiedTodo(todoId, memberId);
-    todoRepository.updateAfterDeleteTodo(findTodo.getIdx());
+    todoRepository.updateAfterDeleteTodo(findTodo.getIdx(), findTodo.getCategory().getCategoryId());
     todoRepository.deleteById(todoId);
   }
 
