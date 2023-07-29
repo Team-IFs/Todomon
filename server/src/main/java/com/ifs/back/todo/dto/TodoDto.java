@@ -37,7 +37,6 @@ public class TodoDto {
     private String repeated;
     @Min(0)
     private long idx;
-    @Min(1)
     private long categoryId;
   }
 
