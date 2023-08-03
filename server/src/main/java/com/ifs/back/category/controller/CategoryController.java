@@ -10,6 +10,7 @@ import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -100,7 +101,7 @@ public class CategoryController {
   @Operation(summary = "모든 카테고리 정보 조회", description = "내가 가진 모든 카테고리 조회",responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CategoryDto.CategoryPage.class)))})
   @GetMapping()
-  public ResponseEntity getCategories(Principal principal, @PageableDefault Pageable pageable) {
+  public ResponseEntity getCategories(Principal principal, @PageableDefault @Parameter(hidden = true) Pageable pageable) {
     log.info("## 모든 카테고리 정보 조회");
     Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     return ResponseEntity.ok().body(categoryService.findAllCategories(currentId, pageable));

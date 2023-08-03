@@ -10,6 +10,7 @@ import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +20,7 @@ import java.security.Principal;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -80,7 +82,7 @@ public class FriendController {
   @Operation(summary = "친구 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping
-  public ResponseEntity getFriend(@PageableDefault Pageable pageable, Principal principal) {
+  public ResponseEntity getFriend(@PageableDefault(page = 0, size = 10) Pageable pageable, Principal principal) {
     log.info("## 친구 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FriendDto.FriendResponse> responses = friendService.findFriends(memberId, pageable);
@@ -90,7 +92,7 @@ public class FriendController {
   @Operation(summary = "친구 요청목록 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping("/request")
-  public ResponseEntity getRequest(@PageableDefault Pageable pageable, Principal principal) {
+  public ResponseEntity getRequest(@ParameterObject @PageableDefault(page = 0, size = 10) Pageable pageable, Principal principal) {
     log.info("## 친구 요청 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FriendDto.FriendResponse> responses = friendService.findRequests(memberId, pageable);

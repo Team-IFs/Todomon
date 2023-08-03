@@ -9,6 +9,7 @@ import com.ifs.back.member.service.MemberService;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,6 +19,7 @@ import java.security.Principal;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -61,7 +63,7 @@ public class FollowController {
   @Operation(summary = "내가 구독한 목록 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FollowDto.FollowPage.class)))})
   @GetMapping("/following")
-  public ResponseEntity getFollowing(@PageableDefault Pageable pageable, Principal principal) {
+  public ResponseEntity getFollowing(@ParameterObject @PageableDefault(page = 0, size = 10) Pageable pageable, Principal principal) {
     log.info("## 내가 구독한 목록 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FollowDto.FollowResponse> responses = followService.findFollowing(memberId, pageable);
@@ -71,7 +73,7 @@ public class FollowController {
   @Operation(summary = "내가 구독된 목록 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FollowDto.FollowPage.class)))})
   @GetMapping("/follower")
-  public ResponseEntity getFollower(@PageableDefault Pageable pageable, Principal principal) {
+  public ResponseEntity getFollower(@ParameterObject @PageableDefault(page = 0, size = 10) Pageable pageable, Principal principal) {
     log.info("## 내가 구독된 목록 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FollowDto.FollowResponse> responses = followService.findFollower(memberId, pageable);
@@ -79,7 +81,7 @@ public class FollowController {
   }
   @Operation(summary = "구독 취소")
   @DeleteMapping("/{follow_id}")
-  public ResponseEntity deleteFriend(@PathVariable("follow_id") @Positive long followId, Principal principal) {
+  public ResponseEntity deleteFriend(@ParameterObject @PathVariable("follow_id") @Positive long followId, Principal principal) {
     log.info("## 구독 취소");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     followService.deleteFollow(followId, memberId);

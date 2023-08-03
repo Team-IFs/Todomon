@@ -10,6 +10,7 @@ import com.ifs.back.todomon.entity.Todomon;
 import com.ifs.back.util.UriCreator;
 import com.ifs.back.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -135,7 +136,7 @@ public class MemberController {
   @GetMapping("/search")
   public ResponseEntity searchMembers(
       @RequestParam(value = "email", required = false, defaultValue = "") String email,
-      @PageableDefault Pageable pageable) {
+      @PageableDefault @Parameter(hidden = true) Pageable pageable) {
     log.info("## 이메일 검색: {}", email);
 
     Page<Member> memberPage = memberService

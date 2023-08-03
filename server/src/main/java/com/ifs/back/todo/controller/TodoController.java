@@ -125,7 +125,7 @@ public class TodoController {
   public ResponseEntity getTodo(
       @Parameter(name = "date", description = "yyyy-mm-dd", required = true)
       @RequestParam(value = "date", required = true) String date,
-      @PageableDefault Pageable pageable,
+      @PageableDefault @Parameter(hidden = true) Pageable pageable,
       Principal principal
   ) {
     log.info("## 월간 달력에서 할 일 확인");
@@ -142,7 +142,7 @@ public class TodoController {
       @RequestParam(value = "year", required = true) Integer year,
       @Parameter(name = "month", description = "달", required = true)
       @RequestParam(value = "month", required = true) @Min(1) @Max(12) Integer month,
-      @PageableDefault Pageable pageable,
+      @PageableDefault @Parameter(hidden = true) Pageable pageable,
       Principal principal
   ) {
     log.info("## 월간 달력에서 할 일 확인");
