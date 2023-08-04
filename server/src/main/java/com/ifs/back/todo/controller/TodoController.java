@@ -84,7 +84,7 @@ public class TodoController {
       Category newCategory = categoryService.findVerifiedCategory(requestBody.getCategoryId(), currentId);
       todo.setCategory(newCategory);
     }
-
+    log.info("## 들어온 todo: {}", todo);
     Todo updatedTodo = todoService.updateTodo(todo, currentId);
     return ResponseEntity.ok().body(mapper.todoToTodoResponse(updatedTodo));
   }
@@ -92,7 +92,7 @@ public class TodoController {
   @Operation(summary = "할 일 완료", description = "{todo_id}를 할 일 완료상태로 변경")
   @PatchMapping("/{todo_id}/done")
   public ResponseEntity patchTodoDone(@PathVariable("todo_id") @Positive long todoId,
-      Principal principal) {
+        Principal principal) {
     log.info("## 할 일 완료");
     Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     todoService.updateTodoDone(todoId, currentId);
