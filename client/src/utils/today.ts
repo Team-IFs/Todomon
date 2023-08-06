@@ -5,17 +5,41 @@ export const today = (option?: string) => {
   const date = now.getDate();
   const week = ['일', '월', '화', '수', '목', '금', '토'];
   const dayOfWeek = week[now.getDay()];
-
   switch (option) {
-    case 'datepicker': // 2023-7-3
-      return `${year}-${month}-${date}`
+    case 'datepicker': // YYYY-M-D
+      return `${year}-${month}-${date}`;
 
-    case 'todoRequest':  // 2023-07-03
-      const TodoFormat =
-        `${year}-${('00' + month.toString()).slice(-2)}-${('00' + date.toString()).slice(-2)}`
-      return TodoFormat
+    case 'todoRequest':  // YYYY-MM-DD
+      return now.toISOString().replace(/T.*$/, '')
+
+    case 'year':
+      return `${year}`;
+
+    case 'month':
+      return `${month}`;
 
     default:  // 7월 3일 월요일
       return `${month}월 ${date}일 ${dayOfWeek}요일`
   }
+}
+
+// YYYY-MM-DD
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const formattedDate = date.toISOString().slice(0, 10);
+  return formattedDate;
+}
+
+export const DateString = (dateString: string) => {
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+
+  const date = new Date(dateString);
+  // const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const dayOfWeek = daysOfWeek[date.getDay()];
+
+  const formattedDate = `${month}월 ${day}일 ${dayOfWeek}요일`;
+
+  return formattedDate;
 }

@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import SettingsIcon from '@mui/icons-material/Settings';
 import OuterTodo from './OuterTodo';
-import {today} from '../../../utils/today'
+import {DateString, today} from '../../../utils/today'
+import { useRecoilState } from 'recoil';
+import { CurrentDay } from '../../../recoil/atoms/atoms';
 
 const Card = styled.div({
   display: 'flex',
@@ -37,10 +39,12 @@ const Categories = styled.div({
 })
 
 const Todo = () => {
+  const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
+  const currentDayString = DateString(currentDay);
   return (
     <Card>
       <DateInfo>
-        <div className='date'>{today()}</div>
+        <div className='date'>{currentDayString}</div>
         <SettingsIcon/>
       </DateInfo>
       <Categories>

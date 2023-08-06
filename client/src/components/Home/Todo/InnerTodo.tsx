@@ -15,6 +15,9 @@ import { ReactComponent as CatBasic } from '../../../assets/cat-basic.svg';
 import { SubItem } from '../../../types/todo'
 import { AddNewItem } from './CRUD';
 import { deleteTodo, getTodaysTodo, setTodo, setTodoDetail, setTodoDoneState } from '../../../utils/axios/todo';
+import { formatDate } from '../../../utils/today';
+import { useRecoilState } from 'recoil';
+import { CurrentDay } from '../../../recoil/atoms/atoms';
 
 const CatContainer = styled.div({
   display: 'flex',
@@ -125,11 +128,13 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
     }
 
     const [newInputValue, setNewInputValue] = useState('');
+    const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
 
     const handleOnKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      
       if (e.key === 'Enter') {
         //DB에 새 할 일 추가
-        !!newInputValue.trim() && setTodo(clickedCategoryId, newInputValue, '2023-07-25').then(() => {
+        !!newInputValue.trim() && setTodo(clickedCategoryId, newInputValue, formatDate(currentDay)).then(() => {
           readTodo();
           setNewInputValue('');
         })
@@ -158,14 +163,15 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
     }
 
     const handleSaveBtn = (item: SubItem) => {
-      if (confirm('변경사항을 저장할까요?')) {
-        item.todoName = todoChange;
+      item.todoName = todoChange;
         console.log(item);
         setTodoDetail(item.todoId, item).then(() => {
           handleClose();
           readTodo();
         });
-      }
+      // if (confirm('변경사항을 저장할까요?')) {
+        
+      // }
     }
     const handleDeleteTodo = (clickedItem: SubItem) => {
       subItems.splice(Number(clickedItem.todoId), 1)

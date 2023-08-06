@@ -5,6 +5,9 @@ import InnerTodo from './InnerTodo';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { CategoryItem, SubItem } from '../../../types/todo'
 import { getTodaysTodo, setCategoryIndex, setTodoIndex } from '../../../utils/axios/todo';
+import { useRecoilState } from 'recoil';
+import { CurrentDay } from '../../../recoil/atoms/atoms';
+import { formatDate } from '../../../utils/today';
 
 
 /** dnd순서상의 id를 다시 부여하는 함수 */
@@ -52,10 +55,11 @@ const getListStyle = () => ({
 });
 
 const OuterTodo = () => {
+const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
   let [items, setItems] = useState<CategoryItem[]>([]);
-
+  const date = formatDate(currentDay)
   const readTodo = () => {
-    const todaysTodo = getTodaysTodo();
+    const todaysTodo = getTodaysTodo(date);
       todaysTodo.then((res) => {
         if (res) {
           setItems(res.content);
@@ -64,8 +68,9 @@ const OuterTodo = () => {
   }
   // api 요청해서 todolist 불러오기
   useEffect(() => {
+    console.log('useEffect입니다. currentDay: ' + currentDay)
     readTodo()
-  }, []);
+  }, [currentDay]);
 
   /**
    * 전체 item list에서 특정 카테고리의 subItem을 수정함
@@ -96,6 +101,8 @@ const OuterTodo = () => {
     }
     const sourceIndex = result.source.index;
     const destIndex = result.destination.index;
+    console.log('result:', result)
+    console.log('destIndex:', destIndex)
 
     /* 카테고리를 드래그하는 경우 */
     if (result.type === 'droppableItem') {
@@ -112,7 +119,8 @@ const OuterTodo = () => {
       const destIndex = result.destination.index;
 
       let newItems = [...items];
-
+      console.log(items);
+      
       // 같은 카테고리 내부에서의 정렬
       if (sourceParentId === destParentId) {
         const unorderedSubItem = items.filter(category => category.categoryId === sourceParentId)[0].todos; 
@@ -164,6 +172,11 @@ const OuterTodo = () => {
         setItems(newItems);
         //TODO: 카테고리를 넘어서 할 일 드래그 하는건 성공, 서버에 저장하는 방법?
         // setCategoryIndex(categoryIndex, newIdx);
+//          다른 카테고리로 할 일을 이동 할 때
+//  * @param todoId 옮길 대상 할 일 아이디
+//  * @param newIdx 도착지 카테고리내부에서의 옮길 대상이 정착할 인덱스
+//  * @param categoryId 도착지 카테고리 아이디
+        setTodoIndex(Number(result.draggableId), destIndex, destParentId)
 
       }
     }

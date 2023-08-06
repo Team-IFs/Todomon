@@ -2,6 +2,7 @@ import { atom } from 'recoil'
 import { static_items as defaultTodoList } from '../../components/Home/Todo/data'
 import { recoilPersist } from 'recoil-persist'
 import { User } from '../../types/user'
+import { today } from '../../utils/today'
 
 const { persistAtom } = recoilPersist()
 
@@ -12,7 +13,19 @@ export const DefaultTodoList = atom({
 
 export const TodoList = atom({
     key: 'TodoList',
-    default: []
+    default: [],
+})
+
+export const MontlyTodo = atom({
+    key: 'MontlyTodo',
+    default: [],
+    effects_UNSTABLE: [persistAtom],
+})
+
+export const CurrentDay = atom({
+    key: 'CurrentDay',
+    default: today('datepicker'),
+    effects_UNSTABLE: [persistAtom],
 })
 
 export const IsLogin = atom({
