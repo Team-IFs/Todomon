@@ -48,7 +48,7 @@ public class FriendController {
 
   @Operation(summary = "친구 요청")
   @PostMapping("/request/{member_id}")
-  public ResponseEntity postFriend(@PathVariable("friend_id") @Positive long memberId,
+  public ResponseEntity postFriend(@PathVariable("member_id") @Positive long memberId,
       Principal principal) {
     log.info("## 친구 요청");
     Member request = memberService.findMemberByEmail(Util.checkPrincipal(principal));
