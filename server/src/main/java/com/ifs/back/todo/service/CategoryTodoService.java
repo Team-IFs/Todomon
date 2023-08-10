@@ -53,7 +53,7 @@ public class CategoryTodoService {
     int scope = checkScope(targetId, memberId);
     Page<Category> categories = categoryService.findCategoriesByMemberId(targetId, scope, pageable);
     Calendar cal = Calendar.getInstance();
-    cal.set(year, month, 1);
+    cal.set(year, month-1, 1);
     int daysOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     List<MonthTodoDto> monthTodoDtoList = new ArrayList<>();
     for (int i = 1; i <= daysOfMonth; i++) {
