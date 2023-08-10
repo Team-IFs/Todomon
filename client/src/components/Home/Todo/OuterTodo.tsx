@@ -7,7 +7,6 @@ import { CategoryItem, SubItem } from '../../../types/todo'
 import { getTodaysTodo, setCategoryIndex, setTodoIndex } from '../../../utils/axios/todo';
 import { useRecoilState } from 'recoil';
 import { CurrentDay } from '../../../recoil/atoms/atoms';
-import { formatDate } from '../../../utils/today';
 
 
 /** dnd순서상의 id를 다시 부여하는 함수 */
@@ -55,11 +54,10 @@ const getListStyle = () => ({
 });
 
 const OuterTodo = () => {
-const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
+const [currentDay] = useRecoilState(CurrentDay);
   let [items, setItems] = useState<CategoryItem[]>([]);
-  const date = formatDate(currentDay)
   const readTodo = () => {
-    const todaysTodo = getTodaysTodo(date);
+    const todaysTodo = getTodaysTodo(currentDay);
       todaysTodo.then((res) => {
         if (res) {
           setItems(res.content);
@@ -68,7 +66,6 @@ const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
   }
   // api 요청해서 todolist 불러오기
   useEffect(() => {
-    console.log('useEffect입니다. currentDay: ' + currentDay)
     readTodo()
   }, [currentDay]);
 
@@ -90,7 +87,7 @@ const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
   const [isAddTodoClicked, setIsAddTodoClicked] = useState(false);
 
   const handleAddTodoClick = (item: CategoryItem) => {
-    setIsAddTodoClicked(!isAddTodoClicked) // 카테고리가 클릭됐다 여부를 누를때마다 토글
+    setIsAddTodoClicked(!isAddTodoClicked)
     setClickedCategoryId(item.categoryId)
   }
 
@@ -170,12 +167,6 @@ const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
           return item;
         });
         setItems(newItems);
-        //TODO: 카테고리를 넘어서 할 일 드래그 하는건 성공, 서버에 저장하는 방법?
-        // setCategoryIndex(categoryIndex, newIdx);
-//          다른 카테고리로 할 일을 이동 할 때
-//  * @param todoId 옮길 대상 할 일 아이디
-//  * @param newIdx 도착지 카테고리내부에서의 옮길 대상이 정착할 인덱스
-//  * @param categoryId 도착지 카테고리 아이디
         setTodoIndex(Number(result.draggableId), destIndex, destParentId)
 
       }
@@ -200,7 +191,7 @@ const [currentDay, setCurrentDay] = useRecoilState(CurrentDay);
                       {...provided.draggableProps}
                     >
                       <TitleContainer categoryColor={item.categoryColor}>
-                        {`${item.categoryName} categoryId:${item.categoryId} idx:${item.idx} index:${index}`}
+                        {`${item.categoryName}`}
                         <AddCircleOutlineIcon style={{ color: item.categoryColor }} onClick={() => handleAddTodoClick(item)} />
                       </TitleContainer>
                       <InnerTodo

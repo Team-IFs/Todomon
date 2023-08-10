@@ -1,9 +1,7 @@
 import { DELETE, GET, PATCH, PATCH_NODATA, POST } from './axios';
-import { getCookie } from '../cookies/cookies';
-import { today } from '../today';
+import { formatDate } from '../today';
 import { SubItem } from '../../types/todo';
 
-type Result = 'SUCCESS' | 'FAIL';
 
 /**
  * 현재 선택된 월의 할 일을 가져오는 함수
@@ -23,7 +21,6 @@ export const getMontlyTodo = async (year: string, month: string) => {
 
 /**
  * 특정 날짜의 할 일을 가져오는 함수
- * authorization required
  * @param date
  */
 export const getTodaysTodo = async (date: string) => {
@@ -50,9 +47,10 @@ export const getTodaysTodo = async (date: string) => {
  * @param date
  */
 export const setTodo = async (categoryId: number, todoName: string, date: string) => {
+  const formattedDate = formatDate(date)
   const todo = {
     todoName: todoName,
-    date: date,
+    date: formattedDate,
   }
   try {
     const response = await POST(`/users/me/todos/${categoryId}`, todo);

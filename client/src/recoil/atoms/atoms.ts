@@ -24,8 +24,7 @@ export const MontlyTodo = atom({
 
 export const CurrentDay = atom({
     key: 'CurrentDay',
-    default: today('datepicker'),
-    effects_UNSTABLE: [persistAtom],
+    default: today('fymd')
 })
 
 export const IsLogin = atom({

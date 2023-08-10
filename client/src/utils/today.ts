@@ -6,10 +6,10 @@ export const today = (option?: string) => {
   const week = ['일', '월', '화', '수', '목', '금', '토'];
   const dayOfWeek = week[now.getDay()];
   switch (option) {
-    case 'datepicker': // YYYY-M-D
+    case 'ymd': // YYYY-M-D
       return `${year}-${month}-${date}`;
 
-    case 'todoRequest':  // YYYY-MM-DD
+    case 'fymd':  // YYYY-MM-DD
       return now.toISOString().replace(/T.*$/, '')
 
     case 'year':
@@ -25,6 +25,7 @@ export const today = (option?: string) => {
 
 // YYYY-MM-DD
 export const formatDate = (dateString: string) => {
+  if (dateString.length === 10) return dateString;
   const date = new Date(dateString);
   const formattedDate = date.toISOString().slice(0, 10);
   return formattedDate;

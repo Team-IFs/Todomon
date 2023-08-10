@@ -15,7 +15,7 @@ export default function Date() {
       <DemoContainer components={['SingleInputDateRangeField']}>
         <DateContainer>
           <DatePicker
-            defaultValue={dayjs(today('datepicker'))}/>
+            defaultValue={dayjs(today('ymd'))}/>
         </DateContainer>
       </DemoContainer>
       </LocalizationProvider>

@@ -13,8 +13,7 @@ import Date from './Date'
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ReactComponent as CatBasic } from '../../../assets/cat-basic.svg';
 import { SubItem } from '../../../types/todo'
-import { AddNewItem } from './CRUD';
-import { deleteTodo, getTodaysTodo, setTodo, setTodoDetail, setTodoDoneState } from '../../../utils/axios/todo';
+import { deleteTodo, setTodo, setTodoDetail, setTodoDoneState } from '../../../utils/axios/todo';
 import { formatDate } from '../../../utils/today';
 import { useRecoilState } from 'recoil';
 import { CurrentDay } from '../../../recoil/atoms/atoms';
@@ -110,7 +109,7 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
 
 
     const updateTodoDone = async (todoId:number, isDone:boolean) => {
-      const res = await setTodoDoneState(todoId, isDone);
+      await setTodoDoneState(todoId, isDone);
     }
 
     const handleCatClick = (categoryId: number, id: number, isDone: boolean, index: number) => {
@@ -169,9 +168,6 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
           handleClose();
           readTodo();
         });
-      // if (confirm('변경사항을 저장할까요?')) {
-        
-      // }
     }
     const handleDeleteTodo = (clickedItem: SubItem) => {
       subItems.splice(Number(clickedItem.todoId), 1)
@@ -209,7 +205,7 @@ const InnerTodo: React.FC<{ todoIndex: number, categoryId: number, subItems: Sub
                           <CatContainer onClick={() => handleCatClick(item.categoryId, item.todoId, item.done, index)}>
                             <CatBasic fill={item.done ? color : pendingColor} />
                           </CatContainer>
-                          {`${item.todoName} todoId:${item.todoId} item.idx:${item.idx} index:${index} isDone:${item.done}`}
+                          {`${item.todoName}`}
 
                         </CatandTodoContainer>
                         <MoreHorizIcon color='primary' onClick={() => handleClickOpen(item)} />

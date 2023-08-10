@@ -11,9 +11,9 @@ export const AddNewItem = (newItemContent: string, categoryId: number, subItems:
   let newItem: SubItem = {
     categoryId: categoryId,
     done: false,
-    endAt: today('todoRequest'),
+    endAt: today('fymd'),
     repeated: null,
-    startAt: today('todoRequest'),
+    startAt: today('fymd'),
     idx: 0,
     todoId: subItems.length,
     todoName: newItemContent
