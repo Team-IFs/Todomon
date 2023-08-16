@@ -36,17 +36,29 @@ public class FriendService {
   }
 
   @Transactional
-  public void acceptFriend(long friendId) {
+  public void acceptFriend(long friendId, long memberId) {
     Friend friend = friendRepository.findById(friendId)
         .orElseThrow(() -> new BusinessLogicException(FriendExceptionCode.FRIEND_NOT_FOUND));
-    friend.setAccepted(true);
-    friendRepository.save(friend);
+    if(friend.getReceived().getMemberId() == memberId) {
+      friend.setAccepted(true);
+      friendRepository.save(friend);
+    }
   }
 
   @Transactional
-  public void denyFriend(long friendId) {
-    friendRepository.deleteById(friendId);
+  public void denyFriend(long friendId, long memberId) {
+    Friend friend = friendRepository.findVerifiedFriendforDeny(memberId, friendId)
+        .orElseThrow(() -> new BusinessLogicException(FriendExceptionCode.FRIEND_NOT_FOUND));
+    friendRepository.deleteById(friend.getFriendId());
   }
+
+  @Transactional
+  public void deleteFriend(long friendId, long memberId) {
+    Friend friend = friendRepository.findVerifiedFriendforDelete(memberId, friendId)
+        .orElseThrow(() -> new BusinessLogicException(FriendExceptionCode.FRIEND_NOT_FOUND));
+    friendRepository.deleteById(friend.getFriendId());
+  }
+
 
   public Page<FriendDto.FriendResponse> findFriends(long memberId, Pageable pageable) {
     Page<Friend> friendPage = friendRepository.findAllFriend(memberId, pageable);

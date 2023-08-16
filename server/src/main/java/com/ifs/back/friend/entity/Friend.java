@@ -32,12 +32,12 @@ public class Friend extends Auditable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long friendId;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @Setter
   @JoinColumn(name = "request_member_id")
   private Member request;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @Setter
   @JoinColumn(name = "received_member_id")
   private Member received;

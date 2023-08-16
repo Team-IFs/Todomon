@@ -27,4 +27,14 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
           + "or (f.received_member_id = :targetId and f.request_member_id = :memberId) and f.accepted = true", nativeQuery = true)
   Optional<Friend> findByUsers(@Param("memberId") long memberId,
       @Param("targetId") long targetId);
+
+  @Query(value =
+      "select * from friend f where f.request_member_id = :memberId and f.friend_id = :friendId", nativeQuery = true)
+  Optional<Friend> findVerifiedFriendforDelete(@Param("memberId") long memberId,
+      @Param("friendId") long friendId);
+
+  @Query(value =
+      "select * from friend f where f.received_member_id = :memberId and f.friend_id = :friendId", nativeQuery = true)
+  Optional<Friend> findVerifiedFriendforDeny(@Param("memberId") long memberId,
+      @Param("friendId") long friendId);
 }

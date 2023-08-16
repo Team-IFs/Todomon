@@ -65,24 +65,29 @@ public class FriendController {
 
   @Operation(summary = "친구 요청 수락")
   @PatchMapping("/{friend_id}/accept")
-  public ResponseEntity acceptFriend(@PathVariable("friend_id") @Positive long friendId) {
+  public ResponseEntity acceptFriend(@PathVariable("friend_id") @Positive long friendId
+      , Principal principal) {
     log.info("## 친구 요청 수락");
-    friendService.acceptFriend(friendId);
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    friendService.acceptFriend(friendId, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Operation(summary = "친구 요청 거절")
   @DeleteMapping("/{friend_id}/deny")
-  public ResponseEntity denyFriend(@PathVariable("friend_id") @Positive long friendId) {
+  public ResponseEntity denyFriend(@PathVariable("friend_id") @Positive long friendId
+      , Principal principal) {
     log.info("## 친구 요청 거절");
-    friendService.denyFriend(friendId);
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    friendService.denyFriend(friendId, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Operation(summary = "친구 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping
-  public ResponseEntity getFriend(@PageableDefault(page = 0, size = 10) Pageable pageable, Principal principal) {
+  public ResponseEntity getFriend(@PageableDefault(page = 0, size = 10) Pageable pageable,
+      Principal principal) {
     log.info("## 친구 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FriendDto.FriendResponse> responses = friendService.findFriends(memberId, pageable);
@@ -92,7 +97,9 @@ public class FriendController {
   @Operation(summary = "친구 요청목록 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping("/request")
-  public ResponseEntity getRequest(@ParameterObject @PageableDefault(page = 0, size = 10) Pageable pageable, Principal principal) {
+  public ResponseEntity getRequest(
+      @ParameterObject @PageableDefault(page = 0, size = 10) Pageable pageable,
+      Principal principal) {
     log.info("## 친구 요청 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     Page<FriendDto.FriendResponse> responses = friendService.findRequests(memberId, pageable);
@@ -101,9 +108,11 @@ public class FriendController {
 
   @Operation(summary = "친구 삭제", description = "{friend_id}를 삭제")
   @DeleteMapping("/{friend_id}")
-  public ResponseEntity deleteFriend(@PathVariable("friend_id") @Positive long friendId) {
+  public ResponseEntity deleteFriend(@PathVariable("friend_id") @Positive long friendId,
+      Principal principal) {
     log.info("## 친구 삭제");
-    friendService.denyFriend(friendId);
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    friendService.deleteFriend(friendId, memberId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

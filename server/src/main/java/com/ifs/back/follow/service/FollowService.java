@@ -44,6 +44,8 @@ public class FollowService {
     Page<Follow> followPage = followRepository.findAllFollowersByMemberId(memberId, pageable);
     return followPage.map(follow -> followToFollowResponse(follow, memberId));
   }
+
+  @Transactional
   public void deleteFollow(long followId, long memberId) {
     Optional<Follow> optionalFollow = followRepository.findById(followId);
     Follow findFollow = optionalFollow.orElseThrow(() -> new BusinessLogicException(FollowExceptionCode.FOLLOW_NOT_FOUND));

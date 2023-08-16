@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.ifs.back.audit.Auditable;
 import com.ifs.back.category.entity.Category;
+import com.ifs.back.follow.entity.Follow;
+import com.ifs.back.friend.entity.Friend;
 import com.ifs.back.todomon.entity.Todomon;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@ToString
+@ToString(exclude = {"friends_received", "follows_request", "followings", "followers"})
 public class Member extends Auditable {
 
   @Id
@@ -74,6 +76,18 @@ public class Member extends Auditable {
 
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Category> categories;
+
+  @OneToMany(mappedBy = "received", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Friend> friends_received;
+
+  @OneToMany(mappedBy = "request", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Friend> follows_request;
+
+  @OneToMany(mappedBy = "following", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Follow> followings;
+
+  @OneToMany(mappedBy = "follower", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Follow> followers;
 
   @RequiredArgsConstructor
   public enum MemberStatus {
