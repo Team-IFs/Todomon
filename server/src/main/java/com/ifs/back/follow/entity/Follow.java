@@ -30,12 +30,12 @@ public class Follow extends Auditable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long followId;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @Setter
   @JoinColumn(name = "follower_member_id")
   private Member follower;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @Setter
   @JoinColumn(name = "following_member_id")
   private Member following;
