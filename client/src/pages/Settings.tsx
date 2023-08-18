@@ -36,19 +36,18 @@ const Settings = () => {
   const [newUsername, setNewUsername] = useState(userInfo.nickname);
   const [newBio, setNewBio] = useState(userInfo.bio);
   const [isTempDarkMode] = useRecoilState(TempDarkMode);
-
+  
 
   const handleChangeClick = () => {
     darkModeSetting();
-    const newTodomon = getDataLocalStorage('newTodomon')
-    const newUserInfoRequest = {
+    PATCH('/users/me', {
       nickname: newUsername,
       bio: newBio,
-    }
-    PATCH('/users/me', newUserInfoRequest);
-    PATCH('/users/me/todomon', newTodomon);
+    });
+    PATCH('/users/me/todomon', userInfo.todomon);
     alert('변경완료되었습니다.');
-    window.location.reload();
+    // window.location.reload();
+    console.log(userInfo.todomon);
   };
 
   const darkModeSetting = () => {

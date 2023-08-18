@@ -5,6 +5,7 @@ import { UserInfo } from '../../../recoil/atoms/atoms';
 import { getCookie } from '../../../utils/cookies/cookies';
 import { getCurrentUserInfo } from '../../../utils/axios/userInfo';
 import Cat from '../../../assets/Cat';
+import NewCat from '../../../assets/NewCat';
 
 const Card = styled.div({
   display: 'flex',
@@ -52,7 +53,7 @@ const UserCard = () => {
   return (
     <Card>
       <UserCat>
-        <Cat />
+        <NewCat todomonColor={userInfo.todomon}/>
       </UserCat>
       <InfoCard>
         <div className='name'>{userInfo? `${userInfo.nickname}` : '비로그인유저'}</div>

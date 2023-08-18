@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import { useRecoilState } from 'recoil';
 import { CurrentClickedPart, UserInfo } from '../../../recoil/atoms/atoms';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color';
-import { setDataLocalStorage } from '../../../utils/localstorage';
+import NewCat from '../../../assets/NewCat';
 
 const Container = styled.div({
   display: 'flex',
@@ -36,7 +36,7 @@ const UserCat = styled.div({
 })
 
 const TodomonSetting = () => {
-  const [userInfo] = useRecoilState(UserInfo);
+  const [userInfo, setUserInfo] = useRecoilState(UserInfo);
   const [currentClickedPart, setCurrentClickedPart] = useRecoilState(CurrentClickedPart);
 
   const [color, setColor] = useState('#000');
@@ -50,10 +50,20 @@ const TodomonSetting = () => {
   };
   
   const isTodomonChange = () => {
-    const currentTodomon = { backgroundColor: bg, faceColor: face, leftEyeColor: left, rightEyeColor: right }
-    if(currentTodomon !== userInfo.todomon){setDataLocalStorage('newTodomon', currentTodomon)}
-  }
-  isTodomonChange();
+    const newTodomon = { backgroundColor: bg, faceColor: face, leftEyeColor: left, rightEyeColor: right }
+
+    if (newTodomon !== userInfo.todomon) {
+      const updatedUserInfo = {
+        ...userInfo,
+        todomon: newTodomon,
+      };
+      setUserInfo(updatedUserInfo);
+    }
+  };
+
+  useEffect(() => {
+    isTodomonChange();
+  }, [bg, face, left, right])
 
   const handleChangeComplete = (color: any) => {
     setColor(color.hex);
@@ -81,6 +91,7 @@ const TodomonSetting = () => {
       <h2>투두몬</h2>
       <ContentContainer>
         <UserCat>
+          {/* <NewCat todomonColor={newTodomon}/> */}
           <svg version="1.1" id="Layer_1" xmlSpace="preserve"
             xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500">
             <style type="text/css">{`

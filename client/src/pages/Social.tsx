@@ -2,7 +2,17 @@ import React, { useEffect } from 'react'
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
 import { IsLogin } from '../recoil/atoms/atoms';
+import Card from '../components/Social/UserCard';
+import Tab from '../components/Social/Tab';
+import styled from '@emotion/styled';
 
+  const SocialPage = styled.div({
+    display: 'flex',
+    flexDirection: 'column',
+    width: 'calc(100vw - 210px)',
+    height: 'calc(100vh - 80px)'
+  })
+  
 const Social = () => {
   const { routeTo } = useRouter();
   const [isLogin] = useRecoilState(IsLogin);
@@ -13,11 +23,12 @@ const Social = () => {
         routeTo('/login')
       }
   });
-  return (<div>
+  return (<SocialPage>
     <h1>
       Social
     </h1>
-  </div>)
+    <Tab />
+  </SocialPage>)
 }
 
 export default Social 

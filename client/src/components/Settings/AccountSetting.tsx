@@ -121,7 +121,7 @@ const AccountSetting: React.FC<{ changeNewUsername: any, changeNewBio: any }>
   = ({ changeNewUsername, changeNewBio }) => {
     const [userInfo] = useRecoilState(UserInfo);
     const [newUsername, setNewUsername] = useState(userInfo.nickname);
-    const [newBio, setNewBio] = useState(userInfo.bio);
+    const [newBio, setNewBio] = useState(userInfo.bio || '');
     const [, setIsLogin] = useRecoilState(IsLogin);
     const { routeTo } = useRouter()
     const [open, setOpen] = useState(false);
@@ -193,13 +193,13 @@ const AccountSetting: React.FC<{ changeNewUsername: any, changeNewBio: any }>
           <InputContainer>
             <label>닉네임</label>
             <ButtonContainer>
-              <Input type='text' fullWidth={true} defaultValue={userInfo.nickname} value={newUsername} onBlur={handleUsernameChange} onChange={handleUsernameChange} />
+              <Input type='text' fullWidth={true} value={newUsername} onBlur={handleUsernameChange} onChange={handleUsernameChange} />
             </ButtonContainer>
           </InputContainer>
           <InputContainer>
             <label>자기소개</label>
             <ButtonContainer>
-              <Input type='text' fullWidth={true} defaultValue={userInfo.bio} value={newBio} onBlur={handleBioChange} onChange={handleBioChange} />
+              <Input type='text' fullWidth={true} value={newBio} onBlur={handleBioChange} onChange={handleBioChange} />
             </ButtonContainer>
           </InputContainer>
           <InputContainer>

@@ -11,8 +11,9 @@ import Cat from '../../assets/Cat';
 import { removeCookie } from '../../utils/cookies/cookies';
 import { useRecoilState } from 'recoil';
 import { useRouter } from '../../hooks/useRouter';
-import { IsLogin } from '../../recoil/atoms/atoms';
+import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
 import styled from '@emotion/styled';
+import NewCat from '../../assets/NewCat';
 
 const UserCat = styled.div({
   width: '40px',
@@ -23,7 +24,11 @@ export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { routeTo } = useRouter()
   const [, setIsLogin] = useRecoilState(IsLogin);
+  const [userInfo] = useRecoilState(UserInfo);
 
+  // React.useEffect(() => {
+  //   console.log(userInfo.todomon)
+  // }, []);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -54,7 +59,7 @@ export default function AccountMenu() {
             aria-expanded={open ? 'true' : undefined}
           >
             <UserCat>
-              <Cat />
+              <NewCat todomonColor={userInfo.todomon} />
             </UserCat>
             
           </IconButton>
