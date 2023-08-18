@@ -86,7 +86,7 @@ public class FriendController {
   @Operation(summary = "친구 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping
-  public ResponseEntity getFriend(@PageableDefault(page = 0, size = 10) Pageable pageable,
+  public ResponseEntity getFriend(@ParameterObject @PageableDefault(page = 0, size = 10) Pageable pageable,
       Principal principal) {
     log.info("## 친구 조회");
     long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
@@ -94,7 +94,19 @@ public class FriendController {
     return ResponseEntity.ok().body(responses);
   }
 
-  @Operation(summary = "친구 요청목록 조회", responses = {
+  @Operation(summary = "친구 요청받은 목록 조회", responses = {
+      @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
+  @GetMapping("/received")
+  public ResponseEntity getReceived(
+      @ParameterObject @PageableDefault(page = 0, size = 10) Pageable pageable,
+      Principal principal) {
+    log.info("## 친구 요청 조회");
+    long memberId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    Page<FriendDto.FriendResponse> responses = friendService.findReceived(memberId, pageable);
+    return ResponseEntity.ok().body(responses);
+  }
+
+  @Operation(summary = "친구 요청보낸 목록 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FriendDto.FriendPage.class)))})
   @GetMapping("/request")
   public ResponseEntity getRequest(
