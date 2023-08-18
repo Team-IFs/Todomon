@@ -28,6 +28,9 @@ public class FollowService {
 
   @Transactional
   public Follow createFollow(Follow follow) {
+    if(follow.getFollower().getMemberId() == follow.getFollowing().getMemberId())
+      throw new BusinessLogicException(FollowExceptionCode.FOLLOW_NOT_ALLOWED);
+
     followRepository.findFollowByUsers(follow.getFollower().getMemberId(),
         follow.getFollowing().getMemberId()).ifPresent(f -> {
       throw new BusinessLogicException(FollowExceptionCode.FOLLOW_EXISTS);

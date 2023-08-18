@@ -24,6 +24,9 @@ public class FriendService {
 
   @Transactional
   public Friend createFriend(Friend friend) {
+    if(friend.getRequest().getMemberId() == friend.getReceived().getMemberId())
+      throw new BusinessLogicException(FriendExceptionCode.FRIEND_NOT_ALLOWED);
+
     friendRepository.findAcceptedByUsers(friend.getRequest().getMemberId(),
         friend.getReceived().getMemberId()).ifPresent(f -> {
       if (f) {
@@ -67,6 +70,11 @@ public class FriendService {
 
   public Page<FriendDto.FriendResponse> findRequests (long memberId, Pageable pageable) {
     Page<Friend> friendPage = friendRepository.findAllRequest(memberId, pageable);
+    return friendPage.map(friend -> friendToFriendResponse(friend, memberId));
+  }
+
+  public Page<FriendDto.FriendResponse> findReceived (long memberId, Pageable pageable) {
+    Page<Friend> friendPage = friendRepository.findAllReceived(memberId, pageable);
     return friendPage.map(friend -> friendToFriendResponse(friend, memberId));
   }
 

@@ -19,8 +19,11 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
   @Query(value = "select * from friend as f where f.received_member_id = :memberId or f.request_member_id = :memberId and f.accepted = true", nativeQuery = true)
   Page<Friend> findAllFriend(@Param("memberId") long memberId, Pageable pageable);
 
-  @Query(value = "select * from friend as f where f.received_member_id = :memberId and f.accepted = false", nativeQuery = true)
+  @Query(value = "select * from friend as f where f.request_member_id = :memberId and f.accepted = false", nativeQuery = true)
   Page<Friend> findAllRequest(@Param("memberId") long memberId, Pageable pageable);
+
+  @Query(value = "select * from friend as f where f.received_member_id = :memberId and f.accepted = false", nativeQuery = true)
+  Page<Friend> findAllReceived(@Param("memberId") long memberId, Pageable pageable);
 
   @Query(value =
       "select * from friend as f where (f.request_member_id = :targetId and f.received_member_id = :memberId) "
