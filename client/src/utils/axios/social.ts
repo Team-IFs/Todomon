@@ -17,11 +17,24 @@ export const getFriends = async () => {
 }
 
 /**
- * 나에게 온 친구 요청 리스트를 확인
+ * 내가 보낸 친구 요청 리스트를 확인
  */
-export const getFriendRequest = async () => {
+export const getFriendRequestedList = async () => {
   try {
     const response = await GET(`/users/me/friends/request`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
+ * 나에게 온 친구 요청 리스트를 확인
+ */
+export const getFriendReceivedList = async () => {
+  try {
+    const response = await GET(`/users/me/friends/received`);
     return response.data;
   } catch (error) {
     console.error(error);

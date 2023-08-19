@@ -1,17 +1,37 @@
 import { useEffect, useState } from 'react';
-import { getFriendRequest } from '../../utils/axios/social';
+import { getFriendRequestedList, getFriendReceivedList } from '../../utils/axios/social';
 import { FriendInterface } from '../../types/user';
 import UserCard from './UserCard';
 import { List, ListItem } from '@mui/material';
+import styled from '@emotion/styled';
+
+const Row = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '20px'
+})
+const RowContent = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  gap: '20px'
+})
 
 const FriendRequest = () => {
-  const [requestLists, setRequestLists] = useState([]);
+  const [receivedLists, setReceivedLists] = useState([]);
+  const [requestedLists, setRequestedLists] = useState([]);
   const friendRequest = () => {
-    getFriendRequest().then((res) => {
+    // 내가 받은 친구 요청 리스트
+    getFriendReceivedList().then((res) => {
       if (res) {
-        setRequestLists(res.content);
+        setReceivedLists(res.content);
       }
-      
+    });
+    // 내가 보낸 친구 요청 리스트
+    getFriendRequestedList().then((res) => {
+      if (res) {
+        setRequestedLists(res.content);
+      }
     });
   }
   
@@ -19,10 +39,11 @@ const FriendRequest = () => {
     friendRequest();
   }, []);
 
-  return <>
-    <div>친구 요청</div>
+  return <Row>
+    <RowContent>
+    <div>받은 친구 요청</div>
     <List>
-      {requestLists.map((rq: FriendInterface) => (
+      {receivedLists.map((rq: FriendInterface) => (
         <ListItem key={rq.friend.memberId}>
           <UserCard
             nickname={rq.friend.nickname}
@@ -33,9 +54,25 @@ const FriendRequest = () => {
             />
         </ListItem>
       ))}
-    </List>
-    
-  </>
+      </List>
+    </RowContent>
+    <RowContent>
+    <div>보낸 친구 요청</div>
+    <List>
+      {requestedLists.map((rq: FriendInterface) => (
+        <ListItem key={rq.friend.memberId}>
+          <UserCard
+            nickname={rq.friend.nickname}
+            bio={rq.friend.bio}
+            todomon={rq.friend.todomon}
+            friendId={rq.friendId}
+            isFriendSetting={true}
+            />
+        </ListItem>
+      ))}
+      </List>
+      </RowContent>
+    </Row>
 }
 
 export default FriendRequest;
