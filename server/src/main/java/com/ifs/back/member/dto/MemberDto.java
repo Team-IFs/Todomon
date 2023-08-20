@@ -76,6 +76,7 @@ public class MemberDto {
 
     private long memberId;
     private String nickname;
+    private String email;
     private String bio;
     private Member.MemberStatus memberStatus;
     private boolean premium;

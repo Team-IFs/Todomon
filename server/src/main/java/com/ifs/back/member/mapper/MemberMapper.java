@@ -21,6 +21,7 @@ public interface MemberMapper {
   default MemberDto.MemberResponse memberToMemberResponse(Member member) {
     MemberDto.MemberResponse.MemberResponseBuilder builder = MemberDto.MemberResponse.builder()
         .memberId(member.getMemberId())
+        .email(member.getEmail())
         .memberStatus(member.getMemberStatus())
         .nickname(member.getNickname())
         .bio(member.getBio())
