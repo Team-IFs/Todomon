@@ -134,6 +134,22 @@ public class TodoController {
         categoryTodoService.findCategoryTodo(currentId, currentId, date, pageable));
   }
 
+  @Operation(summary = "유저의 특정 날짜 별 할 일 확인", description = "해당 date의 category와 todo를 조회",responses = {
+      @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CategoryTodoDto.CategoryTodoPage.class)))})
+  @GetMapping("/{member_id}")
+  public ResponseEntity getFriendTodo(
+      @Parameter(name = "date", description = "yyyy-mm-dd", required = true)
+      @RequestParam(value = "date", required = true) String date,
+      @PageableDefault @Parameter(hidden = true) Pageable pageable,
+      @PathVariable("member_id") @Positive long memberId,
+      Principal principal
+  ) {
+    log.info("## 월간 달력에서 할 일 확인");
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    return ResponseEntity.ok().body(
+        categoryTodoService.findCategoryTodo(memberId, currentId, date, pageable));
+  }
+
   @Operation(summary = "월 별 할 일 확인", description = "해당 year&month의 category와 todo를 조회", responses = {
       @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MonthTodoDto.MonthTodoPage.class)))})
   @GetMapping("/calendar")
@@ -149,5 +165,23 @@ public class TodoController {
     Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
     return ResponseEntity.ok().body(
         categoryTodoService.findMonthCategoryTodo(currentId, currentId, year, month, pageable));
+  }
+
+  @Operation(summary = "유저의 월 별 할 일 확인", description = "해당 member_id의 category와 todo를 조회", responses = {
+      @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MonthTodoDto.MonthTodoPage.class)))})
+  @GetMapping("/calendar/{member_id}")
+  public ResponseEntity getFriendMonthTodo(
+      @Parameter(name = "year", description = "연도", required = true)
+      @RequestParam(value = "year", required = true) Integer year,
+      @Parameter(name = "month", description = "달", required = true)
+      @RequestParam(value = "month", required = true) @Min(1) @Max(12) Integer month,
+      @PageableDefault @Parameter(hidden = true) Pageable pageable,
+      @PathVariable("member_id") @Positive long memberId,
+      Principal principal
+  ) {
+    log.info("## 유저의 월간 달력 할 일 확인");
+    Long currentId = memberService.findMemberIdByEmail(Util.checkPrincipal(principal));
+    return ResponseEntity.ok().body(
+        categoryTodoService.findMonthCategoryTodo(memberId, currentId, year, month, pageable));
   }
 }
