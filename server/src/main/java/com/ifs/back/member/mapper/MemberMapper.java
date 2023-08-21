@@ -30,15 +30,17 @@ public interface MemberMapper {
     return builder.build();
   }
 
-  default Page<MemberDto.MemberResponse> memberPageToMemberResponseDtoPage(Page<Member> memberPage){
+  default Page<MemberDto.MemberResponse> memberPageToMemberResponseDtoPage(
+      Page<Member> memberPage) {
     return memberPage.map(member -> {
       return MemberResponse.builder().memberId(member.getMemberId()).nickname(member.getNickname())
-          .bio(member.getBio()).premium(member.getPremium()).memberStatus(member.getMemberStatus())
+          .email(member.getEmail()).bio(member.getBio()).premium(member.getPremium()).
+          memberStatus(member.getMemberStatus())
           .todomon(todomonToTodomonResponse(member.getTodomon())).build();
     });
   }
 
-  default TodomonDto.TodomonResponse todomonToTodomonResponse(Todomon todomon){
+  default TodomonDto.TodomonResponse todomonToTodomonResponse(Todomon todomon) {
     TodomonDto.TodomonResponse.TodomonResponseBuilder builder = TodomonDto.TodomonResponse.builder()
         .faceColor(todomon.getFaceColor())
         .leftEyeColor(todomon.getLeftEyeColor())
