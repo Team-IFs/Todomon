@@ -42,6 +42,12 @@ const UserCard = (userInfo: UserCardProps) => {
       });
   }
   
+  const handleUserCardClick: any = (clickedUser:any) => {
+    // 클릭한 유저의 프로필 페이지로 이동
+    console.log(clickedUser.friendId);
+    console.log(clickedUser.nickname);
+
+  }
   // useEffect(() => { 
   //   console.log('current user info:', userInfo.nickname);
   //   console.log(userInfo.todomon);
@@ -49,7 +55,7 @@ const UserCard = (userInfo: UserCardProps) => {
   // },[]);
 
   return (
-    <Card>
+    <Card onClick={handleUserCardClick(userInfo)}>
       <UserCat>
         <NewCat todomonColor={userInfo.todomon} />
       </UserCat>

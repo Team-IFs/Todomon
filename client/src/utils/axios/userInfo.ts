@@ -16,3 +16,18 @@ export const getCurrentUserInfo = async (): Promise<User | null> => {
     return null;
   }
 }
+
+export const getUserSearch = async (email: string) => {
+  const requestHeader = {
+    params: {
+      email: email
+    }
+  }
+  try {
+    const response = await GET('/users/search', requestHeader);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

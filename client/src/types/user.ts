@@ -35,6 +35,10 @@ export interface UserCardProps {
   nickname: string;
   bio: string;
   todomon: TodomonColor;
-  friendId: number;
+  friendId: number; /* member id */
   isFriendSetting: boolean;
+}
+
+export interface UserWithEmail extends User {
+  email: string;
 }
