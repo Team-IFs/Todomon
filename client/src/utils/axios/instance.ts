@@ -29,7 +29,7 @@ instance.interceptors.response.use(
   (error) => {
     return new Promise((resolve, reject) => {
       if (error.response.status === 401 && error.config) {
-        alert('로그인 실패')
+        alert('다시 로그인해주세요.')
         if (window.location.pathname !== '/login') {
           removeCookie('accessJwtToken');
           window.location.replace('/');
@@ -40,8 +40,8 @@ instance.interceptors.response.use(
         alert('요청에 실패하였습니다')
         throw new Error(error.response.data.message || '요청에 실패하였습니다');
       }
-      alert('다시 시도해주세요')
-      throw new Error(error.response.data.message || '다시 시도해주세요');
+      alert('다시 로그인해주세요')
+      throw new Error(error.response.data.message || '다시 로그인해주세요');
     });
   }
 );
