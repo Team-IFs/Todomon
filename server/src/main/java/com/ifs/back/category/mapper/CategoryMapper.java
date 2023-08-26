@@ -22,7 +22,34 @@ public interface CategoryMapper {
 
     return category.build();
   }
-  Category categoryPatchToCategory(CategoryDto.CategoryPatch categoryPatchDto);
-  CategoryDto.CategoryResponse categoryToCategoryResponse(Category category);
+  default Category categoryPatchToCategory(CategoryDto.CategoryPatch categoryPatchDto) {
+    if ( categoryPatchDto == null ) {
+      return null;
+    }
+
+    Category.CategoryBuilder category = Category.builder();
+    category.isHide( categoryPatchDto.isHide() );
+    category.categoryName( categoryPatchDto.getCategoryName() );
+    category.categoryColor( categoryPatchDto.getCategoryColor() );
+    category.scope( categoryPatchDto.getScope() );
+    category.idx( categoryPatchDto.getIdx() );
+
+    return category.build();
+  }
+  default CategoryDto.CategoryResponse categoryToCategoryResponse(Category category) {
+    if ( category == null ) {
+      return null;
+    }
+
+    CategoryDto.CategoryResponse.CategoryResponseBuilder categoryResponse = CategoryDto.CategoryResponse.builder();
+    categoryResponse.isHide( category.isHide() );
+    categoryResponse.categoryId( category.getCategoryId() );
+    categoryResponse.categoryName( category.getCategoryName() );
+    categoryResponse.categoryColor( category.getCategoryColor() );
+    categoryResponse.scope( category.getScope() );
+    categoryResponse.idx( category.getIdx() );
+
+    return categoryResponse.build();
+  }
 
 }
