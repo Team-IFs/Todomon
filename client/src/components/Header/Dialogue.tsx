@@ -11,7 +11,10 @@ import InputBase from '@mui/material/InputBase';
 import { useEffect, useState } from 'react';
 import { getUserSearch } from '../../utils/axios/userInfo';
 import NewCat from '../../assets/NewCat';
-import { UserWithEmail } from '../../types/user';
+import { User, UserWithEmail } from '../../types/user';
+import { useRecoilState } from 'recoil';
+import { CurrentClickedUser } from '../../recoil/atoms/atoms';
+import { useRouter } from '../../hooks/useRouter';
 
 const SearchBar = styled.div({
   display: 'flex',
@@ -31,8 +34,8 @@ const SearchIconWrapper = styled.div({
 
 export interface SimpleDialogProps {
   open: boolean;
-  selectedValue: UserWithEmail | undefined;
-  onClose: (value: UserWithEmail) => void;
+  selectedValue: UserWithEmail | User| undefined;
+  onClose: () => void;
   setOpen: any;
 }
 
@@ -41,6 +44,8 @@ function Dialogue(props: SimpleDialogProps) {
   const { onClose, selectedValue, open, setOpen } = props;
   const [input, setInput] = useState('');
   const [searchedResults, setSearchedResults] = useState([]);
+  const [currentClickedUser, setCurrentClickedUser] = useRecoilState(CurrentClickedUser);
+
 
   const userSearch = (input: string) => {
     getUserSearch(input).then((res) => {
@@ -56,8 +61,12 @@ function Dialogue(props: SimpleDialogProps) {
     setOpen(false);
   };
 
-  const handleListItemClick = (result: UserWithEmail) => {
-    console.log('클릭한 유저:', result);
+  const { routeTo } = useRouter();
+
+  const handleListItemClick = async(result: User) => {
+    setCurrentClickedUser(result);
+    await routeTo('/otheruserhome');
+    onClose();
   };
 
   const onInputChange = (e: any) => {
@@ -67,7 +76,6 @@ function Dialogue(props: SimpleDialogProps) {
   useEffect(() => {
     if (input.length > 0 && input.trim() !== '') {
       userSearch(input);
-      console.log(input);
     }
 
   }, [input]);

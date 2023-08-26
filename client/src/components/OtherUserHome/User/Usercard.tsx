@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { UserInfo } from '../../../recoil/atoms/atoms';
 import { getCookie } from '../../../utils/cookies/cookies';
-import { getMyUserInfo } from '../../../utils/axios/userInfo';
+import { getCurrentUserInfo } from '../../../utils/axios/userInfo';
 import Cat from '../../../assets/Cat';
 import NewCat from '../../../assets/NewCat';
+import { User } from '../../../types/user';
 
 const Card = styled.div({
   display: 'flex',
@@ -34,15 +35,18 @@ const InfoCard = styled.div({
   }
 })
 
+interface UserCardProps {
+  currentUser: User;
+}
 
-const UserCard = () => {
+const UserCard = ({ currentUser }: UserCardProps) => {
   const [userInfo, setUserInfo] = useRecoilState(UserInfo);
   const [userInfoLoaded, setUserInfoLoaded] = useState(false);
 
    // 토큰이 있으면 로그인 상태 유지하기
   if (!userInfoLoaded) {
     if (getCookie('accessJwtToken') && getCookie('refreshJwtToken')) {
-      getMyUserInfo().then(userInfo => {
+      getCurrentUserInfo(currentUser.memberId).then(userInfo => {
           if(userInfo) setUserInfo(userInfo);
       });
       setUserInfoLoaded(true);

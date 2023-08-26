@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { useState } from 'react';
 import Dialogue from './Dialogue';
-import { UserWithEmail } from '../../types/user';
+import { User, UserWithEmail } from '../../types/user';
 
 const SearchBar = styled.div({
   display: 'flex',
@@ -22,15 +22,17 @@ const SearchIconWrapper = styled.div({
 
 const Search = () => {
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<UserWithEmail>();
+  const [selectedValue, setSelectedValue] = useState< UserWithEmail | User>();
+
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (value: UserWithEmail) => {
+  const handleClose = () => {
     setOpen(false);
-    setSelectedValue(value);
+    // setSelectedValue(value);
+    
   };
 
   return (

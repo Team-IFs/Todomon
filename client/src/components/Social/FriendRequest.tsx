@@ -4,6 +4,7 @@ import { FriendInterface } from '../../types/user';
 import UserCard from './UserCard';
 import { List, ListItem } from '@mui/material';
 import styled from '@emotion/styled';
+import { useUserCardClick } from '../../hooks/usercardClick';
 
 const Row = styled.div({
   display: 'flex',

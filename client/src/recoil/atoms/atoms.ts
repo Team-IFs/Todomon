@@ -58,3 +58,21 @@ export const CurrentClickedPart = atom({
     key: 'currentClickedPart',
     default: 'backgroundColor',
 })
+
+export const CurrentClickedUser = atom({
+    key: 'currentClickedUser',
+    default: {
+        bio: '',
+        memberId: -1,
+        memberStatus: '',
+        nickname: '',
+        premium: false,
+        todomon: {
+            backgroundColor: '',
+            faceColor: '',
+            leftEyeColor: '',
+            rightEyeColor: '',
+        },
+    },
+    effects_UNSTABLE: [persistAtom]
+})

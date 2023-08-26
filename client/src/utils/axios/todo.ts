@@ -8,10 +8,11 @@ import { SubItem } from '../../types/todo';
  * @param year 선택된 년도(2023)
  * @param month 선택된 월(7)
  */
-export const getMontlyTodo = async (year: string, month: string) => {
-
+export const getMontlyTodo = async (year: string, month: string, memberId?: number) => {
   try {
-    const response = await GET(`/users/me/todos/calendar?year=${year}&month=${month}&page=0&size=10`);
+    const response = memberId ?
+      await GET(`/users/me/todos/calendar/${memberId}?year=${year}&month=${month}&page=0&size=10`)
+      : await GET(`/users/me/todos/calendar?year=${year}&month=${month}&page=0&size=10`)
     return response.data;
   } catch (error) {
     console.error(error);
@@ -23,7 +24,7 @@ export const getMontlyTodo = async (year: string, month: string) => {
  * 특정 날짜의 할 일을 가져오는 함수
  * @param date
  */
-export const getTodaysTodo = async (date: string) => {
+export const getTodaysTodo = async (date: string, memberId?: number) => {
   const requestHeader = {
     params: {
       date: date,
@@ -32,7 +33,9 @@ export const getTodaysTodo = async (date: string) => {
     }
   }
   try {
-    const response = await GET('/users/me/todos', requestHeader);
+    const response = memberId ?
+      await GET(`/users/me/todos/${memberId}`, requestHeader)
+      : await GET(`/users/me/todos`, requestHeader);
     return response.data;
   } catch (error) {
     console.error(error);

@@ -11,6 +11,7 @@ import { Router as RemixRouter } from '@remix-run/router/dist/router'
 import { SidebarElement } from './types/sidebar'
 import {SidebarLayout, HeaderLayout} from './layout/GeneralLayout'
 import FindPassword from './pages/FindPassword'
+import OtherUserHome from './pages/OtherUserHome'
 
 interface RouterElement {
   id: number
@@ -82,6 +83,13 @@ const routerData: RouterElement[] = [
     path: '/findpassword',
     label: '비밀번호찾기',
     element: <FindPassword />,
+    isSidebar: false
+  },
+  {
+    id: 8,
+    path: '/otheruserhome',
+    label: '친구의 홈',
+    element: <OtherUserHome />,
     isSidebar: false
   },
   

@@ -9,7 +9,7 @@ import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
 import { setCookie, getCookie } from '../../utils/cookies/cookies';
 import { useEffect } from 'react';
 import { loginRequest } from '../../utils/axios/account';
-import { getCurrentUserInfo } from '../../utils/axios/userInfo';
+import { getMyUserInfo } from '../../utils/axios/userInfo';
 
 const Form = styled.div({
   display: 'flex',
@@ -56,7 +56,7 @@ const Login = () => {
     const res = await loginRequest(userData)
     // login success
     if (res === 'SUCCESS') {
-      getCurrentUserInfo().then(userInfo => {
+      getMyUserInfo().then(userInfo => {
           if(userInfo) setUserInfo(userInfo);
         });
       setIsLogin(true);
@@ -87,7 +87,7 @@ const Login = () => {
         const refreshToken = urlParams.get('refresh_token');
         setCookie('accessJwtToken', 'Bearer ' + accessToken);
         setCookie('refreshJwtToken', 'Bearer ' + refreshToken);
-        getCurrentUserInfo().then(userInfo => {
+        getMyUserInfo().then(userInfo => {
           if(userInfo) setUserInfo(userInfo);
         });
         setIsLogin(true);
