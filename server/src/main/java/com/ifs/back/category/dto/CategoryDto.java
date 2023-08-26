@@ -32,7 +32,7 @@ public class CategoryDto {
     private int scope;
     @Schema(description = "숨기기 여부")
     @NotNull(message = "숨기기 여부를 비울 수 없습니다.")
-    private boolean isHide;
+    private boolean hide;
   }
   @Getter
   @AllArgsConstructor
@@ -40,7 +40,7 @@ public class CategoryDto {
   public static class CategoryPatch {
     private String categoryName;
     private String categoryColor;
-    private boolean isHide;
+    private boolean hide;
     @Max(2)
     @Min(0)
     private int scope;
@@ -54,7 +54,7 @@ public class CategoryDto {
     private long categoryId;
     private String categoryName;
     private String categoryColor;
-    private boolean isHide;
+    private boolean hide;
     private int scope;
     private long idx;
   }

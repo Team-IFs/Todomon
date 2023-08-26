@@ -42,7 +42,7 @@ public interface CategoryMapper {
     }
 
     CategoryDto.CategoryResponse.CategoryResponseBuilder categoryResponse = CategoryDto.CategoryResponse.builder();
-    categoryResponse.isHide( category.isHide() );
+    categoryResponse.hide( category.isHide() );
     categoryResponse.categoryId( category.getCategoryId() );
     categoryResponse.categoryName( category.getCategoryName() );
     categoryResponse.categoryColor( category.getCategoryColor() );

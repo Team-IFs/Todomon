@@ -60,7 +60,6 @@ public class Category extends Auditable {
   private int scope;
   @Setter
   @Column(nullable = false)
-  @ColumnDefault("false")
   private boolean isHide;
   @ToString.Exclude
   @ManyToOne(fetch = FetchType.LAZY)
