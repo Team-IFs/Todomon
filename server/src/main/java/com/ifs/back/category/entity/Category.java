@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.ToString.Exclude;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Builder
@@ -59,6 +60,7 @@ public class Category extends Auditable {
   private int scope;
   @Setter
   @Column(nullable = false)
+  @ColumnDefault("false")
   private boolean isHide;
   @ToString.Exclude
   @ManyToOne(fetch = FetchType.LAZY)

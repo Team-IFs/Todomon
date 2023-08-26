@@ -8,7 +8,20 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CategoryMapper {
-  Category categoryPostToCategory(CategoryDto.CategoryPost categoryPostDto);
+
+  default Category categoryPostToCategory(CategoryDto.CategoryPost categoryPostDto) {
+    if ( categoryPostDto == null ) {
+      return null;
+    }
+
+    Category.CategoryBuilder category = Category.builder();
+    category.isHide( categoryPostDto.isHide() );
+    category.categoryName( categoryPostDto.getCategoryName() );
+    category.categoryColor( categoryPostDto.getCategoryColor() );
+    category.scope( categoryPostDto.getScope() );
+
+    return category.build();
+  }
   Category categoryPatchToCategory(CategoryDto.CategoryPatch categoryPatchDto);
   CategoryDto.CategoryResponse categoryToCategoryResponse(Category category);
 
