@@ -261,7 +261,7 @@ const AccountSetting: React.FC<{ changeNewUsername: any, changeNewBio: any }>
           <InputContainer>
             <label>계정삭제</label>
             <ButtonContainer>
-              <Button type='submit' variant='outlined' fullWidth={true} onClick={handleAccountDelete}>계정 삭제</Button>
+              <Button type='submit' variant='outlined' color='error' fullWidth={true} onClick={handleAccountDelete}>계정 삭제</Button>
             </ButtonContainer>
           </InputContainer>
         </ContentContainer>

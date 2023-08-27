@@ -25,7 +25,7 @@ const Social = () => {
   });
   return (<SocialPage>
     <h1>
-      Social
+      | 친구 관리
     </h1>
     <Tab />
   </SocialPage>)

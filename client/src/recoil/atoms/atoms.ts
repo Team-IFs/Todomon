@@ -3,6 +3,7 @@ import { static_items as defaultTodoList } from '../../components/Home/Todo/data
 import { recoilPersist } from 'recoil-persist'
 import { User } from '../../types/user'
 import { today } from '../../utils/today'
+import { CategoryItem } from '../../types/todo'
 
 const { persistAtom } = recoilPersist()
 
@@ -75,4 +76,17 @@ export const CurrentClickedUser = atom({
         },
     },
     effects_UNSTABLE: [persistAtom]
+})
+
+export const CurrentClickedCategory = atom<CategoryItem>({
+    key: 'currentClickedCategory',
+    default: {
+        categoryColor: '',
+        categoryId: -1,
+        categoryName: '',
+        hide: false,
+        scope: 0,
+        idx: 0,
+        todos: []
+    },
 })
