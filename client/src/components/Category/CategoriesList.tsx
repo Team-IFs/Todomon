@@ -14,19 +14,19 @@ import { CurrentClickedCategory } from '../../recoil/atoms/atoms';
 const CategoriesList = () => {
 
   const [categoryList, setCategoryList] = useState<CategoryItem[]>([]);
-  const [, setClickedCategory] = useRecoilState(CurrentClickedCategory);
+  const [, setCurrentClickedCategory] = useRecoilState(CurrentClickedCategory);
 
   const getCategoryList = () => {
     getCategories().then((res) => {
       if (res) {
         setCategoryList(res.content);
-        setClickedCategory(res.content[0]);
+        setCurrentClickedCategory(res.content[0]);
       }
     });
   }
 
-  const handleCategoryClicked = (category:CategoryItem) => {
-    setClickedCategory(category);
+  const handleCategoryClicked = (category: CategoryItem) => {
+    setCurrentClickedCategory(category);
   }
   
   useEffect(() => { 
@@ -36,7 +36,6 @@ const CategoriesList = () => {
 
   return (
     <Box sx={{ width: '100%', height: '100%', maxWidth: 200, margin: '0px 10px'}}>
-      <nav aria-label="categoriesList">
         <Typography sx={{ fontWeight: 'bold', padding: '10px' }}>| 내 카테고리</Typography>
         <List>
           {categoryList.map((category: CategoryItem) => (
@@ -50,9 +49,7 @@ const CategoriesList = () => {
               </ListItem>
             )))}
         </List>
-      </nav>
       <Divider />
-      <nav aria-label="secondary mailbox folders">
         <Typography sx={{fontWeight: 'bold', padding: '10px'}}>| 숨긴 카테고리</Typography>
         <List>
           {categoryList.map((category: CategoryItem) => (
@@ -67,7 +64,6 @@ const CategoriesList = () => {
             )))}
           
         </List>
-      </nav>
     </Box >
   );
 }

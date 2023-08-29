@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 import styled from '@emotion/styled';
-import { CurrentClickedCategory } from '../../recoil/atoms/atoms';
+import { CurrentClickedCategory, NewCategorySetting } from '../../recoil/atoms/atoms';
 import { useRecoilState } from 'recoil';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -8,6 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { CirclePicker } from 'react-color';
 import { useEffect, useState } from 'react';
 import Input from '@mui/material/Input';
+import { deleteCategory } from '../../utils/axios/category';
 
 const Row = styled.div({
   display: 'flex',
@@ -28,87 +29,121 @@ const ButtonContainer = styled.div({
   width: '200px',
 })
 
+interface TempCategorySetting {
+  categoryName: string;
+  hide: boolean;
+  scope: number;
+  categoryColor: string;
+}
+
 const SelectedCategory = () => {
-  const [category, setCategory] = useRecoilState(CurrentClickedCategory);
-  console.log(category)
-  
+  const [category] = useRecoilState(CurrentClickedCategory);
+  const [, setNewCategorySetting] = useRecoilState(NewCategorySetting);
   const [clickedIndex, setClickedIndex] = useState(category.scope);
+  const [categoryName, setCategoryName] = useState(category.categoryName);
+  const [isHide, setIsHide] = useState(category.hide);
 
   useEffect(() => {
     setClickedIndex(category.scope);
+    setCategoryName(category.categoryName);
+    setIsHide(category.hide);
   }, [category]);
 
-  useEffect(() => { 
-    setCategory(category)
-  }, []);
-  
-  const handleButtonClick = (index: any) => {
+
+  const handleCategoryNameChange = (e: any) => {
+    setCategoryName(e.target.value);
+    setNewCategorySetting(prevSetting => ({
+      ...prevSetting,
+      categoryName: e.target.value
+    }));
+  };
+
+  const handleVisiblityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsHide(e.target.checked)
+    setNewCategorySetting(prevSetting => ({
+      ...prevSetting,
+      hide: e.target.checked
+    }));
+  }
+
+  const handleScopeChange = (index: any) => {
     setClickedIndex(index);
+    setNewCategorySetting(prevSetting => ({
+      ...prevSetting,
+      scope: index
+    }));
   };
 
-  const handleCategoryNameChange = () => {
+  const handleCategoryDelete = async () => {
+    deleteCategory(category.categoryId).then((res) => {
+      if (res) {
+        alert(`${categoryName} 카테고리를 성공적으로 삭제했습니다.`);
+        window.location.reload();
+      }
+    });
   };
 
-  const handleAccountDelete = async () => {
-  };
-  
 
 
-  return(
-  <RowContent>
-    <Row>
-      <Typography>이름</Typography>
-      <Typography
-        sx={{ fontWeight: 'bold' }}
-          color={category.categoryColor}>
-          <Input type='text' fullWidth={true} value={category.categoryName} onChange={handleCategoryNameChange} />
-            
-      </Typography>
-    </Row>
-    <Row>
-      <Typography>카테고리 숨기기</Typography>
-        <Checkbox
-          checked={category.hide}
-          sx={{
-          color: category.categoryColor,
-          '&.Mui-checked': { color: category.categoryColor },
-          }} />
-        <Typography variant='caption'>
-          할 일 추가 화면에서 더이상 해당 카테고리가 나타나지 않도록 카테고리를 숨깁니다.
-          </Typography>
-    </Row>
-    <Row>
-      <Typography>공개범위</Typography>
-      <ButtonGroup variant='outlined'>
-        {[0, 1, 2].map((scope) => (
-          <Button
-            key={scope}
-            variant={clickedIndex === scope ? 'contained' : 'outlined'}
-            onClick={() => handleButtonClick(scope)}
-          >
-            {scope === 0 ? '전체 공개' : scope === 1 ? '친구 공개' : '비공개'}
-          </Button>
-        ))}
-      </ButtonGroup>
-    </Row>
-    <Row>
-      <Typography>색상</Typography>
-      <CirclePicker/>
-    </Row>
-    <Row>
-      <label>카테고리 삭제</label>
-      <ButtonContainer>
-        <Button
-          type='submit'
-          variant='outlined'
-          color='error'
-          fullWidth={true}
-          onClick={handleAccountDelete}
-        >
-          카테고리 삭제
-        </Button>
-      </ButtonContainer>
-    </Row>
-  </RowContent>
-)}
+  return (
+    <>
+      {category.categoryId === -1 || category.categoryName === ''
+        ? <Typography>왼쪽에서 카테고리를 클릭 하세요.</Typography>
+        : <RowContent>
+            <Row>
+            <Typography>이름</Typography>
+            <Input sx={{ fontWeight: 'bold' }}
+              type='text' value={categoryName || category.categoryName} onChange={handleCategoryNameChange} />
+            </Row>
+            <Row>
+              <Typography>카테고리 숨기기</Typography>
+              <Checkbox
+                checked={isHide}
+                sx={{
+                  color: category.categoryColor,
+                  '&.Mui-checked': { color: category.categoryColor }
+                }}
+                onChange={handleVisiblityChange}
+              />
+              <Typography variant='caption'>
+                할 일 추가 화면에서 더이상 해당 카테고리가 나타나지 않도록 카테고리를 숨깁니다.
+              </Typography>
+            </Row>
+            <Row>
+              <Typography>공개범위</Typography>
+              <ButtonGroup variant='outlined'>
+                {[0, 1, 2].map((scope) => (
+                  <Button
+                    key={scope}
+                    variant={clickedIndex === scope ? 'contained' : 'outlined'}
+                    onClick={() => handleScopeChange(scope)}
+                  >
+                    {scope === 0 ? '전체 공개' : scope === 1 ? '친구 공개' : '비공개'}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Row>
+            <Row>
+              <Typography>색상</Typography>
+              <CirclePicker />
+            </Row>
+            <Row>
+              <label>카테고리 삭제</label>
+              <ButtonContainer>
+                <Button
+                  type='submit'
+                  variant='outlined'
+                  color='error'
+                  fullWidth={true}
+                  onClick={handleCategoryDelete}
+                >
+                  카테고리 삭제
+                </Button>
+              </ButtonContainer>
+            </Row>
+          </RowContent>
+      }
+    </>
+  )
+}
 export default SelectedCategory;

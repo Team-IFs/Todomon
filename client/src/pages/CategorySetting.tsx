@@ -1,22 +1,26 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
-import { IsLogin } from '../recoil/atoms/atoms';
+import { CurrentClickedCategory, IsLogin, NewCategorySetting } from '../recoil/atoms/atoms';
 import CategoriesList from '../components/Category/CategoriesList';
 import SelectedCategory from '../components/Category/SelectedCategory';
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import { updateCategory } from '../utils/axios/category';
 
-  const SocialPage = styled.div({
+
+const SocialPage = styled.div({
     display: 'flex',
     flexDirection: 'column',
     width: 'calc(100vw - 210px)',
     height: 'calc(100vh - 80px)'
-  })
+})
 
 const Contents = styled.div({
   display: 'flex',
   flexDirection: 'row',
+  margin: '20px 10px'
 });
 
 const ButtonContainer = styled.div({
@@ -30,26 +34,42 @@ const ButtonRow = styled.div({
   margin: '20px',
   gap: '20px',
 })
-  
+
 const CategorySetting = () => {
   const { routeTo } = useRouter();
   const [isLogin] = useRecoilState(IsLogin);
+  const [newCategorySetting, setNewCategorySetting] = useRecoilState(NewCategorySetting);
+  const [currentClickedCategory, setCurrentClickedCategory] = useRecoilState(CurrentClickedCategory);
 
   const handleChangeClick = () => {
+    updateCategory(newCategorySetting).then((res) => {
+      if (res === 'SUCCESS') {
+        alert('변경완료되었습니다.');
+        window.location.reload();
+      }
+    });
+  };
 
-  }
+
   useEffect(() => {
     if (!isLogin) {
         alert('로그인이 필요한 페이지입니다.')
         routeTo('/login')
-      }
-  });
+    } else {
+      setNewCategorySetting(currentClickedCategory);
+      setCurrentClickedCategory(currentClickedCategory);
+    }
+  }, []);
+  
+
   return (<SocialPage>
     <h1>
       | 카테고리 관리
     </h1>
+    <Divider />
     <Contents>
       <CategoriesList />
+      <Divider orientation='vertical' />
       <SelectedCategory />
     </Contents>
     <ButtonRow>
