@@ -1,5 +1,5 @@
-import { CategoryItemWithoutTodomon } from '../../types/todo';
-import { DELETE, GET, PATCH } from './axios'
+import { CategoryCreationData, CategoryItemWithoutTodomon } from '../../types/todo';
+import { DELETE, GET, PATCH, POST } from './axios'
 
 /**
  * 특정 유저의 카테고리를 전부 가져오는 함수
@@ -15,13 +15,25 @@ export const getCategories = async () => {
 }
 
 /**
+ * 카테고리를 추가 하는 함수
+ */
+export const addCategory = async (category: CategoryCreationData) => {
+  const params = { ...category };
+  try {
+    await POST(`/users/me/categories`, params);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
  * 선택한 카테고리 설정을 업데이트 하는 함수
  */
 export const updateCategory = async (category: CategoryItemWithoutTodomon) => {
   const params = { ...category };
   try {
-    const response = await PATCH(`/users/me/categories/${category.categoryId}`, params);
-    return response.data;
+    await PATCH(`/users/me/categories/${category.categoryId}`, params);
   } catch (error) {
     console.error(error);
     return null;

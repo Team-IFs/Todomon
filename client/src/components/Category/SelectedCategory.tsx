@@ -29,24 +29,19 @@ const ButtonContainer = styled.div({
   width: '200px',
 })
 
-interface TempCategorySetting {
-  categoryName: string;
-  hide: boolean;
-  scope: number;
-  categoryColor: string;
-}
-
 const SelectedCategory = () => {
   const [category] = useRecoilState(CurrentClickedCategory);
   const [, setNewCategorySetting] = useRecoilState(NewCategorySetting);
   const [clickedIndex, setClickedIndex] = useState(category.scope);
   const [categoryName, setCategoryName] = useState(category.categoryName);
   const [isHide, setIsHide] = useState(category.hide);
+  const [color, setColor] = useState(category.categoryColor);
 
   useEffect(() => {
     setClickedIndex(category.scope);
     setCategoryName(category.categoryName);
     setIsHide(category.hide);
+    setColor(category.categoryColor);
   }, [category]);
 
 
@@ -73,6 +68,14 @@ const SelectedCategory = () => {
       scope: index
     }));
   };
+
+  const handleColorChange = (c:any) => {
+    setColor(c.hex)
+    setNewCategorySetting(prevSetting => ({
+      ...prevSetting,
+      categoryColor: c.hex
+    }));
+  }
 
   const handleCategoryDelete = async () => {
     deleteCategory(category.categoryId).then((res) => {
@@ -125,7 +128,7 @@ const SelectedCategory = () => {
             </Row>
             <Row>
               <Typography>색상</Typography>
-              <CirclePicker />
+            <CirclePicker onChange={handleColorChange}/>
             </Row>
             <Row>
               <label>카테고리 삭제</label>

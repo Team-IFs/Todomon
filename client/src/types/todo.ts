@@ -1,3 +1,11 @@
+/** 카테고리 생성용 interface */
+export interface CategoryCreationData {
+  categoryName: string;
+  categoryColor: string;
+  scope: number;
+  hide: boolean;
+}
+
 /** 응답으로 받아서 필요한 타입으로 변경한 카테고리 아이템 interface */
 export interface CategoryItemWithoutTodomon {
   categoryColor: string,

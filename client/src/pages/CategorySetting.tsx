@@ -40,13 +40,11 @@ const CategorySetting = () => {
   const [isLogin] = useRecoilState(IsLogin);
   const [newCategorySetting, setNewCategorySetting] = useRecoilState(NewCategorySetting);
   const [currentClickedCategory, setCurrentClickedCategory] = useRecoilState(CurrentClickedCategory);
-
+  
   const handleChangeClick = () => {
-    updateCategory(newCategorySetting).then((res) => {
-      if (res === 'SUCCESS') {
+    updateCategory(newCategorySetting).then(() => {
         alert('변경완료되었습니다.');
         window.location.reload();
-      }
     });
   };
 
