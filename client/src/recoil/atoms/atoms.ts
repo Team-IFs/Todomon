@@ -1,16 +1,10 @@
 import { atom } from 'recoil'
-import { static_items as defaultTodoList } from '../../components/Home/Todo/data'
 import { recoilPersist } from 'recoil-persist'
 import { User } from '../../types/user'
 import { today } from '../../utils/today'
 import { CategoryItem, CategoryItemWithoutTodomon } from '../../types/todo'
 
 const { persistAtom } = recoilPersist()
-
-export const DefaultTodoList = atom({
-    key: 'defaultTodoList',
-    default: defaultTodoList
-})
 
 export const TodoList = atom({
     key: 'TodoList',
