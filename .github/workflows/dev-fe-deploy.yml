@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+          working-directory: ./client
     steps:
       - name: Checkout source code
         uses: actions/checkout@master
@@ -21,14 +23,13 @@ jobs:
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
             
-      - name: Change Directory
-        run: cd Todomon/client
-        
       - name: Install Dependencies
         run: npm install
+        working-directory: ${{ env.working-directory }}
 
       - name: Build
         run: npm run build
+        working-directory: ${{ env.working-directory }}
 
       - name: Deploy 
         env:
