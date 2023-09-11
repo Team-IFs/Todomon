@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
           working-directory: ./client
+          process.env.CI : false
     steps:
       - name: Checkout source code
         uses: actions/checkout@master
