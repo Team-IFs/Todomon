@@ -20,7 +20,10 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
-
+            
+      - name: Change Directory
+        run: cd /client
+        
       - name: Install Dependencies
         run: npm install
 
