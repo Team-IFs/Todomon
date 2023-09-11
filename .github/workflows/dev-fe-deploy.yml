@@ -22,7 +22,7 @@ jobs:
             ${{ runner.OS }}-
             
       - name: Change Directory
-        run: cd /client
+        run: cd Todomon/client
         
       - name: Install Dependencies
         run: npm install
