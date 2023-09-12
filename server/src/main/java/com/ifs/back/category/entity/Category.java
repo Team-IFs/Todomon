@@ -40,7 +40,6 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(
     uniqueConstraints={
-        @UniqueConstraint(name = "UniqueColorAndMember", columnNames = {"member_id", "categoryColor"}),
         @UniqueConstraint(name = "UniqueCategoryNameAndMember", columnNames = {"member_id", "categoryName"})
     }
 )

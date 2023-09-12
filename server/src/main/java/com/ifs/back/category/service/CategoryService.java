@@ -105,7 +105,7 @@ public class CategoryService {
   @Transactional
   public void createBasicCategory(Member member) {
     Category basicCategory = Category.builder().member(member)
-        .categoryColor("#000000").categoryName("기본").isHide(false).scope(0).build();
+        .categoryColor("#808080").categoryName("기본").isHide(false).scope(0).build();
 
     createCategory(basicCategory);
   }
