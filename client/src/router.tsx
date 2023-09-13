@@ -109,7 +109,8 @@ export const routers: RemixRouter = createBrowserRouter(
         element: <HeaderLayout>{ router.element }</HeaderLayout>
       }
     }
-  })
+  }),
+  { basename: `${process.env.REACT_APP_PUBLIC_URL}` }
 )
 
 export const SidebarContent: SidebarElement[] = routerData.reduce((prev, router) => {
