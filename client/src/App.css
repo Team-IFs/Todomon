@@ -1,0 +1,44 @@
+
+* {
+  word-wrap: keep-all;
+  white-space : nowrap;
+  box-sizing: border-box;
+  
+}
+.general-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100vw;
+  align-items: center;
+  padding: 0px 10px;
+  border-bottom: 1px solid #757575;
+}
+
+.sidebar-layout-child {
+  display: flex;
+  height: 100vh;
+}
+
+.header-layout-child {
+  display: flex;
+  height: 100vh;
+}
+
+.logo {
+  width: 170px;
+  height: 100%;
+}
+
+.login-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
