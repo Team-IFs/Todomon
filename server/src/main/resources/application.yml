@@ -13,21 +13,21 @@ spring:  # 환경변수
             client-id: ${google_clientId}
             client-secret: ${google_clientSecret}
             scope: email, profile
-            redirect-uri: http://todomon-dev.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/google
+            redirect-uri: ${google_redirect_url}
           naver:
             client-id: ${naver_clientId}
             client-secret: ${naver_clientSecret}
             scope: nickname,email
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: http://todomon-dev.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/naver
+            redirect-uri: ${naver_redirect_url}
           kakao:
             client-id: ${kakao_clientId}
             client-secret: ${kakao_clientSecret}
             scope: profile_nickname, account_email
             client-name: Kakao
             authorization-grant-type: authorization_code
-            redirect-uri: http://todomon-dev.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/kakao
+            redirect-uri: ${kakao_redirect_url}
             client-authentication-method: POST
         provider:
           naver:
