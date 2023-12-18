@@ -14,11 +14,20 @@ type Result = 'SUCCESS' | 'FAIL';
 
 
 export const loginRequest = async (userData: UserData): Promise<Result> => {
-
   try {
     const response = await POST('/login', userData);
     setCookie('accessJwtToken', response.headers.authorization);
     setCookie('refreshJwtToken', response.headers.refresh);
+    return 'SUCCESS';
+  } catch (error) {
+    console.log(error);
+    return 'FAIL';
+  }
+}
+
+export const googleLoginRequest = async (accessToken: string | null): Promise<Result> => {
+  try {
+    await POST('/login/oauth2/code/google', accessToken);
     return 'SUCCESS';
   } catch (error) {
     console.log(error);

@@ -10,6 +10,8 @@ import { setCookie, getCookie } from '../../utils/cookies/cookies';
 import { useEffect } from 'react';
 import { loginRequest } from '../../utils/axios/account';
 import { getMyUserInfo } from '../../utils/axios/userInfo';
+import { googleLoginRequest } from '../../utils/axios/account';
+
 
 const Form = styled.div({
   display: 'flex',
@@ -37,7 +39,7 @@ const ButtonContainer = styled.div({
 const Login = () => {
   const { routeTo } = useRouter();
   const [, setIsLogin] = useRecoilState(IsLogin);
-  const [userInfo, setUserInfo] = useRecoilState(UserInfo);
+  const [, setUserInfo] = useRecoilState(UserInfo);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -68,8 +70,11 @@ const Login = () => {
   }
   
 
-  const googleLoginClick = () => {
+  const googleLoginClick = async () => {
     window.location.href = `${process.env.REACT_APP_GOOGLE_LOGIN_URL}`;
+    const parsedHash = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = parsedHash.get('access_token');
+    await googleLoginRequest(accessToken);
   }
   const kakaoLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_KAKAO_LOGIN_URL}`;
