@@ -48,7 +48,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     queryParams.add("refresh_token", refreshToken);
 
     return UriComponentsBuilder.newInstance()
-        .scheme("http")
+        .scheme("https")
         .host("todo-mon.netlify.app")
         .path("/login")
         .queryParams(queryParams).build().toUri();
