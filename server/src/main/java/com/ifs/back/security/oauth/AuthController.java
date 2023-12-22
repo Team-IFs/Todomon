@@ -37,6 +37,11 @@ public class AuthController {
     queryParams.add("access_token", accessToken);
     queryParams.add("refresh_token", refreshToken);
 
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
+    response.setHeader("Access-Control-Max-Age", "3600");
+    response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");        response.setHeader("Access-Control-Expose-Headers", "Location");
+
     response.sendRedirect(UriComponentsBuilder.newInstance()
         .scheme("https")
         .host("todo-mon.netlify.app")
