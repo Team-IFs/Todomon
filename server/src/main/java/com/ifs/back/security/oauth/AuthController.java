@@ -1,11 +1,13 @@
 package com.ifs.back.security.oauth;
 
 import com.ifs.back.member.entity.Member;
+import com.ifs.back.security.dto.TokenDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +27,8 @@ public class AuthController {
   private final AuthService authService;
 
   @GetMapping("/google")
-  public void socialLoginGoogle(@RequestParam String access_token, HttpServletResponse response)
+  public ResponseEntity socialLoginGoogle(@RequestParam String access_token,
+      HttpServletResponse response)
       throws IOException {
 
     Member member = authService.getMemberByToken(access_token);
@@ -33,19 +36,7 @@ public class AuthController {
     String accessToken = authService.delegateAccessToken(member);
     String refreshToken = authService.delegateRefreshToken(member);
 
-    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-    queryParams.add("access_token", accessToken);
-    queryParams.add("refresh_token", refreshToken);
-
-    response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-    response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
-    response.setHeader("Access-Control-Max-Age", "3600");
-    response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");        response.setHeader("Access-Control-Expose-Headers", "Location");
-
-    response.sendRedirect(UriComponentsBuilder.newInstance()
-        .scheme("https")
-        .host("todo-mon.netlify.app")
-        .path("/login")
-        .queryParams(queryParams).build().toUri().toString());
+    return ResponseEntity.ok()
+        .body(TokenDto.builder().access_token(accessToken).refresh_token(refreshToken).build());
   }
 }
