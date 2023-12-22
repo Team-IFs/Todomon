@@ -37,6 +37,6 @@ public class AuthController {
     String refreshToken = authService.delegateRefreshToken(member);
 
     return ResponseEntity.ok()
-        .body(TokenDto.builder().access_token(accessToken).refresh_token(refreshToken).build());
+        .body(TokenDto.builder().accessJwtToken(accessToken).refreshJwtToken(refreshToken).build());
   }
 }
