@@ -1,7 +1,7 @@
 package com.ifs.back.security.jwt;
 
 import com.ifs.back.member.entity.Member;
-import com.ifs.back.security.oauth.AuthService;
+import com.ifs.back.security.oauth.RedisService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -36,7 +36,7 @@ public class JwtTokenizer {
   @Value("${jwt.refresh-token-expiration-minutes}")
   private int refreshTokenExpirationMinutes;
 
-  private final AuthService authService;
+  private final RedisService redisService;
 
   public String encodeBase64SecretKey(String secretKey) {
     return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -149,8 +149,7 @@ public class JwtTokenizer {
         base64EncodedSecretKey);
 
     Long refreshTokenExp = getExpiration(refreshToken);
-
-    authService.redisSetRefreshToken(refreshTokenExp, refreshToken, subject);
+    redisService.redisSetRefreshToken(refreshTokenExp, refreshToken, subject);
     return refreshToken;
   }
 
