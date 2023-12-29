@@ -48,7 +48,7 @@ export const newPasswordRequest = async (userEmail: UserEmail): Promise<Result> 
 
 export const accountDeleteRequest = async (): Promise<Result> => {
   try {
-    const response = await DELETE('/users/me');
+    await DELETE('/users/me');
     removeCookie('accessJwtToken');
     removeCookie('refreshJwtToken');
     return 'SUCCESS';
@@ -60,7 +60,7 @@ export const accountDeleteRequest = async (): Promise<Result> => {
 
 export const updateRequest = async (data: any): Promise<Result> => {
   try {
-    const response = PATCH('/users/me/password', data)
+    PATCH('/users/me/password', data)
     return 'SUCCESS';
   } catch (error) {
     console.log(error);

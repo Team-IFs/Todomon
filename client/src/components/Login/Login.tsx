@@ -1,16 +1,15 @@
-
 import styled from '@emotion/styled';
-import { useRouter } from '../../hooks/useRouter'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import React, { useEffect } from 'react';
+import { useRouter } from '../../hooks/useRouter'
 import { Divider } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
-import { setCookie } from '../../utils/cookies/cookies';
-import { useEffect } from 'react';
 import { loginRequest } from '../../utils/axios/account';
 import { getMyUserInfo } from '../../utils/axios/userInfo';
-import { googleLoginRequest } from '../../utils/axios/account';
+import useLogin from '../../hooks/useLogin';
+
 
 const Form = styled.div({
   display: 'flex',
@@ -36,10 +35,13 @@ const ButtonContainer = styled.div({
 })
 
 const Login = () => {
-  const { routeTo } = useRouter();
   const [, setIsLogin] = useRecoilState(IsLogin);
   const [, setUserInfo] = useRecoilState(UserInfo);
+  const { login } = useLogin();
+  const { routeTo } = useRouter();
 
+
+  // 이메일로 로그인
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -64,12 +66,20 @@ const Login = () => {
       setIsLogin(true);
       alert('로그인 성공!');
       routeTo('/home');
+
     } else {
       setIsLogin(false);
     }
   }
-  
 
+  useEffect(() => { 
+    if (window.location.search) {
+      if (login()) {
+        setIsLogin(true);
+        routeTo('/home');
+      }
+    }
+  });
 
   
   const googleLoginClick = async () => {
@@ -80,34 +90,6 @@ const Login = () => {
   }
   const naverLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_NAVER_LOGIN_URL}`;
-  }
-
-  useEffect(() => { 
-    if (window.location.search) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get('access_token');
-      if (accessToken) {
-        const refreshToken = urlParams.get('refresh_token');
-        setCookie('accessJwtToken', 'Bearer ' + accessToken);
-        setCookie('refreshJwtToken', 'Bearer ' + refreshToken);
-        getMyUserInfo().then(userInfo => {
-          if(userInfo) setUserInfo(userInfo);
-        });
-        setIsLogin(true);
-        routeTo('/home')
-      }
-    }
-
-    if (window.location.hash.includes('access_token')) { 
-      googleLogin();
-    }
-  });
-
-  const googleLogin = async () => {
-    const res = await googleLoginRequest(window.location.hash.substring(1));
-    if (res === 'SUCCESS') {
-      routeTo('/home');
-    }
   }
 
 

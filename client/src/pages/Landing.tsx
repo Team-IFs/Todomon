@@ -2,6 +2,9 @@ import styled from '@emotion/styled'
 import { ReactComponent as CatBasic } from '../assets/cat-basic.svg';
 import Button from '@mui/material/Button';
 import { useRouter } from '../hooks/useRouter';
+import { useEffect } from 'react';
+import useLogin from '../hooks/useLogin';
+import { googleLoginRequest } from '../utils/axios/account';
 
 const LandingPage = styled.div({
   display: 'flex',
@@ -34,6 +37,25 @@ const ButtonContainer = styled.div({
 })
 const Landing = () => {
   const { routeTo } = useRouter();
+  const { login, setIsLogin } = useLogin();
+
+  useEffect(() => {
+    if (window.location.hash.includes('access_token')) { 
+      googleLogin();
+    }
+  });
+
+  const googleLogin = async () => {
+    //구글 로그인 후 리다이렉트된 url에서 인가된 토큰 백엔드 서버에 전송
+    const res = await googleLoginRequest(window.location.hash.substring(1));
+    if (res === 'SUCCESS') {
+      if (login()) {
+        routeTo('/home');
+        setIsLogin(true);
+      }
+    }
+  }
+
 
   return (
     <>
