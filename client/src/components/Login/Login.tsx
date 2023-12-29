@@ -6,12 +6,11 @@ import Button from '@mui/material/Button';
 import { Divider } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
-import { setCookie, getCookie } from '../../utils/cookies/cookies';
+import { setCookie } from '../../utils/cookies/cookies';
 import { useEffect } from 'react';
 import { loginRequest } from '../../utils/axios/account';
 import { getMyUserInfo } from '../../utils/axios/userInfo';
 import { googleLoginRequest } from '../../utils/axios/account';
-
 
 const Form = styled.div({
   display: 'flex',
@@ -54,6 +53,7 @@ const Login = () => {
       username: email,
       password: password
     }
+
     // login request
     const res = await loginRequest(userData)
     // login success
@@ -70,21 +70,19 @@ const Login = () => {
   }
   
 
+
+  
   const googleLoginClick = async () => {
     window.location.href = `${process.env.REACT_APP_GOOGLE_LOGIN_URL}`;
-    const parsedHash = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = parsedHash.get('access_token');
-    await googleLoginRequest(accessToken);
   }
   const kakaoLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_KAKAO_LOGIN_URL}`;
   }
   const naverLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_NAVER_LOGIN_URL}`;
-
   }
 
-  useEffect(() => {
+  useEffect(() => { 
     if (window.location.search) {
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('access_token');
@@ -99,8 +97,18 @@ const Login = () => {
         routeTo('/home')
       }
     }
+
+    if (window.location.hash.includes('access_token')) { 
+      googleLogin();
+    }
   });
 
+  const googleLogin = async () => {
+    const res = await googleLoginRequest(window.location.hash.substring(1));
+    if (res === 'SUCCESS') {
+      routeTo('/home');
+    }
+  }
 
 
   return (
