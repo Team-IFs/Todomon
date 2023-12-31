@@ -29,7 +29,7 @@ export const loginRequest = async (userData: UserData): Promise<Result> => {
   }
 }
 
-export const googleLoginRequest = async (token: any): Promise<TokenObject | null> => {
+export const googleLoginRequest = async (token: any): Promise<TokenObject> => {
   try {
     const response = await GET(`/social/google?${token}`);
     setCookie('accessJwtToken', response.data.accessJwtToken);
@@ -40,7 +40,10 @@ export const googleLoginRequest = async (token: any): Promise<TokenObject | null
     }
   } catch (error) {
     console.log(error);
-    return null;
+    return {
+      'accessJwtToken': '',
+      'refreshJwtToken': ''
+    }
   }
 }
 

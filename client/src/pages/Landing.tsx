@@ -38,10 +38,10 @@ const ButtonContainer = styled.div({
 })
 const Landing = () => {
   const { routeTo } = useRouter();
-  const { login, setIsLogin } = useLogin();
+  const { setIsLogin } = useLogin();
 
   useEffect(() => {
-    if (window.location.hash.includes('access_token')) { 
+    if (window.location.hash.includes('access_token')) {
       googleLogin();
     }
     if (getCookie('accessJwtToken')) {
@@ -53,17 +53,8 @@ const Landing = () => {
 
   const googleLogin = async () => {
     await googleLoginRequest(window.location.hash.substring(1)).then(res => {
-      const tokens = {
-        'accessJwtToken': res?.accessJwtToken,
-        'refreshJwtToken': res?.refreshJwtToken
-      }
-      login(tokens).then(res => { 
-        console.log(res);
-        if (res) {
-          setIsLogin(true);
-          routeTo('/home');
-        }
-      })
+      setIsLogin(true);
+      routeTo('/home');
     });
   }
 

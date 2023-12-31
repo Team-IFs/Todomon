@@ -1,14 +1,13 @@
 import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from '../../hooks/useRouter'
 import { Divider } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
 import { loginRequest } from '../../utils/axios/account';
 import { getMyUserInfo } from '../../utils/axios/userInfo';
-import useLogin from '../../hooks/useLogin';
 
 
 const Form = styled.div({
@@ -37,7 +36,6 @@ const ButtonContainer = styled.div({
 const Login = () => {
   const [, setIsLogin] = useRecoilState(IsLogin);
   const [, setUserInfo] = useRecoilState(UserInfo);
-  const { login } = useLogin();
   const { routeTo } = useRouter();
 
 
@@ -71,18 +69,6 @@ const Login = () => {
       setIsLogin(false);
     }
   }
-
-  useEffect(() => { 
-    if (window.location.search) {
-      login().then(result => {
-        console.log(result); // true 또는 false
-        if (result) {
-          setIsLogin(true);
-          routeTo('/home');
-        }
-      });
-    }
-  });
 
   
   const googleLoginClick = async () => {
