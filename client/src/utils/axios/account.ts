@@ -11,6 +11,10 @@ export interface UserEmail {
 }
 
 type Result = 'SUCCESS' | 'FAIL';
+export type TokenObject = {
+  'accessJwtToken': string,
+  'refreshJwtToken': string
+}
 
 
 export const loginRequest = async (userData: UserData): Promise<Result> => {
@@ -25,15 +29,18 @@ export const loginRequest = async (userData: UserData): Promise<Result> => {
   }
 }
 
-export const googleLoginRequest = async (token: any): Promise<Result> => {
+export const googleLoginRequest = async (token: any): Promise<TokenObject | null> => {
   try {
     const response = await GET(`/social/google?${token}`);
-    setCookie('accessJwtToken', response.data.access_token);
-    setCookie('refreshJwtToken', response.data.refresh_token);
-    return 'SUCCESS';
+    setCookie('accessJwtToken', response.data.accessJwtToken);
+    setCookie('refreshJwtToken', response.data.refreshJwtToken);
+    return {
+      'accessJwtToken': response.data.accessJwtToken,
+      'refreshJwtToken': response.data.refreshJwtToken
+    }
   } catch (error) {
     console.log(error);
-    return 'FAIL';
+    return null;
   }
 }
 

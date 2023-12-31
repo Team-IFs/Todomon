@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { IsLogin } from '../recoil/atoms/atoms';
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
+import { getCookie } from '../utils/cookies/cookies';
 
   const HomePage = styled.div({
     display: 'flex',
@@ -35,12 +36,10 @@ import { useRecoilState } from 'recoil';
 const Home = () => {
   const { routeTo } = useRouter();
   const [isLogin] = useRecoilState(IsLogin);
-
   useEffect(() => {
-    if (!isLogin) {
+    if (!getCookie('accessJwsToken')) {
         alert('로그인이 필요한 페이지입니다.')
       routeTo('/login')
-      
     }
   });
 

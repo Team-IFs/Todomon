@@ -5,6 +5,7 @@ import { useRouter } from '../hooks/useRouter';
 import { useEffect } from 'react';
 import useLogin from '../hooks/useLogin';
 import { googleLoginRequest } from '../utils/axios/account';
+import { getCookie } from '../utils/cookies/cookies';
 
 const LandingPage = styled.div({
   display: 'flex',
@@ -43,17 +44,27 @@ const Landing = () => {
     if (window.location.hash.includes('access_token')) { 
       googleLogin();
     }
+    if (getCookie('accessJwtToken')) {
+      alert('로그인되었습니다!')
+      setIsLogin(true);
+      routeTo('/home');
+    }
   });
 
   const googleLogin = async () => {
-    //구글 로그인 후 리다이렉트된 url에서 인가된 토큰 백엔드 서버에 전송
-    const res = await googleLoginRequest(window.location.hash.substring(1));
-    if (res === 'SUCCESS') {
-      if (login()) {
-        routeTo('/home');
-        setIsLogin(true);
+    await googleLoginRequest(window.location.hash.substring(1)).then(res => {
+      const tokens = {
+        'accessJwtToken': res?.accessJwtToken,
+        'refreshJwtToken': res?.refreshJwtToken
       }
-    }
+      login(tokens).then(res => { 
+        console.log(res);
+        if (res) {
+          setIsLogin(true);
+          routeTo('/home');
+        }
+      })
+    });
   }
 
 

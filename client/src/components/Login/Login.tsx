@@ -74,10 +74,13 @@ const Login = () => {
 
   useEffect(() => { 
     if (window.location.search) {
-      if (login()) {
-        setIsLogin(true);
-        routeTo('/home');
-      }
+      login().then(result => {
+        console.log(result); // true 또는 false
+        if (result) {
+          setIsLogin(true);
+          routeTo('/home');
+        }
+      });
     }
   });
 
