@@ -35,7 +35,6 @@ import { getCookie } from '../utils/cookies/cookies';
 
 const Home = () => {
   const { routeTo } = useRouter();
-  const [isLogin] = useRecoilState(IsLogin);
   useEffect(() => {
     if (!getCookie('accessJwtToken')) {
         alert('로그인이 필요한 페이지입니다.')

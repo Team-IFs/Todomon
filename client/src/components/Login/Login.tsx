@@ -70,10 +70,6 @@ const Login = () => {
     }
   }
 
-  
-  const googleLoginClick = async () => {
-    window.location.href = `${process.env.REACT_APP_GOOGLE_LOGIN_URL}`;
-  }
   const kakaoLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_KAKAO_LOGIN_URL}`;
   }
@@ -97,7 +93,6 @@ const Login = () => {
           </BottomLogin>
           <Divider>간편 로그인</Divider>
           <ButtonContainer>
-            <Button variant='outlined' onClick={googleLoginClick}>구글 로그인</Button>
             <Button variant='outlined' onClick={kakaoLoginClick}>카카오 로그인</Button>
             <Button variant='outlined' onClick={naverLoginClick}>네이버 로그인</Button>
           </ButtonContainer>

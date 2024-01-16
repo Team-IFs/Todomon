@@ -1,4 +1,4 @@
-import { DELETE, GET, PATCH, POST } from './axios';
+import { DELETE, PATCH, POST } from './axios';
 import { removeCookie, setCookie } from '../cookies/cookies';
 
 export interface UserData {
@@ -26,24 +26,6 @@ export const loginRequest = async (userData: UserData): Promise<Result> => {
   } catch (error) {
     console.log(error);
     return 'FAIL';
-  }
-}
-
-export const googleLoginRequest = async (token: any): Promise<TokenObject> => {
-  try {
-    const response = await GET(`/social/google?${token}`);
-    setCookie('accessJwtToken', response.data.accessJwtToken);
-    setCookie('refreshJwtToken', response.data.refreshJwtToken);
-    return {
-      'accessJwtToken': response.data.accessJwtToken,
-      'refreshJwtToken': response.data.refreshJwtToken
-    }
-  } catch (error) {
-    console.log(error);
-    return {
-      'accessJwtToken': '',
-      'refreshJwtToken': ''
-    }
   }
 }
 

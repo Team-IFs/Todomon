@@ -4,8 +4,10 @@ import Button from '@mui/material/Button';
 import { useRouter } from '../hooks/useRouter';
 import { useEffect } from 'react';
 import useLogin from '../hooks/useLogin';
-import { googleLoginRequest } from '../utils/axios/account';
 import { getCookie } from '../utils/cookies/cookies';
+import { getMyUserInfo } from '../utils/axios/userInfo';
+import { useRecoilState } from 'recoil';
+import { UserInfo } from '../recoil/atoms/atoms';
 
 const LandingPage = styled.div({
   display: 'flex',
@@ -39,25 +41,19 @@ const ButtonContainer = styled.div({
 const Landing = () => {
   const { routeTo } = useRouter();
   const { setIsLogin } = useLogin();
+  const [, setUserInfo] = useRecoilState(UserInfo);
+
 
   useEffect(() => {
-    if (window.location.hash.includes('access_token')) {
-      googleLogin();
-    }
     if (getCookie('accessJwtToken')) {
-      alert('로그인되었습니다!')
-      setIsLogin(true);
+      getMyUserInfo().then(userInfo => {
+          if(userInfo) setUserInfo(userInfo);
+      });
       routeTo('/home');
+      alert('로그인되었습니다!');
+      setIsLogin(true);
     }
   });
-
-  const googleLogin = async () => {
-    await googleLoginRequest(window.location.hash.substring(1)).then(res => {
-      setIsLogin(true);
-      routeTo('/home');
-    });
-  }
-
 
   return (
     <>
