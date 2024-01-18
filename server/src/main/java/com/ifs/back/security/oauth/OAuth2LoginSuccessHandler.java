@@ -34,7 +34,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     String accessToken = delegateAccessToken(oAuth2User);
     String refreshToken = delegateRefreshToken(oAuth2User);
 
-    String redirectURI = "https://todo-mon.netlify.app/login";
+    String redirectURI = "https://todomoncopy.netlify.app/";
     log.info("## 리다이렉트 -> {}", redirectURI);
     log.info("## 토큰: {}", accessToken);
     getRedirectStrategy().sendRedirect(request, response,
@@ -49,8 +49,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     return UriComponentsBuilder.newInstance()
         .scheme("https")
-        .host("todo-mon.netlify.app")
-        .path("/login")
+        .host("todomoncopy.netlify.app")
         .queryParams(queryParams).build().toUri();
   }
 
