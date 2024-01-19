@@ -46,8 +46,7 @@ export const UserInfo = atom<User>({
             leftEyeColor: '',
             rightEyeColor: '',
         },
-    },
-    effects_UNSTABLE: [persistAtom]
+    }
 });
 export const CurrentClickedPart = atom({
     key: 'currentClickedPart',
