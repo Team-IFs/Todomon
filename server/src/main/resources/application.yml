@@ -9,11 +9,6 @@ spring:  # 환경변수
     oauth2:
       client:
         registration:
-          google:
-            client-id: ${google_clientId}
-            client-secret: ${google_clientSecret}
-            scope: email, profile
-            redirect-uri: ${google_redirect_url}
           naver:
             client-id: ${naver_clientId}
             client-secret: ${naver_clientSecret}
