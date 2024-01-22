@@ -30,22 +30,13 @@ public class OAuthAttributes {
   }
 
   public static OAuthAttributes of(String userNameAttributeName, Map<String, Object> attributes, String registrationId) {
-    if("google".equals(registrationId)) {
-      return ofGoogle(userNameAttributeName, attributes);
-    }
-    else if("naver".equals(registrationId)) {
+    if("naver".equals(registrationId)) {
       return ofNaver(userNameAttributeName, attributes);
     }
     else if("kakao".equals(registrationId)){
       return ofKakao(userNameAttributeName, attributes);
     }
     else throw new BusinessLogicException(CommonExceptionCode.INVALID_OAUTH);
-  }
-  private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
-    return OAuthAttributes.builder()
-        .nameAttributeKey(userNameAttributeName)
-        .oauth2UserInfo(new GoogleOAuth2UserInfo(attributes))
-        .build();
   }
 
   private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
