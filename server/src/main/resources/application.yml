@@ -86,6 +86,7 @@ aws:
     prefix: /config
 
 springdoc:
+  domain: ${domain}
   api-docs:
     enabled: true
   swagger-ui:

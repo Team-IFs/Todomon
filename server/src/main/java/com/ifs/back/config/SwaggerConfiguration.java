@@ -6,6 +6,8 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 
 @Configuration
 public class SwaggerConfiguration {
+  @Value("${springdoc.domain}") String domain;
   @Bean
   public OpenAPI openAPI(
       @Value("${springdoc.version}") String version
@@ -36,11 +39,15 @@ public class SwaggerConfiguration {
     SecurityRequirement addSecurityItem = new SecurityRequirement();
     addSecurityItem.addList("Authorization");
 
+    Server server = new Server();
+    server.setUrl(domain); // https://에 접근 가능하게 설정
+
     return new OpenAPI()
         // Security 인증 컴포넌트 설정
         .components(new Components().addSecuritySchemes("Authorization", bearerAuth))
         // API 마다 Security 인증 컴포넌트 설정
         .addSecurityItem(addSecurityItem)
-        .info(info);
+        .info(info)
+        .servers(List.of(server));
   }
 }
