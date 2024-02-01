@@ -45,6 +45,7 @@ const Landing = () => {
 
 
   useEffect(() => {
+
     if (getCookie('accessJwtToken')) {
       getMyUserInfo().then(userInfo => {
           if(userInfo) setUserInfo(userInfo);
@@ -52,7 +53,10 @@ const Landing = () => {
       routeTo('/home');
       alert('로그인되었습니다!');
       setIsLogin(true);
+    } else {
+      setIsLogin(false);
     }
+
   });
 
   return (

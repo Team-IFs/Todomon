@@ -37,22 +37,27 @@ const Home = () => {
   const { routeTo } = useRouter();
   useEffect(() => {
     if (!getCookie('accessJwtToken')) {
-        alert('로그인이 필요한 페이지입니다.')
+      alert('로그인이 필요한 페이지입니다.')
       routeTo('/login')
     }
   });
 
   
   return (
-    <HomePage>
-      <UserTodoContainer>
-        <UserCard />
-        <TodoContainer/>
-      </UserTodoContainer>
-      <CalendarContainer>
-        <Cal/>
-      </CalendarContainer>
-  </HomePage>)
+    <>
+      {getCookie('accessJwtToken') && (
+        <HomePage>
+          <UserTodoContainer>
+            <UserCard />
+            <TodoContainer />
+          </UserTodoContainer>
+          <CalendarContainer>
+            <Cal />
+          </CalendarContainer>
+        </HomePage>
+      )}
+    </>
+  )
 }
 
 export default Home
