@@ -5,6 +5,7 @@ import { IsLogin } from '../recoil/atoms/atoms';
 import Card from '../components/Social/UserCard';
 import Tab from '../components/Social/Tab';
 import styled from '@emotion/styled';
+import { getCookie } from '../utils/cookies/cookies';
 
   const SocialPage = styled.div({
     display: 'flex',
@@ -23,12 +24,18 @@ const Social = () => {
         routeTo('/login')
       }
   });
-  return (<SocialPage>
-    <h1>
-      | 친구 관리
-    </h1>
-    <Tab />
-  </SocialPage>)
+  return (
+    <>
+      {getCookie('accessJwtToken') && 
+        <SocialPage>
+          <h1>
+            | 친구 관리
+          </h1>
+          <Tab />
+        </SocialPage>
+      }
+  </>
+  )
 }
 
 export default Social 

@@ -8,13 +8,14 @@ import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { updateCategory } from '../utils/axios/category';
+import { getCookie } from '../utils/cookies/cookies';
 
 
 const SocialPage = styled.div({
-    display: 'flex',
-    flexDirection: 'column',
-    width: 'calc(100vw - 210px)',
-    height: 'calc(100vh - 80px)'
+  display: 'flex',
+  flexDirection: 'column',
+  width: 'calc(100vw - 210px)',
+  height: 'calc(100vh - 80px)'
 })
 
 const Contents = styled.div({
@@ -40,42 +41,45 @@ const CategorySetting = () => {
   const [isLogin] = useRecoilState(IsLogin);
   const [newCategorySetting, setNewCategorySetting] = useRecoilState(NewCategorySetting);
   const [currentClickedCategory, setCurrentClickedCategory] = useRecoilState(CurrentClickedCategory);
-  
+
   const handleChangeClick = () => {
     updateCategory(newCategorySetting).then(() => {
-        alert('변경완료되었습니다.');
-        window.location.reload();
+      alert('변경완료되었습니다.');
+      window.location.reload();
     });
   };
 
 
   useEffect(() => {
     if (!isLogin) {
-        alert('로그인이 필요한 페이지입니다.')
-        routeTo('/login')
+      alert('로그인이 필요한 페이지입니다.')
+      routeTo('/login')
     } else {
       setNewCategorySetting(currentClickedCategory);
       setCurrentClickedCategory(currentClickedCategory);
     }
   }, []);
-  
 
-  return (<SocialPage>
-    <h1>
-      | 카테고리 관리
-    </h1>
-    <Divider />
-    <Contents>
-      <CategoriesList />
-      <Divider orientation='vertical' />
-      <SelectedCategory />
-    </Contents>
-    <ButtonRow>
+
+  return <>
+    {getCookie('accessJwtToken') && <SocialPage>
+      <h1>
+        | 카테고리 관리
+      </h1>
+      <Divider />
+      <Contents>
+        <CategoriesList />
+        <Divider orientation='vertical' />
+        <SelectedCategory />
+      </Contents>
+      <ButtonRow>
         <ButtonContainer>
           <Button id='faceColor' variant='outlined' fullWidth={true} onClick={handleChangeClick}>변경</Button>
         </ButtonContainer>
       </ButtonRow>
-  </SocialPage>)
+    </SocialPage >
+    }
+  </>
 }
 
 export default CategorySetting 

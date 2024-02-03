@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import { Button, Divider } from '@mui/material';
 import { getDataLocalStorage, setDataLocalStorage } from '../utils/localstorage';
 import { PATCH } from '../utils/axios/axios';
+import { getCookie } from '../utils/cookies/cookies';
 
 const SettingContainer = styled.div({
   display: 'flex',
@@ -36,7 +37,7 @@ const Settings = () => {
   const [newUsername, setNewUsername] = useState(userInfo.nickname);
   const [newBio, setNewBio] = useState(userInfo.bio);
   const [isTempDarkMode] = useRecoilState(TempDarkMode);
-  
+
 
   const handleChangeClick = () => {
     darkModeSetting();
@@ -67,23 +68,25 @@ const Settings = () => {
     }
   });
 
-  return (<div>
-    <h1>| 설정 </h1>
-    <SettingContainer>
-      <Divider />
-      <AccountSetting changeNewUsername={changeNewUsername} changeNewBio={changeNewBio} />
-      <Divider />
-      <ThemeSetting />
-      <Divider />
-      <TodomonSetting />
-      <Divider />
-      <ButtonRow>
-        <ButtonContainer>
-          <Button id='faceColor' variant='outlined' fullWidth={true} onClick={handleChangeClick}>변경</Button>
-        </ButtonContainer>
-      </ButtonRow>
-    </SettingContainer>
-  </div>)
+  return <>{getCookie('accessJwtToken') &&
+    <div>
+      <h1>| 설정 </h1>
+      <SettingContainer>
+        <Divider />
+        <AccountSetting changeNewUsername={changeNewUsername} changeNewBio={changeNewBio} />
+        <Divider />
+        <ThemeSetting />
+        <Divider />
+        <TodomonSetting />
+        <Divider />
+        <ButtonRow>
+          <ButtonContainer>
+            <Button id='faceColor' variant='outlined' fullWidth={true} onClick={handleChangeClick}>변경</Button>
+          </ButtonContainer>
+        </ButtonRow>
+      </SettingContainer>
+    </div>}
+  </>
 }
 
 export default Settings 
