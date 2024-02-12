@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from '../../hooks/useRouter'
 import { Divider } from '@mui/material';
 import { useRecoilState } from 'recoil';
@@ -34,8 +34,9 @@ const ButtonContainer = styled.div({
 })
 
 const Login = () => {
-  const [, setIsLogin] = useRecoilState(IsLogin);
+  const [isLogin, setIsLogin] = useRecoilState(IsLogin);
   const [, setUserInfo] = useRecoilState(UserInfo);
+  
   const { routeTo } = useRouter();
 
 
@@ -76,6 +77,10 @@ const Login = () => {
   const naverLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_NAVER_LOGIN_URL}`;
   }
+
+  useEffect(() => { 
+    if (isLogin) routeTo('/home');
+  });
 
 
   return (
