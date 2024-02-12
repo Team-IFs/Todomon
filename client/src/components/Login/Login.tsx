@@ -36,7 +36,7 @@ const ButtonContainer = styled.div({
 const Login = () => {
   const [isLogin, setIsLogin] = useRecoilState(IsLogin);
   const [, setUserInfo] = useRecoilState(UserInfo);
-  
+
   const { routeTo } = useRouter();
 
 
@@ -50,25 +50,31 @@ const Login = () => {
     };
     const email = target.email.value;
     const password = target.password.value;
-    const userData = {
-      username: email,
-      password: password
-    }
 
-    // login request
-    const res = await loginRequest(userData)
-    // login success
-    if (res === 'SUCCESS') {
-      getMyUserInfo().then(userInfo => {
-          if(userInfo) setUserInfo(userInfo);
-        });
-      setIsLogin(true);
-      alert('로그인 성공!');
-      routeTo('/home');
+    if (email && password) { 
+      const userData = {
+        username: email,
+        password: password
+      }
 
+      // login request
+      const res = await loginRequest(userData)
+      // login success
+      if (res === 'SUCCESS') {
+        getMyUserInfo().then(userInfo => {
+            if(userInfo) setUserInfo(userInfo);
+          });
+        setIsLogin(true);
+        alert('로그인 성공!');
+        routeTo('/home');
+
+      } else {
+        setIsLogin(false);
+      }
     } else {
-      setIsLogin(false);
+      alert('이메일과 비밀번호를 입력해주세요.')
     }
+    
   }
 
   const kakaoLoginClick = () => {
@@ -87,8 +93,8 @@ const Login = () => {
     <>
       <form onSubmit={handleSubmit}>
         <Form>
-          <TextField required name='email' label='이메일' type='email' variant='standard' />
-          <TextField required name='password' label='비밀번호' type='password' variant='standard' />
+          <TextField name='email' label='이메일' type='email' variant='standard' />
+          <TextField name='password' label='비밀번호' type='password' variant='standard' />
           <ButtonContainer>
             <Button variant='outlined' type='submit'>로그인</Button>
           </ButtonContainer>
