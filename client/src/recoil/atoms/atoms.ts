@@ -6,6 +6,28 @@ import { CategoryItem, CategoryItemWithoutTodomon } from '../../types/todo'
 
 const { persistAtom } = recoilPersist()
 
+export const defaultUserInfo = {
+    bio: '',
+    memberId: -1,
+    memberStatus: '',
+    nickname: '',
+    premium: false,
+    todomon: {
+        backgroundColor: '',
+        faceColor: '',
+        leftEyeColor: '',
+        rightEyeColor: '',
+    },
+}
+
+export const defaultCategorySetting = {
+    categoryColor: '',
+    categoryId: -1,
+    categoryName: '',
+    hide: false,
+    scope: 0,
+    idx: 0
+}
 export const TodoList = atom({
     key: 'TodoList',
     default: [],
@@ -34,19 +56,7 @@ export const TempDarkMode = atom({
 })
 export const UserInfo = atom<User>({
     key: 'UserInfo',
-    default: {
-        bio: '',
-        memberId: -1,
-        memberStatus: '',
-        nickname: '',
-        premium: false,
-        todomon: {
-            backgroundColor: '',
-            faceColor: '',
-            leftEyeColor: '',
-            rightEyeColor: '',
-        },
-    },
+    default: defaultUserInfo,
     effects_UNSTABLE: [persistAtom],
 });
 export const CurrentClickedPart = atom({
@@ -56,31 +66,14 @@ export const CurrentClickedPart = atom({
 
 export const CurrentClickedUser = atom({
     key: 'currentClickedUser',
-    default: {
-        bio: '',
-        memberId: -1,
-        memberStatus: '',
-        nickname: '',
-        premium: false,
-        todomon: {
-            backgroundColor: '',
-            faceColor: '',
-            leftEyeColor: '',
-            rightEyeColor: '',
-        },
-    },
+    default: defaultUserInfo,
     effects_UNSTABLE: [persistAtom]
 })
 
 export const CurrentClickedCategory = atom<CategoryItem>({
     key: 'currentClickedCategory',
     default: {
-        categoryColor: '',
-        categoryId: -1,
-        categoryName: '',
-        hide: false,
-        scope: 0,
-        idx: 0,
+        ...defaultCategorySetting,
         todos: []
     },
     effects_UNSTABLE: [persistAtom]
@@ -88,13 +81,6 @@ export const CurrentClickedCategory = atom<CategoryItem>({
 
 export const NewCategorySetting = atom<CategoryItemWithoutTodomon>({
     key: 'NewCategorySetting',
-    default: {
-        categoryColor: '',
-        categoryId: -1,
-        categoryName: '',
-        hide: false,
-        scope: 0,
-        idx: 0
-    },
+    default: defaultCategorySetting,
     effects_UNSTABLE: [persistAtom]
 })

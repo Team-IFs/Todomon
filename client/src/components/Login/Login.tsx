@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from '../../hooks/useRouter'
 import { Divider } from '@mui/material';
 import { useRecoilState } from 'recoil';
-import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
+import { IsLogin, UserInfo, defaultUserInfo } from '../../recoil/atoms/atoms';
 import { loginRequest } from '../../utils/axios/account';
 import { getMyUserInfo } from '../../utils/axios/userInfo';
 
@@ -70,6 +70,7 @@ const Login = () => {
 
       } else {
         setIsLogin(false);
+        setUserInfo(defaultUserInfo); // delete user info from localstorage when user logout
       }
     } else {
       alert('이메일과 비밀번호를 입력해주세요.')

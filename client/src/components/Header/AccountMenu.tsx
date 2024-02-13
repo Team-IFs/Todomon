@@ -11,7 +11,7 @@ import Cat from '../../assets/Cat';
 import { removeCookie } from '../../utils/cookies/cookies';
 import { useRecoilState } from 'recoil';
 import { useRouter } from '../../hooks/useRouter';
-import { IsLogin, UserInfo } from '../../recoil/atoms/atoms';
+import { IsLogin, UserInfo, defaultUserInfo } from '../../recoil/atoms/atoms';
 import styled from '@emotion/styled';
 import NewCat from '../../assets/NewCat';
 
@@ -25,6 +25,8 @@ export default function AccountMenu() {
   const { routeTo } = useRouter()
   const [, setIsLogin] = useRecoilState(IsLogin);
   const [userInfo] = useRecoilState(UserInfo);
+  const [, setUserInfo] = useRecoilState(UserInfo);
+
 
   // React.useEffect(() => {
   //   console.log(userInfo.todomon)
@@ -37,11 +39,12 @@ export default function AccountMenu() {
     setAnchorEl(null);
   };
   const handleLogoutClick = () => {
-    removeCookie('accessJwtToken')
-    removeCookie('refreshJwtToken')
-    setIsLogin(false)
-    alert('로그아웃되었습니다!')
-    routeTo('/')
+    removeCookie('accessJwtToken');
+    removeCookie('refreshJwtToken');
+    setIsLogin(false);
+    setUserInfo(defaultUserInfo);
+    alert('로그아웃되었습니다!');
+    routeTo('/');
   }
   const handleSettingClick = () => {
     routeTo('/settings')
