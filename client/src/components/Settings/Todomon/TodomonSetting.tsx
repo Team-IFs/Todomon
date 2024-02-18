@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import { UserInfo } from '../../../recoil/atoms/atoms';
 import { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color';
+import { TodomonColor } from '../../../types/todomon';
 
 const Container = styled.div({
   display: 'flex',
@@ -31,83 +32,59 @@ const UserCat = styled.div({
   width: '200px',
   height: '200px',
   display: 'flex',
-
 })
 
 const TodomonSetting = () => {
   const [userInfo, setUserInfo] = useRecoilState(UserInfo);
-  const [color, setColor] = useState(userInfo.todomon.backgroundColor && '#000');
-  const [bg, setB] = useState(userInfo.todomon.backgroundColor);
-  const [face, setF] = useState(userInfo.todomon.faceColor);
-  const [left, setL] = useState(userInfo.todomon.leftEyeColor)
-  const [right, setR] = useState(userInfo.todomon.rightEyeColor);
+  const [currentSelectedTodomonColor, setCurrentSelectedTodomonColor] = useState<TodomonColor>(userInfo.todomon);
   const [selectedButtonId, setSelectedButtonId] = useState<string>('faceColor');
+  const [pickerColor, setPickerColor] = useState<string>(userInfo.todomon.faceColor || '#000');
 
-
-  const handleClick = (buttonId: string) => {
-    setSelectedButtonId(buttonId);
-
-  };
-  
   const buttons = [
-    { id: 'faceColor', label: '얼굴' },
-    { id: 'leftEyeColor', label: '왼쪽 눈' },
-    { id: 'rightEyeColor', label: '오른쪽 눈' },
-    { id: 'backgroundColor', label: '배경' }
+    { id: 'faceColor', label: '얼굴', color: currentSelectedTodomonColor.faceColor },
+    { id: 'leftEyeColor', label: '왼쪽 눈', color: currentSelectedTodomonColor.leftEyeColor },
+    { id: 'rightEyeColor', label: '오른쪽 눈', color: currentSelectedTodomonColor.rightEyeColor },
+    { id: 'backgroundColor', label: '배경', color: currentSelectedTodomonColor.backgroundColor }
   ];
-
-
   
-  const isTodomonChange = () => {
-    const newTodomon = { backgroundColor: bg, faceColor: face, leftEyeColor: left, rightEyeColor: right }
+  const handleButtonClick = (currentButtonId: string) => {
+    setSelectedButtonId(currentButtonId);
+    setPickerColor(buttons.find(btn => btn.id === currentButtonId)?.color || '#000');
+  };
 
-    if (newTodomon !== userInfo.todomon) {
-      const updatedUserInfo = {
-        ...userInfo,
-        todomon: newTodomon,
-      };
-      setUserInfo(updatedUserInfo);
-    }
+  const handleChangeColorPicker = (color: any) => {
+    // change가 일어날 때 마다 picker를 해당 값으로 변경
+    setPickerColor(color.hex);
+    // 현재 화면에 보이는 투두몬의 색상 변경
+    setCurrentSelectedTodomonColor({
+      ...currentSelectedTodomonColor,
+      [selectedButtonId]: color.hex
+    });
   };
 
   useEffect(() => {
-    isTodomonChange();
-  }, [bg, face, left, right])
-
-  const handleChangeComplete = (color: any) => {
-    setColor(color.hex);
-
-    switch (selectedButtonId) {
-      case 'backgroundColor':
-        setB(color.hex)
-        break;
-      case 'faceColor':
-        setF(color.hex)
-        break;
-      case 'leftEyeColor':
-        setL(color.hex)
-        break;
-      case 'rightEyeColor':
-        setR(color.hex)
-        break;
-      default:
-        break;
-    }
-  };
+    // recoil에 저장된 userInfo의 투두몬의 색상과 현재 투두몬의 색상이 다르다면 현재 투두몬의 색상을 저장
+    if (currentSelectedTodomonColor !== userInfo.todomon) {
+      const updatedUserInfo = {
+        ...userInfo,
+        todomon: currentSelectedTodomonColor,
+      };
+      setUserInfo(updatedUserInfo);
+    };
+  }, [currentSelectedTodomonColor]);
 
   return (
     <Container>
       <h2>투두몬</h2>
       <ContentContainer>
         <UserCat>
-          {/* <NewCat todomonColor={newTodomon}/> */}
           <svg version="1.1" id="Layer_1" xmlSpace="preserve"
             xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500">
             <style type="text/css">{`
-            .st0{fill:${bg};}
-            .st1{fill:${right};}
-            .st2{fill:${left};}
-            .st3{fill:${face};}
+            .st0{fill:${currentSelectedTodomonColor.backgroundColor};}
+            .st1{fill:${currentSelectedTodomonColor.rightEyeColor};}
+            .st2{fill:${currentSelectedTodomonColor.leftEyeColor};}
+            .st3{fill:${currentSelectedTodomonColor.faceColor};}
             `}
             </style>
             <ellipse id="background" className="st0" cx="250" cy="250" rx="242" ry="242" />
@@ -128,7 +105,7 @@ const TodomonSetting = () => {
                 id={id}
                 variant={selectedButtonId === id ? 'contained' : 'outlined'}
                 fullWidth={true}
-                onClick={() => handleClick(id)}
+                onClick={() => handleButtonClick(id)}
               >
                 {label}
               </Button>
@@ -136,8 +113,8 @@ const TodomonSetting = () => {
           ))}
         </ButtonColumn>
         <SketchPicker
-          color={color}
-          onChange={handleChangeComplete}
+          color={pickerColor}
+          onChange={handleChangeColorPicker}
           width='300px'
         />
       </ContentContainer>
