@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import { useRecoilState } from 'recoil';
-import { CurrentClickedPart, UserInfo } from '../../../recoil/atoms/atoms';
+import { UserInfo } from '../../../recoil/atoms/atoms';
 import { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color';
-import NewCat from '../../../assets/NewCat';
 
 const Container = styled.div({
   display: 'flex',
@@ -37,17 +36,27 @@ const UserCat = styled.div({
 
 const TodomonSetting = () => {
   const [userInfo, setUserInfo] = useRecoilState(UserInfo);
-  const [currentClickedPart, setCurrentClickedPart] = useRecoilState(CurrentClickedPart);
-
-  const [color, setColor] = useState('#000');
+  const [color, setColor] = useState(userInfo.todomon.backgroundColor && '#000');
   const [bg, setB] = useState(userInfo.todomon.backgroundColor);
   const [face, setF] = useState(userInfo.todomon.faceColor);
   const [left, setL] = useState(userInfo.todomon.leftEyeColor)
   const [right, setR] = useState(userInfo.todomon.rightEyeColor);
-  
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setCurrentClickedPart(event.currentTarget.id.valueOf())
+  const [selectedButtonId, setSelectedButtonId] = useState<string>('faceColor');
+
+
+  const handleClick = (buttonId: string) => {
+    setSelectedButtonId(buttonId);
+
   };
+  
+  const buttons = [
+    { id: 'faceColor', label: '얼굴' },
+    { id: 'leftEyeColor', label: '왼쪽 눈' },
+    { id: 'rightEyeColor', label: '오른쪽 눈' },
+    { id: 'backgroundColor', label: '배경' }
+  ];
+
+
   
   const isTodomonChange = () => {
     const newTodomon = { backgroundColor: bg, faceColor: face, leftEyeColor: left, rightEyeColor: right }
@@ -68,7 +77,7 @@ const TodomonSetting = () => {
   const handleChangeComplete = (color: any) => {
     setColor(color.hex);
 
-    switch (currentClickedPart) {
+    switch (selectedButtonId) {
       case 'backgroundColor':
         setB(color.hex)
         break;
@@ -113,18 +122,18 @@ const TodomonSetting = () => {
           </svg>
         </UserCat>
         <ButtonColumn>
-          <ButtonContainer>
-            <Button id='faceColor' variant='outlined' fullWidth={true} onClick={handleClick}>얼굴</Button>
-          </ButtonContainer>
-          <ButtonContainer>
-            <Button id='leftEyeColor' variant='outlined' fullWidth={true} onClick={handleClick}>왼쪽 눈</Button>
-          </ButtonContainer>
-          <ButtonContainer>
-            <Button id='rightEyeColor' variant='outlined' fullWidth={true} onClick={handleClick}>오른쪽 눈</Button>
-          </ButtonContainer>
-          <ButtonContainer>
-            <Button id='backgroundColor' variant='outlined' fullWidth={true} onClick={handleClick}>배경</Button>
-          </ButtonContainer>
+          {buttons.map(({ id, label }) => (
+            <ButtonContainer key={id}>
+              <Button
+                id={id}
+                variant={selectedButtonId === id ? 'contained' : 'outlined'}
+                fullWidth={true}
+                onClick={() => handleClick(id)}
+              >
+                {label}
+              </Button>
+            </ButtonContainer>
+          ))}
         </ButtonColumn>
         <SketchPicker
           color={color}

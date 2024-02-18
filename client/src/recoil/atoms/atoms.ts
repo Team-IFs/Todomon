@@ -59,10 +59,6 @@ export const UserInfo = atom<User>({
     default: defaultUserInfo,
     effects_UNSTABLE: [persistAtom],
 });
-export const CurrentClickedPart = atom({
-    key: 'currentClickedPart',
-    default: 'backgroundColor',
-})
 
 export const CurrentClickedUser = atom({
     key: 'currentClickedUser',
