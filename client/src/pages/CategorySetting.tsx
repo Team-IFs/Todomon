@@ -9,14 +9,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { updateCategory } from '../utils/axios/category';
 import { getCookie } from '../utils/cookies/cookies';
-
-
-const SocialPage = styled.div({
-  display: 'flex',
-  flexDirection: 'column',
-  width: 'calc(100vw - 210px)',
-  height: 'calc(100vh - 80px)'
-})
+import { SettingContentsLayout } from '../layout/GeneralLayout';
 
 const Contents = styled.div({
   display: 'flex',
@@ -62,22 +55,23 @@ const CategorySetting = () => {
 
 
   return <>
-    {getCookie('accessJwtToken') && <SocialPage>
-      <h1>
-        | 카테고리 관리
-      </h1>
-      <Divider />
-      <Contents>
-        <CategoriesList />
-        <Divider orientation='vertical' />
-        <SelectedCategory />
-      </Contents>
-      <ButtonRow>
-        <ButtonContainer>
-          <Button id='faceColor' variant='outlined' fullWidth={true} onClick={handleChangeClick}>변경</Button>
-        </ButtonContainer>
-      </ButtonRow>
-    </SocialPage >
+    {getCookie('accessJwtToken') &&
+      <SettingContentsLayout>
+        <h1>
+          | 카테고리 관리
+        </h1>
+        <Divider />
+        <Contents>
+          <CategoriesList />
+          <Divider orientation='vertical' />
+          <SelectedCategory />
+        </Contents>
+        <ButtonRow>
+          <ButtonContainer>
+            <Button id='faceColor' variant='outlined' fullWidth={true} onClick={handleChangeClick}>변경</Button>
+          </ButtonContainer>
+        </ButtonRow>
+      </SettingContentsLayout >
     }
   </>
 }

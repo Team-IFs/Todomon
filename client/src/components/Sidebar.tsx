@@ -11,8 +11,16 @@ import Settings from '@mui/icons-material/Settings';
 import { SidebarContent } from '../router';
 import { useRouter } from '../hooks/useRouter'
 import { Divider } from '@mui/material';
+import styled from '@emotion/styled';
 
 const sidebarIcons = [<Settings/>, <ListIcon/>,<PeopleIcon/>, <StarsIcon/>]
+
+const RowLayout = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  height: 'auto',
+  minHeight: 'calc(100vh-20px)'
+})
 
 const Sidebar = () => {
   const { routeTo } = useRouter()
@@ -26,29 +34,27 @@ const Sidebar = () => {
   };
 
   return (
-    <>
-      <Box sx={{ width: '100%', maxWidth: 210 }}>
-        <List component="nav" aria-label="sidebar">
-          {SidebarContent.map((item, idx) => (
-              <ListItemButton
-              key={item.id}
-              selected={selectedIndex === idx}
-              onClick={() => handleListItemClick(idx, item.path)}
-              >
-                <ListItemIcon sx={{ color: 'inherit' }}>
-                  {sidebarIcons[idx]}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
-                />
-            </ListItemButton>
-            
-            ))}
-        </List>
-      </Box>
+    <RowLayout>
+      <List component="nav" aria-label="sidebar">
+        {SidebarContent.map((item, idx) => (
+            <ListItemButton
+            key={item.id}
+            selected={selectedIndex === idx}
+            onClick={() => handleListItemClick(idx, item.path)}
+            >
+              <ListItemIcon sx={{ color: 'inherit' }}>
+                {sidebarIcons[idx]}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.label}
+                primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+              />
+          </ListItemButton>
+          
+          ))}
+      </List>
       <Divider orientation="vertical" />
-    </>
+    </RowLayout>
   );
 }
 

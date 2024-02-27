@@ -3,8 +3,8 @@ import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
 import { IsLogin } from '../recoil/atoms/atoms';
 import { getCookie } from '../utils/cookies/cookies';
+import { SettingContentsLayout } from '../layout/GeneralLayout';
 const Premium = () => {
-
   const { routeTo } = useRouter();
   const [isLogin] = useRecoilState(IsLogin);
 
@@ -16,9 +16,9 @@ const Premium = () => {
   });
   return <>
     {getCookie('accessJwtToken') &&
-      <div>
+      <SettingContentsLayout>
         <h1>| 프리미엄 </h1>
-      </div>
+      </SettingContentsLayout>
     }
   </>
 }

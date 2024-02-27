@@ -7,15 +7,10 @@ import ThemeSetting from '../components/Settings/ThemeSetting';
 import TodomonSetting from '../components/Settings/Todomon/TodomonSetting';
 import styled from '@emotion/styled';
 import { Button, Divider } from '@mui/material';
-import { getDataLocalStorage, setDataLocalStorage } from '../utils/localstorage';
+import { setDataLocalStorage } from '../utils/localstorage';
 import { PATCH } from '../utils/axios/axios';
 import { getCookie } from '../utils/cookies/cookies';
-
-const SettingContainer = styled.div({
-  display: 'flex',
-  flexDirection: 'column',
-  width: 'calc(100vw - 210px)',
-})
+import { SettingContentsLayout } from '../layout/GeneralLayout';
 
 const ButtonContainer = styled.div({
   display: 'flex',
@@ -71,7 +66,7 @@ const Settings = () => {
   return <>{getCookie('accessJwtToken') &&
     <div>
       <h1>| 설정 </h1>
-      <SettingContainer>
+      <SettingContentsLayout>
         <Divider />
         <AccountSetting changeNewUsername={changeNewUsername} changeNewBio={changeNewBio} />
         <Divider />
@@ -84,7 +79,7 @@ const Settings = () => {
             <Button id='faceColor' variant='outlined' fullWidth={true} onClick={handleChangeClick}>변경</Button>
           </ButtonContainer>
         </ButtonRow>
-      </SettingContainer>
+      </SettingContentsLayout>
     </div>}
   </>
 }

@@ -2,17 +2,9 @@ import React, { useEffect } from 'react'
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
 import { IsLogin } from '../recoil/atoms/atoms';
-import Card from '../components/Social/UserCard';
 import Tab from '../components/Social/Tab';
-import styled from '@emotion/styled';
 import { getCookie } from '../utils/cookies/cookies';
-
-  const SocialPage = styled.div({
-    display: 'flex',
-    flexDirection: 'column',
-    width: 'calc(100vw - 210px)',
-    height: 'calc(100vh - 80px)'
-  })
+import { SettingContentsLayout } from '../layout/GeneralLayout';
   
 const Social = () => {
   const { routeTo } = useRouter();
@@ -27,12 +19,12 @@ const Social = () => {
   return (
     <>
       {getCookie('accessJwtToken') && 
-        <SocialPage>
+        <SettingContentsLayout>
           <h1>
             | 친구 관리
           </h1>
           <Tab />
-        </SocialPage>
+        </SettingContentsLayout>
       }
   </>
   )
