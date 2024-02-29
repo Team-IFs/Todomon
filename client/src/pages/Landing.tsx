@@ -3,11 +3,7 @@ import { ReactComponent as CatBasic } from '../assets/cat-basic.svg';
 import Button from '@mui/material/Button';
 import { useRouter } from '../hooks/useRouter';
 import { useEffect } from 'react';
-import useLogin from '../hooks/useLogin';
 import { getCookie } from '../utils/cookies/cookies';
-import { getMyUserInfo } from '../utils/axios/userInfo';
-import { useRecoilState } from 'recoil';
-import { UserInfo } from '../recoil/atoms/atoms';
 
 const LandingPage = styled.div({
   display: 'flex',
@@ -38,25 +34,14 @@ const ButtonContainer = styled.div({
   flexDirection: 'column',
   width: '100%',
 })
+
 const Landing = () => {
   const { routeTo } = useRouter();
-  const { setIsLogin } = useLogin();
-  const [, setUserInfo] = useRecoilState(UserInfo);
-
 
   useEffect(() => {
-
     if (getCookie('accessJwtToken')) {
-      getMyUserInfo().then(userInfo => {
-          if(userInfo) setUserInfo(userInfo);
-      });
       routeTo('/home');
-      alert('로그인되었습니다!');
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
     }
-
   });
 
   return (
