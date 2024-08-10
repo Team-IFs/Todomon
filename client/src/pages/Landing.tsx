@@ -2,8 +2,10 @@ import styled from '@emotion/styled'
 import { ReactComponent as CatBasic } from '../assets/cat-basic.svg';
 import Button from '@mui/material/Button';
 import { useRouter } from '../hooks/useRouter';
+
 import { useEffect } from 'react';
 import { getCookie } from '../utils/cookies/cookies';
+
 
 const LandingPage = styled.div({
   display: 'flex',
@@ -35,6 +37,7 @@ const ButtonContainer = styled.div({
   width: '100%',
 })
 
+
 const Landing = () => {
   const { routeTo } = useRouter();
 
@@ -43,6 +46,7 @@ const Landing = () => {
       routeTo('/home');
     }
   });
+
 
   return (
     <>

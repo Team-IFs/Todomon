@@ -45,6 +45,7 @@ export default function AccountMenu() {
     setUserInfo(defaultUserInfo);
     alert('로그아웃되었습니다!');
     routeTo('/');
+
   }
   const handleSettingClick = () => {
     routeTo('/settings')

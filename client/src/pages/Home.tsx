@@ -6,7 +6,9 @@ import { useEffect } from 'react';
 import { IsLogin } from '../recoil/atoms/atoms';
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
+
 import { getCookie } from '../utils/cookies/cookies';
+
 
   const HomePage = styled.div({
     display: 'flex',
@@ -35,10 +37,12 @@ import { getCookie } from '../utils/cookies/cookies';
 
 const Home = () => {
   const { routeTo } = useRouter();
+
   useEffect(() => {
     if (!getCookie('accessJwtToken')) {
       alert('로그인이 필요한 페이지입니다.')
       routeTo('/login')
+
     }
   });
 
@@ -58,6 +62,7 @@ const Home = () => {
       )}
     </>
   )
+
 }
 
 export default Home

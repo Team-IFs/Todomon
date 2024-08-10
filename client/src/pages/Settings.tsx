@@ -7,10 +7,12 @@ import ThemeSetting from '../components/Settings/ThemeSetting';
 import TodomonSetting from '../components/Settings/Todomon/TodomonSetting';
 import styled from '@emotion/styled';
 import { Button, Divider } from '@mui/material';
+
 import { setDataLocalStorage } from '../utils/localstorage';
 import { PATCH } from '../utils/axios/axios';
 import { getCookie } from '../utils/cookies/cookies';
 import { SettingContentsLayout } from '../layout/GeneralLayout';
+
 
 const ButtonContainer = styled.div({
   display: 'flex',
@@ -62,6 +64,7 @@ const Settings = () => {
       routeTo('/login')
     }
   });
+
 
   return <>{getCookie('accessJwtToken') &&
     <div>
