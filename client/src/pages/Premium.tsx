@@ -2,6 +2,9 @@ import React, { useEffect } from 'react'
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
 import { IsLogin } from '../recoil/atoms/atoms';
+
+import { getCookie } from '../utils/cookies/cookies';
+import { SettingContentsLayout } from '../layout/GeneralLayout';
 const Premium = () => {
 
   const { routeTo } = useRouter();
@@ -13,11 +16,15 @@ const Premium = () => {
         routeTo('/login')
       }
   });
-  return (<div>
-    <h1>
-      Premium
-    </h1>
-  </div>)
+
+  return <>
+    {getCookie('accessJwtToken') &&
+      <SettingContentsLayout>
+        <h1>| 프리미엄 </h1>
+      </SettingContentsLayout>
+    }
+  </>
+
 }
 
 export default Premium 

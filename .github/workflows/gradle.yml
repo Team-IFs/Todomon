@@ -64,7 +64,7 @@ jobs:
     # CodeDeploy에게 배포 명령을 내립니다.
     - name: Code Deploy
       run: >
-        aws deploy create-deployment --application-name Todomon
+        aws deploy create-deployment --application-name todomon
         --deployment-config-name CodeDeployDefault.AllAtOnce
         --deployment-group-name todomon-deploy-group
         --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=server-archive/server.zip

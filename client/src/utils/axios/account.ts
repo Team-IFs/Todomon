@@ -11,10 +11,13 @@ export interface UserEmail {
 }
 
 type Result = 'SUCCESS' | 'FAIL';
+export type TokenObject = {
+  'accessJwtToken': string,
+  'refreshJwtToken': string
+}
 
 
 export const loginRequest = async (userData: UserData): Promise<Result> => {
-
   try {
     const response = await POST('/login', userData);
     setCookie('accessJwtToken', response.headers.authorization);
@@ -37,7 +40,7 @@ export const newPasswordRequest = async (userEmail: UserEmail): Promise<Result> 
 
 export const accountDeleteRequest = async (): Promise<Result> => {
   try {
-    const response = await DELETE('/users/me');
+    await DELETE('/users/me');
     removeCookie('accessJwtToken');
     removeCookie('refreshJwtToken');
     return 'SUCCESS';
@@ -49,7 +52,7 @@ export const accountDeleteRequest = async (): Promise<Result> => {
 
 export const updateRequest = async (data: any): Promise<Result> => {
   try {
-    const response = PATCH('/users/me/password', data)
+    PATCH('/users/me/password', data)
     return 'SUCCESS';
   } catch (error) {
     console.log(error);

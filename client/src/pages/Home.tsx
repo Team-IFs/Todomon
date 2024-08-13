@@ -7,6 +7,9 @@ import { IsLogin } from '../recoil/atoms/atoms';
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
 
+import { getCookie } from '../utils/cookies/cookies';
+
+
   const HomePage = styled.div({
     display: 'flex',
     flexDirection: 'row',
@@ -34,27 +37,32 @@ import { useRecoilState } from 'recoil';
 
 const Home = () => {
   const { routeTo } = useRouter();
-  const [isLogin] = useRecoilState(IsLogin);
 
   useEffect(() => {
-    if (!isLogin) {
-        alert('로그인이 필요한 페이지입니다.')
+    if (!getCookie('accessJwtToken')) {
+      alert('로그인이 필요한 페이지입니다.')
       routeTo('/login')
-      
+
     }
   });
 
   
   return (
-    <HomePage>
-      <UserTodoContainer>
-        <UserCard />
-        <TodoContainer/>
-      </UserTodoContainer>
-      <CalendarContainer>
-        <Cal/>
-      </CalendarContainer>
-  </HomePage>)
+    <>
+      {getCookie('accessJwtToken') && (
+        <HomePage>
+          <UserTodoContainer>
+            <UserCard />
+            <TodoContainer />
+          </UserTodoContainer>
+          <CalendarContainer>
+            <Cal />
+          </CalendarContainer>
+        </HomePage>
+      )}
+    </>
+  )
+
 }
 
 export default Home
