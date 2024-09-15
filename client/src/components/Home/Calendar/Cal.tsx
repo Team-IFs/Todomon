@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import styled from '@emotion/styled'
 import { useRecoilState } from 'recoil';
 import { CurrentDay } from '../../../recoil/atoms/atoms';
+import { useTheme } from '@mui/material/styles';
 
 const Todo = styled.div<{ color: string }>({
   display: 'flex',
@@ -26,6 +27,7 @@ export const createEventId = () => {
 }
 
 const Cal = () => {
+    const theme = useTheme(); // MUI 테마 가져오기
   let calendarRef: any = null;
   const [events, setEvents] = useState<EventInput[]>([]);
   const [currentYear, setCurrentYear] = useState(today('year'));
@@ -56,6 +58,7 @@ const Cal = () => {
                 start: subItem.startAt,
                 backgroundColor: 'transparent',
                 borderColor: 'transparent',
+                textColor: theme.palette.text.primary,
               })
             })
           })
