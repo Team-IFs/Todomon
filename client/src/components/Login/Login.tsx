@@ -40,6 +40,9 @@ const Login = () => {
 
   const { routeTo } = useRouter();
 
+  useEffect(() => {
+    setIsLogin(false);
+  },[])
 
   // 이메일로 로그인
 
