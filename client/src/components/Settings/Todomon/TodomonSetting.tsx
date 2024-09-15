@@ -1,10 +1,12 @@
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import { useRecoilState } from 'recoil';
+
 import { UserInfo } from '../../../recoil/atoms/atoms';
 import { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color';
 import { TodomonColor } from '../../../types/todomon';
+
 
 const Container = styled.div({
   display: 'flex',
@@ -32,6 +34,7 @@ const UserCat = styled.div({
   width: '200px',
   height: '200px',
   display: 'flex',
+
 })
 
 const TodomonSetting = () => {
@@ -73,11 +76,13 @@ const TodomonSetting = () => {
     };
   }, [currentSelectedTodomonColor]);
 
+
   return (
     <Container>
       <h2>투두몬</h2>
       <ContentContainer>
         <UserCat>
+
           <svg version="1.1" id="Layer_1" xmlSpace="preserve"
             xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500">
             <style type="text/css">{`
@@ -85,6 +90,7 @@ const TodomonSetting = () => {
             .st1{fill:${currentSelectedTodomonColor.rightEyeColor};}
             .st2{fill:${currentSelectedTodomonColor.leftEyeColor};}
             .st3{fill:${currentSelectedTodomonColor.faceColor};}
+
             `}
             </style>
             <ellipse id="background" className="st0" cx="250" cy="250" rx="242" ry="242" />
@@ -99,6 +105,7 @@ const TodomonSetting = () => {
           </svg>
         </UserCat>
         <ButtonColumn>
+
           {buttons.map(({ id, label }) => (
             <ButtonContainer key={id}>
               <Button

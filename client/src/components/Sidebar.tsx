@@ -11,6 +11,7 @@ import Settings from '@mui/icons-material/Settings';
 import { SidebarContent } from '../router';
 import { useRouter } from '../hooks/useRouter'
 import { Divider } from '@mui/material';
+
 import styled from '@emotion/styled';
 
 const sidebarIcons = [<Settings/>, <ListIcon/>,<PeopleIcon/>, <StarsIcon/>]
@@ -21,6 +22,7 @@ const RowLayout = styled.div({
   height: 'auto',
   minHeight: 'calc(100vh-20px)'
 })
+
 
 const Sidebar = () => {
   const { routeTo } = useRouter()
@@ -55,6 +57,7 @@ const Sidebar = () => {
       </List>
       <Divider orientation="vertical" />
     </RowLayout>
+
   );
 }
 

@@ -8,8 +8,10 @@ import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { updateCategory } from '../utils/axios/category';
+
 import { getCookie } from '../utils/cookies/cookies';
 import { SettingContentsLayout } from '../layout/GeneralLayout';
+
 
 const Contents = styled.div({
   display: 'flex',
@@ -35,10 +37,12 @@ const CategorySetting = () => {
   const [newCategorySetting, setNewCategorySetting] = useRecoilState(NewCategorySetting);
   const [currentClickedCategory, setCurrentClickedCategory] = useRecoilState(CurrentClickedCategory);
 
+
   const handleChangeClick = () => {
     updateCategory(newCategorySetting).then(() => {
       alert('변경완료되었습니다.');
       window.location.reload();
+
     });
   };
 
@@ -47,11 +51,13 @@ const CategorySetting = () => {
     if (!isLogin) {
       alert('로그인이 필요한 페이지입니다.')
       routeTo('/login')
+
     } else {
       setNewCategorySetting(currentClickedCategory);
       setCurrentClickedCategory(currentClickedCategory);
     }
   }, []);
+
 
 
   return <>

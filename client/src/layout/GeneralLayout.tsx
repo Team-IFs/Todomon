@@ -1,5 +1,6 @@
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header/Header'
+
 import styled from '@emotion/styled'
 interface GeneralLayoutProps {
   children: React.ReactNode
@@ -33,6 +34,7 @@ export const SidebarLayout: React.FC<GeneralLayoutProps> = ({children}) => {
       </ColumnLayout>
     </RowLayout>
   </ColumnLayout>)
+
 }
 
 export const HeaderLayout: React.FC<GeneralLayoutProps> = ({children}) => {

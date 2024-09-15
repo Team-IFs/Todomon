@@ -34,6 +34,7 @@ const ButtonContainer = styled.div({
 })
 
 const Login = () => {
+
   const [isLogin, setIsLogin] = useRecoilState(IsLogin);
   const [, setUserInfo] = useRecoilState(UserInfo);
 
@@ -41,6 +42,7 @@ const Login = () => {
 
 
   // 이메일로 로그인
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -83,11 +85,13 @@ const Login = () => {
   }
   const naverLoginClick = () => {
     window.location.href = `${process.env.REACT_APP_NAVER_LOGIN_URL}`;
+
   }
 
   useEffect(() => { 
     if (isLogin) routeTo('/home');
   });
+
 
 
   return (
@@ -96,6 +100,7 @@ const Login = () => {
         <Form>
           <TextField name='email' label='이메일' type='email' variant='standard' />
           <TextField name='password' label='비밀번호' type='password' variant='standard' />
+
           <ButtonContainer>
             <Button variant='outlined' type='submit'>로그인</Button>
           </ButtonContainer>

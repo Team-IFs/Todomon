@@ -2,9 +2,11 @@ import React, { useEffect } from 'react'
 import { useRouter } from '../hooks/useRouter';
 import { useRecoilState } from 'recoil';
 import { IsLogin } from '../recoil/atoms/atoms';
+
 import Tab from '../components/Social/Tab';
 import { getCookie } from '../utils/cookies/cookies';
 import { SettingContentsLayout } from '../layout/GeneralLayout';
+
   
 const Social = () => {
   const { routeTo } = useRouter();
@@ -16,6 +18,7 @@ const Social = () => {
         routeTo('/login')
       }
   });
+
   return (
     <>
       {getCookie('accessJwtToken') && 
